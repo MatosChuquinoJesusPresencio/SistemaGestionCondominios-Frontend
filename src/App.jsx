@@ -1,9 +1,9 @@
-function App() {
-  return (
-    <>
-    <h1>SISTEMA GESTIÓN CONDOMINIO</h1>
-    </>
-  )
-}
+import AppRouter from "./routers/AppRouter";
 
-export default App
+const App = () => {
+  return (
+    <AppRouter />
+  );
+};
+
+export default App;
