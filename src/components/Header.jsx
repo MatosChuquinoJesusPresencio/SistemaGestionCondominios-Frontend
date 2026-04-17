@@ -31,7 +31,7 @@ const Header = () => {
 
             <button
                 onClick={handleLogout}
-                className="btn btn-outline-danger d-flex align-items-center gap-2">
+                className="btn btn-outline-light d-flex align-items-center gap-2">
                 <FaSignOutAlt />
                 <span>Cerrar sesión</span>
             </button>
