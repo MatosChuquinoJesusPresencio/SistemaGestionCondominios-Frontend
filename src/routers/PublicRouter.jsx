@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 
 const PublicRouter = ({ children }) => {
-  const  { isAuthenticated } = false;
+  const isAuthenticated = true;
 
   return !isAuthenticated ? children : <Navigate to="/" />;
 };

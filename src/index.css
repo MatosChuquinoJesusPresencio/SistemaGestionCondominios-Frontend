@@ -1,0 +1,33 @@
+:root {
+  --primary-color: #112D4D;
+  --secondary-color: #2c5281;
+  --text-color: #F9F7F7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bg-main {
+  background: linear-gradient(
+    180deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+}
+
+.text-main {
+  color: var(--text-color)
+}

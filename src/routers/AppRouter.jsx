@@ -7,9 +7,12 @@ import NotFoundPage from "../pages/NotFoundPage";
 import PrivateRouter from "./PrivateRouter";
 import PublicRouter from "./PublicRouter";
 
+import PrivateLayout from "../layouts/PrivateLayout";
+
 const AppRouter = () => {
     return (
         <Routes>
+
             <Route
                 path="/login"
                 element={
@@ -20,15 +23,17 @@ const AppRouter = () => {
             />
 
             <Route
-                path="/"
                 element={
                     <PrivateRouter>
-                        <HomePage />
+                        <PrivateLayout />
                     </PrivateRouter>
                 }
-            />
+            >
+                <Route path="/" element={<HomePage />} />
+            </Route>
 
             <Route path="*" element={<NotFoundPage />} />
+
         </Routes>
     );
 };
