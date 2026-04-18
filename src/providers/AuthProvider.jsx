@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
+import { VALID_ROLES } from "../constants/roles"
+import { useEffect } from "react";
+
 export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(false);
-  const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user")) || null;
-  });
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser && !user) {
+      setUser(storedUser);
+    }
+  }, [user]);
 
   const isAuthenticated = !!user;
 
@@ -20,9 +30,16 @@ export const AuthProvider = ({ children }) => {
         role: "SUPER_ADMIN"
       };
 
+      if (!VALID_ROLES.includes(userWithRole.role)) {
+        setError("Rol no permitido en el sistema");
+        return;
+      }
+
       setUser(userWithRole);
       localStorage.setItem("user", JSON.stringify(userWithRole));
 
+    } catch (e) {
+      setError("Error inesperado en el login: ", e.message)
     } finally {
       setAuthLoading(false);
     }
@@ -49,7 +66,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         user,
-        authLoading
+        authLoading,
+        error
       }}
     >
       {children}

@@ -1,0 +1,7 @@
+export const ROLES = {
+    SUPER_ADMIN: "SUPER_ADMIN",
+    ADMIN_CONDOMINIO: "ADMIN_CONDOMINIO",
+    PROPIETARIO: "PROPIETARIO"
+};
+
+export const VALID_ROLES = Object.values(ROLES);

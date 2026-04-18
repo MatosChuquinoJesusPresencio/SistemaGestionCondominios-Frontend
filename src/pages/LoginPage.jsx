@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth"
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { login, authLoading } = useAuth();
+    const { login, authLoading, error } = useAuth();
 
     const {
         register,
@@ -79,6 +79,12 @@ const LoginPage = () => {
                             "Ingresar"
                         )}
                     </button>
+
+                    {error && (
+                        <div className="alert alert-danger mt-3 text-center">
+                            {error}
+                        </div>
+                    )}
 
                 </form>
 

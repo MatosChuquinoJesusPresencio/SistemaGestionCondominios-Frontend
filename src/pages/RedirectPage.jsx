@@ -1,19 +1,18 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { ROLES, VALID_ROLES } from "../constants/roles";
 
 const RedirectPage = () => {
     const { user } = useAuth();
 
-    if (!user) return <Navigate to="/login" />;
-
     switch (user.role) {
-        case "SUPER_ADMIN":
+        case ROLES.SUPER_ADMIN:
             return <Navigate to="/super-admin" />;
 
-        case "ADMIN_CONDOMINIO":
+        case ROLES.ADMIN_CONDOMINIO:
             return <Navigate to="/admin" />;
 
-        case "PROPIETARIO":
+        case ROLES.PROPIETARIO:
             return <Navigate to="/propietario" />;
 
         default:
