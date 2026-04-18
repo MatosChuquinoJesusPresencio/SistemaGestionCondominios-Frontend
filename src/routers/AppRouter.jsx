@@ -1,11 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 
-import HomePage from "../pages/HomePage";
+import RedirectPage from "../pages/RedirectPage";
 import LoginPage from "../pages/LoginPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import UnauthorizedPage from "../pages/UnauthorizedPage";
 
-import PrivateRouter from "./PrivateRouter";
-import PublicRouter from "./PublicRouter";
+import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
+import PDashboardPage from "../pages/propietario/PDashboardPage";
+import SADashboardPage from "../pages/super-admin/SADashboardPage";
+
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
+import RoleRoute from "./RoleRoute";
 
 import PrivateLayout from "../layouts/PrivateLayout";
 
@@ -16,22 +22,52 @@ const AppRouter = () => {
             <Route
                 path="/login"
                 element={
-                    <PublicRouter>
+                    <PublicRoute>
                         <LoginPage />
-                    </PublicRouter>
+                    </PublicRoute>
                 }
             />
 
             <Route
                 element={
-                    <PrivateRouter>
+                    <PrivateRoute>
                         <PrivateLayout />
-                    </PrivateRouter>
+                    </PrivateRoute>
                 }
             >
-                <Route path="/" element={<HomePage />} />
+
+                <Route path="/" element={<RedirectPage />} />
+
+                <Route
+                    path="/super-admin"
+                    element={
+                        <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
+                            <SADashboardPage />
+                        </RoleRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin"
+                    element={
+                        <RoleRoute allowedRoles={["ADMIN_CONDOMINIO", "SUPER_ADMIN"]}>
+                            <ACDashboardPage />
+                        </RoleRoute>
+                    }
+                />
+
+                <Route
+                    path="/propietario"
+                    element={
+                        <RoleRoute allowedRoles={["PROPIETARIO"]}>
+                            <PDashboardPage />
+                        </RoleRoute>
+                    }
+                />
+
             </Route>
 
+            <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="*" element={<NotFoundPage />} />
 
         </Routes>

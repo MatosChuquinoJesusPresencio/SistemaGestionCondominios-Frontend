@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth"
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, authLoading } = useAuth();
 
     const {
         register,
@@ -13,9 +13,8 @@ const LoginPage = () => {
         formState: { errors }
     } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
-        login();
+    const onSubmit = async (data) => {
+        await login(data);
         navigate("/");
     };
 
@@ -68,9 +67,17 @@ const LoginPage = () => {
                         )}
                     </div>
 
-                    <button type="submit" className="btn w-100 text-light"
-                        style={{ backgroundColor: "var(--secondary-color)", border: "none" }}>
-                        Ingresar
+                    <button
+                        type="submit"
+                        className="btn w-100 text-light"
+                        style={{ backgroundColor: "var(--secondary-color)", border: "none" }}
+                        disabled={authLoading}
+                    >
+                        {authLoading ? (
+                            <span className="spinner-border spinner-border-sm"></span>
+                        ) : (
+                            "Ingresar"
+                        )}
                     </button>
 
                 </form>
