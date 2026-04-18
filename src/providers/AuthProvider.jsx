@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
 import { VALID_ROLES } from "../constants/roles";
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       setAuthUser(foundUser);
       localStorage.setItem("authUser", JSON.stringify(foundUser));
     } catch (e) {
-      setAuthError(`Error inesperado en el login: ${e.message}`);
+      setAuthError(`Error inesperado al iniciar sesión: ${e.message}`);
     } finally {
       setAuthLoading(false);
     }
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("authUser");
 
     } catch (e) {
-      setAuthError(`Error inesperado en el login: ${e.message}`);
+      setAuthError(`Error inesperado al cerrar sesión: ${e.message}`);
     } finally {
       setAuthLoading(false);
     }
