@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const RoleRoute = ({ children, allowedRoles }) => {
@@ -8,7 +8,7 @@ const RoleRoute = ({ children, allowedRoles }) => {
         return <Navigate to="/unauthorized" replace />;
     }
 
-    return children;
+    return children ? children : <Outlet />;
 };
 
 export default RoleRoute;

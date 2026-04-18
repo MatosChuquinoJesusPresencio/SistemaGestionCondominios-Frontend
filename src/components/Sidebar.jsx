@@ -3,6 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 const Sidebar = ({ menuItems }) => {
     const location = useLocation();
 
+    const closeSidebar = () => {
+        const closeBtn = document.getElementById("btn-close-sidebar");
+        if (closeBtn) closeBtn.click();
+    };
+
     return (
         <div
             className="offcanvas offcanvas-start text-main bg-main"
@@ -12,6 +17,7 @@ const Sidebar = ({ menuItems }) => {
             <div className="offcanvas-header border-bottom border-light border-opacity-25">
                 <button
                     type="button"
+                    id="btn-close-sidebar"
                     className="btn-close btn-close-white"
                     data-bs-dismiss="offcanvas"
                 />
@@ -30,7 +36,7 @@ const Sidebar = ({ menuItems }) => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                data-bs-dismiss="offcanvas"
+                                onClick={closeSidebar}
                                 className={`
                                     nav-link d-flex align-items-center gap-2
                                     px-3 py-2 rounded

@@ -6,7 +6,9 @@ import NotFoundPage from "../pages/NotFoundPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
+
 import PDashboardPage from "../pages/propietario/PDashboardPage";
+
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 
 import PrivateRoute from "./PrivateRoute";
@@ -38,32 +40,17 @@ const AppRouter = () => {
 
                 <Route path="/" element={<RedirectPage />} />
 
-                <Route
-                    path="/super-admin"
-                    element={
-                        <RoleRoute allowedRoles={["SUPER_ADMIN"]}>
-                            <SADashboardPage />
-                        </RoleRoute>
-                    }
-                />
+                <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
+                    <Route index element={<SADashboardPage />} />
+                </Route>
 
-                <Route
-                    path="/admin-condominio"
-                    element={
-                        <RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]}>
-                            <ACDashboardPage />
-                        </RoleRoute>
-                    }
-                />
+                <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
+                    <Route index element={<ACDashboardPage />} />
+                </Route>
 
-                <Route
-                    path="/propietario"
-                    element={
-                        <RoleRoute allowedRoles={["PROPIETARIO"]}>
-                            <PDashboardPage />
-                        </RoleRoute>
-                    }
-                />
+                <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>
+                    <Route index element={<PDashboardPage />} />
+                </Route>
 
             </Route>
 

@@ -7,16 +7,11 @@ import { users } from "../data/users";
 
 export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(false);
-  const [authUser, setAuthUser] = useState(null);
+  const [authUser, setAuthUser] = useState(() => {
+    const storedUser = localStorage.getItem("authUser");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [authError, setAuthError] = useState(null);
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("authUser"));
-
-    if (storedUser && !authUser) {
-      setAuthUser(storedUser);
-    }
-  }, [authUser]);
 
   const isAuthenticated = !!authUser;
 
