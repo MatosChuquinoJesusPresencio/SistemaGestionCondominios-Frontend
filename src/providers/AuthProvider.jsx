@@ -1,23 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-import { VALID_ROLES } from "../constants/roles"
-import { useEffect } from "react";
+import { VALID_ROLES } from "../constants/roles";
+
+import { users } from "../data/users";
 
 export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(false);
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
+  const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = JSON.parse(localStorage.getItem("authUser"));
 
-    if (storedUser && !user) {
-      setUser(storedUser);
+    if (storedUser && !authUser) {
+      setAuthUser(storedUser);
     }
-  }, [user]);
+  }, [authUser]);
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!authUser;
 
   const login = async (userData) => {
     try {
@@ -25,21 +26,26 @@ export const AuthProvider = ({ children }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const userWithRole = {
-        ...userData,
-        role: "SUPER_ADMIN"
-      };
+      const foundUser = users.find(
+        (u) =>
+          u.email === userData.email &&
+          u.password === userData.password
+      );
 
-      if (!VALID_ROLES.includes(userWithRole.role)) {
-        setError("Rol no permitido en el sistema");
+      if (!foundUser) {
+        setAuthError("Credenciales incorrectas");
         return;
       }
 
-      setUser(userWithRole);
-      localStorage.setItem("user", JSON.stringify(userWithRole));
+      if (!VALID_ROLES.includes(foundUser.role)) {
+        setAuthError("Rol no permitido en el sistema");
+        return;
+      }
 
+      setAuthUser(foundUser);
+      localStorage.setItem("authUser", JSON.stringify(foundUser));
     } catch (e) {
-      setError("Error inesperado en el login: ", e.message)
+      setAuthError(`Error inesperado en el login: ${e.message}`);
     } finally {
       setAuthLoading(false);
     }
@@ -51,13 +57,17 @@ export const AuthProvider = ({ children }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setUser(null);
-      localStorage.removeItem("user");
+      setAuthUser(null);
+      localStorage.removeItem("authUser");
 
+    } catch (e) {
+      setAuthError(`Error inesperado en el login: ${e.message}`);
     } finally {
       setAuthLoading(false);
     }
   };
+
+  const clearAuthError = () => setAuthError(null);
 
   return (
     <AuthContext.Provider
@@ -65,9 +75,10 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         login,
         logout,
-        user,
+        clearAuthError,
+        authUser,
         authLoading,
-        error
+        authError
       }}
     >
       {children}

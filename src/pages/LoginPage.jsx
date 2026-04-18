@@ -5,15 +5,17 @@ import { useAuth } from "../hooks/useAuth"
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { login, authLoading, error } = useAuth();
+    const { login, authLoading, clearAuthError, authError } = useAuth();
 
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
     } = useForm();
 
     const onSubmit = async (data) => {
+        clearAuthError();
+
         await login(data);
         navigate("/");
     };
@@ -80,9 +82,14 @@ const LoginPage = () => {
                         )}
                     </button>
 
-                    {error && (
-                        <div className="alert alert-danger mt-3 text-center">
-                            {error}
+                    {authError && (
+                        <div className="alert alert-danger d-flex align-items-center justify-content-between mt-3 py-2">
+                            <span>{authError}</span>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={clearAuthError}
+                            />
                         </div>
                     )}
 

@@ -48,9 +48,9 @@ const AppRouter = () => {
                 />
 
                 <Route
-                    path="/admin"
+                    path="/admin-condominio"
                     element={
-                        <RoleRoute allowedRoles={["ADMIN_CONDOMINIO", "SUPER_ADMIN"]}>
+                        <RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]}>
                             <ACDashboardPage />
                         </RoleRoute>
                     }

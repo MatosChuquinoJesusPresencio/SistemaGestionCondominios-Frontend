@@ -3,14 +3,14 @@ import { useAuth } from "../hooks/useAuth";
 import { ROLES, VALID_ROLES } from "../constants/roles";
 
 const RedirectPage = () => {
-    const { user } = useAuth();
+    const { authUser } = useAuth();
 
-    switch (user.role) {
+    switch (authUser.role) {
         case ROLES.SUPER_ADMIN:
             return <Navigate to="/super-admin" />;
 
         case ROLES.ADMIN_CONDOMINIO:
-            return <Navigate to="/admin" />;
+            return <Navigate to="/admin-condominio" />;
 
         case ROLES.PROPIETARIO:
             return <Navigate to="/propietario" />;

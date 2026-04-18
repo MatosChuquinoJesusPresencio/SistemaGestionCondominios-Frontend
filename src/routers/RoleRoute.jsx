@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const RoleRoute = ({ children, allowedRoles }) => {
-    const { user } = useAuth();
+    const { authUser } = useAuth();
 
-    if (!allowedRoles.includes(user.role)) {
+    if (!allowedRoles.includes(authUser.role)) {
         return <Navigate to="/unauthorized" replace />;
     }
 
