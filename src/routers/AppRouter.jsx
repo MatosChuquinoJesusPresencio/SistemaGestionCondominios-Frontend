@@ -11,6 +11,9 @@ import PDashboardPage from "../pages/propietario/PDashboardPage";
 
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 
+//pa usarlo 
+import GestionUsuariosPage from "../pages/gestion-usuarios/GestionUsuariosPage";
+
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
@@ -42,6 +45,9 @@ const AppRouter = () => {
 
                 <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
                     <Route index element={<SADashboardPage />} />
+
+                    //ruta nueva de gestion users
+                    <Route path="usuarios" element={<GestionUsuariosPage />} />
                 </Route>
 
                 <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
