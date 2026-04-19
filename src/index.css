@@ -21,10 +21,15 @@ body {
   flex-direction: column;
 }
 
+.bg-login-image {
+  background-image: linear-gradient(rgba(33, 37, 41, 0.6), rgba(33, 37, 41, 0.6)), url('./assets/login-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .bg-main {
-  background: linear-gradient(180deg,
-      var(--primary-color),
-      var(--secondary-color));
+  background-color: var(--primary-color);
 }
 
 .text-main {
@@ -36,6 +41,10 @@ body {
   height: 42px;
   padding: 0 10px;
   border-radius: 10px;
+}
+
+.header-logo {
+  height: 45px;
 }
 
 .hover-bg:hover {
@@ -66,6 +75,49 @@ body {
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+.login-card-container {
+  width: 100%;
+  max-width: 420px;
+  z-index: 10;
+}
+
+.login-logo {
+  width: 100px;
+  height: 100px;
+  background-color: white;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+.login-title {
+  letter-spacing: 0.5px;
+}
+
+.input-no-shadow {
+  box-shadow: none !important;
+}
+
+.btn-login {
+  background-color: var(--primary-color);
+  border: none;
+  font-size: 1.05rem;
+  color: white;
+}
+
+.btn-login:disabled {
+  background-color: var(--primary-color) !important;
+  opacity: 0.7;
+  color: white !important;
+}
+
+.btn-login:hover {
+  background-color: var(--secondary-color);
+}
+
+.alert-close-small {
+  font-size: 0.8rem;
 }
 
 .active-nav-link {

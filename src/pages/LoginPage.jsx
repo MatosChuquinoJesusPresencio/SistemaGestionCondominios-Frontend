@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../hooks/useAuth";
 
-import loginBg from "../assets/login-bg.png";
-import logo from "../assets/logo2.svg";
+import logoSinFondo from "../assets/logo-sin-fondo.svg";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -24,35 +23,21 @@ const LoginPage = () => {
     };
 
     return (
-        <div 
-            className="container-fluid vh-100 d-flex justify-content-center align-items-center position-relative"
-            style={{
-                backgroundImage: `url(${loginBg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-            }}
+        <div
+            className="container-fluid vh-100 d-flex justify-content-center align-items-center position-relative bg-login-image"
         >
-            {/* Overlay oscuro */}
-            <div 
-                className="position-absolute top-0 start-0 w-100 h-100 bg-dark"
-                style={{ opacity: 0.6 }}
-            ></div>
 
-            {/* Tarjeta de Login */}
-            <div 
-                className="card border-0 shadow-lg position-relative p-4 rounded-4 login-glass-card" 
-                style={{ width: "100%", maxWidth: "420px", zIndex: 10 }}
+            <div
+                className="card border-0 shadow-lg position-relative p-4 rounded-4 login-glass-card login-card-container"
             >
-                
+
                 <div className="text-center mb-4">
-                    <img 
-                        src={logo} 
-                        alt="Logo Condominio" 
-                        className="mb-3 rounded-circle shadow-sm"
-                        style={{ width: "100px", height: "100px", backgroundColor: "white", objectFit: "cover", border: "3px solid white" }} 
+                    <img
+                        src={logoSinFondo}
+                        alt="Logo Condominio"
+                        className="mb-3 rounded-circle shadow-sm login-logo"
                     />
-                    <h3 className="fw-bold text-dark mb-0" style={{ letterSpacing: '0.5px' }}>
+                    <h3 className="fw-bold text-dark mb-0 login-title">
                         Bienvenido
                     </h3>
                     <p className="text-muted small">Ingresa tus credenciales para continuar</p>
@@ -63,14 +48,13 @@ const LoginPage = () => {
                     <div className="mb-4">
                         <label className="form-label text-secondary fw-semibold small mb-1">Correo Electrónico</label>
                         <div className="input-group">
-                            <span className="input-group-text bg-white border-end-0 text-muted">
+                            <span className={`input-group-text bg-white border-end-0 ${errors.email ? "border-danger text-danger" : "text-muted"}`}>
                                 <i className="bi bi-envelope"></i>
                             </span>
                             <input
                                 type="email"
                                 placeholder="ejemplo@correo.com"
-                                className={`form-control border-start-0 ps-0 ${errors.email ? "is-invalid" : ""}`}
-                                style={{ boxShadow: 'none' }}
+                                className={`form-control border-start-0 ps-0 input-no-shadow ${errors.email ? "is-invalid" : ""}`}
                                 {...register("email", {
                                     required: "El correo es obligatorio",
                                     pattern: {
@@ -90,14 +74,13 @@ const LoginPage = () => {
                     <div className="mb-4">
                         <label className="form-label text-secondary fw-semibold small mb-1">Contraseña</label>
                         <div className="input-group">
-                            <span className="input-group-text bg-white border-end-0 text-muted">
+                            <span className={`input-group-text bg-white border-end-0 ${errors.password ? "border-danger text-danger" : "text-muted"}`}>
                                 <i className="bi bi-lock"></i>
                             </span>
                             <input
                                 type="password"
                                 placeholder="********"
-                                className={`form-control border-start-0 ps-0 ${errors.password ? "is-invalid" : ""}`}
-                                style={{ boxShadow: 'none' }}
+                                className={`form-control border-start-0 ps-0 input-no-shadow ${errors.password ? "is-invalid" : ""}`}
                                 {...register("password", {
                                     required: "La contraseña es obligatoria",
                                     minLength: {
@@ -116,11 +99,8 @@ const LoginPage = () => {
 
                     <button
                         type="submit"
-                        className="btn w-100 text-light py-2 rounded-3 fw-semibold shadow-sm transition"
-                        style={{ backgroundColor: "var(--primary-color)", border: "none", fontSize: "1.05rem" }}
+                        className="btn w-100 text-light py-2 rounded-3 fw-semibold shadow-sm transition btn-login"
                         disabled={authLoading}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--secondary-color)"}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--primary-color)"}
                     >
                         {authLoading ? (
                             <span className="spinner-border spinner-border-sm me-2"></span>
@@ -129,13 +109,12 @@ const LoginPage = () => {
                     </button>
 
                     {authError && (
-                        <div className="alert alert-danger d-flex align-items-center justify-content-between mt-3 py-2 border-0 rounded-3 shadow-sm">
+                        <div className="alert alert-danger d-flex align-items-center justify-content-center position-relative mt-3 py-2 border-0 rounded-3 shadow-sm text-center">
                             <span className="small"><i className="bi bi-exclamation-triangle-fill me-2"></i>{authError}</span>
                             <button
                                 type="button"
-                                className="btn-close"
+                                className="btn-close alert-close-small position-absolute end-0 me-3"
                                 onClick={clearAuthError}
-                                style={{ fontSize: '0.8rem' }}
                             />
                         </div>
                     )}

@@ -30,7 +30,7 @@ const Header = () => {
 
                     <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
 
-                        <img src={logo} alt="Logo" style={{ height: "45px" }} />
+                        <img src={logo} alt="Logo" className="header-logo" />
 
                         <span className="text-main fw-bold fs-4 d-none d-md-inline">
                             Gestión de Condominios

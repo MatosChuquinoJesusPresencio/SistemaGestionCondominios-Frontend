@@ -44,7 +44,6 @@ const Sidebar = ({ menuItems }) => {
                                     transition
                                    ${isActive ? "active-nav-link" : "hover-bg text-main"}
                                 `}
-                                style={{ transition: "all 0.2s ease" }}
                             >
                                 {item.icon && <span className="sidebar-icon">{item.icon}</span>}
                                 <span>{item.label}</span>
