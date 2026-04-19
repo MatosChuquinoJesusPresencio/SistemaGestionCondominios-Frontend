@@ -45,17 +45,13 @@ html, body {
 
 .nav-link {
     transition: all 0.2s ease;
+    color: var(--text-color) !important;
+    position: relative;
+    overflow: hidden; /* to keep the before element inside nicely, though not strictly needed */
 }
 
 .nav-link:hover {
     transform: translateX(2px);
-}
-
-.nav-link {
-    color: var(--text-color) !important;
-}
-
-.nav-link:hover {
     color: var(--text-color) !important;
 }
 
@@ -65,4 +61,23 @@ html, body {
     justify-content: center;
     font-size: 18px;
     min-width: 24px;
+}
+
+.active-nav-link {
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: 600;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 4px;
+    background-color: var(--text-color);
+    border-radius: 0 4px 4px 0;
 }

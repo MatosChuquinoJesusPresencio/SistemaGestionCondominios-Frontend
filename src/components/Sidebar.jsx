@@ -28,8 +28,9 @@ const Sidebar = ({ menuItems }) => {
                 <nav className="nav flex-column gap-1">
 
                     {menuItems.map((item) => {
-                        const isActive =
-                            location.pathname === item.path ||
+                        const isActive = item.exact
+                            ? location.pathname === item.path
+                            : location.pathname === item.path ||
                             location.pathname.startsWith(item.path + "/");
 
                         return (
@@ -40,9 +41,8 @@ const Sidebar = ({ menuItems }) => {
                                 className={`
                                     nav-link d-flex align-items-center gap-2
                                     px-3 py-2 rounded
-                                    text-main
                                     transition
-                                   ${isActive ? "bg-primary bg-opacity-25 fw-semibold border-start border-3 border-primary" : "hover-bg"}
+                                   ${isActive ? "active-nav-link" : "hover-bg text-main"}
                                 `}
                                 style={{ transition: "all 0.2s ease" }}
                             >
