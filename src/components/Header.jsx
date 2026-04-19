@@ -6,7 +6,7 @@ import logo from "../assets/logo.svg";
 
 const Header = () => {
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { logout, authLoading } = useAuth();
 
     const handleLogout = async () => {
         await logout();
@@ -41,12 +41,22 @@ const Header = () => {
 
                 <button
                     onClick={handleLogout}
+                    disabled={authLoading}
                     className="btn btn-outline-light d-flex align-items-center justify-content-center header-icon-btn"
                 >
-                    <FaSignOutAlt />
-                    <span className="d-none d-md-inline ms-2">
-                        Cerrar sesión
-                    </span>
+                    {authLoading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span className="d-none d-md-inline ms-2">Cerrando sesión...</span>
+                        </>
+                    ) : (
+                        <>
+                            <FaSignOutAlt />
+                            <span className="d-none d-md-inline ms-2">
+                                Cerrar sesión
+                            </span>
+                        </>
+                    )}
                 </button>
 
             </header>
