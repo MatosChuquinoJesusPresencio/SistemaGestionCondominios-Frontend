@@ -1,4 +1,4 @@
-const baseUsers = [
+export const users = [
   {
     id: 1,
     name: "Juan Pérez",
@@ -21,13 +21,3 @@ const baseUsers = [
     role: "PROPIETARIO"
   }
 ];
-
-const generatedPropietarios = Array.from({ length: 30 }).map((_, index) => ({
-  id: index + 4,
-  name: `Propietario ${index + 4}`,
-  email: `propietario${index + 4}@gmail.com`,
-  password: "123123",
-  role: "PROPIETARIO"
-}));
-
-export const users = [...baseUsers, ...generatedPropietarios];
