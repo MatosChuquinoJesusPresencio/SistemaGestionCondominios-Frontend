@@ -6,21 +6,33 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
     numero: '',
     metraje: '',
     derecho_estacionamiento: false,
-    id_usuario: ''
+    id_usuario: '',
+    id_condominio: ''
   });
 
   const propietarios = mockUsers.filter(u => u.role === 'PROPIETARIO');
 
   useEffect(() => {
-    if (apartamento && show) {
-      setFormData({
-        numero: apartamento.numero || '',
-        metraje: apartamento.metraje || '',
-        derecho_estacionamiento: apartamento.derecho_estacionamiento || false,
-        id_usuario: apartamento.id_usuario || ''
-      });
+    if (show) {
+      if (mode === 'create') {
+        setFormData({
+          numero: '',
+          metraje: '',
+          derecho_estacionamiento: false,
+          id_usuario: '',
+          id_condominio: apartamento?.id_condominio || 1
+        });
+      } else if (apartamento) {
+        setFormData({
+          numero: apartamento.numero || '',
+          metraje: apartamento.metraje || '',
+          derecho_estacionamiento: apartamento.derecho_estacionamiento || false,
+          id_usuario: apartamento.id_usuario || '',
+          id_condominio: apartamento.id_condominio || 1
+        });
+      }
     }
-  }, [apartamento, show]);
+  }, [apartamento, show, mode]);
 
   if (!show) return null;
 
@@ -34,10 +46,12 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(apartamento.id, formData);
+    onSave(apartamento ? apartamento.id : null, formData);
   };
 
-  const title = mode === 'edit' ? 'Editar Apartamento' : 'Asociar Propietario';
+  const title = mode === 'edit' ? 'Editar Apartamento' : 
+                mode === 'assign' ? 'Asociar Propietario' : 
+                'Crear Apartamento';
 
   return (
     <>
@@ -47,7 +61,9 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header bg-light border-0">
               <h5 className="modal-title fw-bold text-primary">
-                {mode === 'edit' ? <i className="bi bi-pencil me-2"></i> : <i className="bi bi-person-plus me-2"></i>}
+                {mode === 'edit' && <i className="bi bi-pencil me-2"></i>}
+                {mode === 'assign' && <i className="bi bi-person-plus me-2"></i>}
+                {mode === 'create' && <i className="bi bi-plus-circle me-2"></i>}
                 {title}
               </h5>
               <button type="button" className="btn-close" onClick={onClose}></button>
@@ -55,7 +71,7 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
             
             <div className="modal-body">
               <form id="apartamentoForm" onSubmit={handleSubmit}>
-                {mode === 'edit' && (
+                {(mode === 'edit' || mode === 'create') && (
                   <>
                     <div className="mb-3">
                       <label className="form-label text-muted fw-semibold">Número de Apartamento</label>
@@ -66,6 +82,7 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
                         value={formData.numero} 
                         onChange={handleChange}
                         required 
+                        placeholder="Ej. 101, A-1"
                       />
                     </div>
                     <div className="mb-3">
@@ -78,6 +95,7 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
                         value={formData.metraje} 
                         onChange={handleChange}
                         required 
+                        placeholder="Ej. 85.50"
                       />
                     </div>
                     <div className="mb-3 form-check form-switch">
@@ -96,9 +114,9 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
                   </>
                 )}
 
-                {mode === 'assign' && (
+                {(mode === 'assign' || mode === 'create') && (
                   <div className="mb-3">
-                    <label className="form-label text-muted fw-semibold">Seleccionar Propietario</label>
+                    <label className="form-label text-muted fw-semibold">Propietario Asociado</label>
                     <select 
                       className="form-select" 
                       name="id_usuario" 
@@ -120,7 +138,7 @@ const ApartamentoModal = ({ show, onClose, mode, apartamento, onSave }) => {
             <div className="modal-footer border-0">
               <button type="button" className="btn btn-light" onClick={onClose}>Cancelar</button>
               <button type="submit" form="apartamentoForm" className="btn btn-primary px-4">
-                Guardar Cambios
+                Guardar
               </button>
             </div>
           </div>

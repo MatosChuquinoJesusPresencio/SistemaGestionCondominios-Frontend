@@ -95,39 +95,76 @@ const ApartamentosPage = () => {
     setModalState({ show: false, mode: null, apartamento: null });
   };
 
+  // CRUD Actions
   const handleSave = (id, formData) => {
     setApartamentos(prev => {
-      const newApartamentos = prev.map(apt => {
-        if (apt.id === id) {
-          if (modalState.mode === 'edit') {
-            return {
-              ...apt,
-              numero: formData.numero,
-              metraje: parseFloat(formData.metraje),
-              derecho_estacionamiento: formData.derecho_estacionamiento
-            };
-          } else if (modalState.mode === 'assign') {
-            return {
-              ...apt,
-              id_usuario: formData.id_usuario ? parseInt(formData.id_usuario) : null
-            };
+      let newApartamentos;
+
+      if (modalState.mode === 'create') {
+        const newId = prev.length > 0 ? Math.max(...prev.map(a => a.id)) + 1 : 1;
+        const newApt = {
+          id: newId,
+          numero: formData.numero,
+          metraje: parseFloat(formData.metraje) || 0,
+          derecho_estacionamiento: formData.derecho_estacionamiento,
+          id_usuario: formData.id_usuario ? parseInt(formData.id_usuario) : null,
+          id_condominio: isCondominioAdmin ? userCondominioId : (parseInt(formData.id_condominio) || 1)
+        };
+        newApartamentos = [newApt, ...prev];
+      } else {
+        newApartamentos = prev.map(apt => {
+          if (apt.id === id) {
+            if (modalState.mode === 'edit') {
+              return {
+                ...apt,
+                numero: formData.numero,
+                metraje: parseFloat(formData.metraje),
+                derecho_estacionamiento: formData.derecho_estacionamiento
+              };
+            } else if (modalState.mode === 'assign') {
+              return {
+                ...apt,
+                id_usuario: formData.id_usuario ? parseInt(formData.id_usuario) : null
+              };
+            }
           }
-        }
-        return apt;
-      });
+          return apt;
+        });
+      }
+
       localStorage.setItem('apartamentosMock', JSON.stringify(newApartamentos));
       return newApartamentos;
     });
     closeModal();
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm("¿Estás seguro de eliminar este apartamento?")) {
+      setApartamentos(prev => {
+        const newApartamentos = prev.filter(apt => apt.id !== id);
+        localStorage.setItem('apartamentosMock', JSON.stringify(newApartamentos));
+        return newApartamentos;
+      });
+    }
+  };
+
   return (
     <div className="container-fluid py-4">
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <h2 className="text-primary fw-bold mb-0">
-          <i className="bi bi-building me-2"></i>
-          Gestión de Apartamentos
-        </h2>
+        <div className="d-flex align-items-center gap-3">
+          <h2 className="text-primary fw-bold mb-0">
+            <i className="bi bi-building me-2"></i>
+            Gestión de Apartamentos
+          </h2>
+          {(isAdmin || isCondominioAdmin) && (
+            <button 
+              className="btn btn-success rounded-pill px-3 shadow-sm"
+              onClick={() => openModal('create', null)}
+            >
+              <i className="bi bi-plus-lg me-1"></i> Nuevo Apartamento
+            </button>
+          )}
+        </div>
         
         <ApartamentosFiltros 
           itemsPerPage={itemsPerPage}
@@ -191,6 +228,7 @@ const ApartamentosPage = () => {
               currentItems={currentItems}
               isAdmin={isAdmin}
               openModal={openModal}
+              handleDelete={handleDelete}
             />
             
             <ApartamentosPaginacion 
