@@ -22,7 +22,8 @@ body {
 }
 
 .bg-main {
-  background: linear-gradient(180deg,
+  background:
+    linear-gradient(180deg,
       var(--primary-color),
       var(--secondary-color));
 }
