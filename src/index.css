@@ -138,3 +138,18 @@ body {
   background-color: var(--text-color);
   border-radius: 0 4px 4px 0;
 }
+
+.global-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  z-index: 9999;
+}
+
+.global-loader-spinner {
+  width: 3rem;
+  height: 3rem;
+}

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
 import { VALID_ROLES } from "../constants/roles";
-
 import { users } from "../data/users";
 
 export const AuthProvider = ({ children }) => {
@@ -29,18 +28,20 @@ export const AuthProvider = ({ children }) => {
 
       if (!foundUser) {
         setAuthError("Credenciales incorrectas");
-        return;
+        return { success: false };
       }
 
       if (!VALID_ROLES.includes(foundUser.role)) {
         setAuthError("Rol no permitido en el sistema");
-        return;
+        return { success: false };
       }
 
       setAuthUser(foundUser);
       localStorage.setItem("authUser", JSON.stringify(foundUser));
+      return { success: true };
     } catch (e) {
       setAuthError(`Error inesperado al iniciar sesión: ${e.message}`);
+      return { success: false, error: e.message };
     } finally {
       setAuthLoading(false);
     }
@@ -54,9 +55,10 @@ export const AuthProvider = ({ children }) => {
 
       setAuthUser(null);
       localStorage.removeItem("authUser");
-
+      return { success: true };
     } catch (e) {
       setAuthError(`Error inesperado al cerrar sesión: ${e.message}`);
+      return { success: false, error: e.message };
     } finally {
       setAuthLoading(false);
     }

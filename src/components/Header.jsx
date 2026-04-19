@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 
 import { useAuth } from "../hooks/useAuth";
+
 import logo from "../assets/logo.svg";
 
 const Header = () => {
@@ -9,8 +10,11 @@ const Header = () => {
     const { logout, authLoading } = useAuth();
 
     const handleLogout = async () => {
-        await logout();
-        navigate("/login");
+
+        const result = await logout();
+        if (result.success) {
+            navigate("/login");
+        }
     };
 
     return (

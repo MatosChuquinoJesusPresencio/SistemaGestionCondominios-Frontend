@@ -18,8 +18,11 @@ const LoginPage = () => {
     const onSubmit = async (data) => {
         clearAuthError();
 
-        await login(data);
-        navigate("/");
+        const result = await login(data);
+
+        if (result.success) {
+            navigate("/");
+        }
     };
 
     return (
