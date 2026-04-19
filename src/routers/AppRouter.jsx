@@ -10,6 +10,7 @@ import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import PDashboardPage from "../pages/propietario/PDashboardPage";
 
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
+import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
 
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
@@ -42,6 +43,7 @@ const AppRouter = () => {
 
                 <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
                     <Route index element={<SADashboardPage />} />
+                    <Route path="condominios" element={<SACondominiosPage />} />
                 </Route>
 
                 <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>

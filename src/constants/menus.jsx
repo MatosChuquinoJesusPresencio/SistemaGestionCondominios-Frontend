@@ -7,6 +7,7 @@ export const MENU_BY_ROLE = {
 
     SUPER_ADMIN: [
         { path: "/super-admin", label: "Inicio", icon: <FaUserShield /> },
+        { path: "/super-admin/condominios", label: "Condominios", icon: <FaBuilding /> },
     ],
 
     PROPIETARIO: [
