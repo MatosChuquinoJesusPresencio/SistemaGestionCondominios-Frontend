@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-import { VALID_ROLES } from "../constants/roles";
-import { users } from "../data/users";
+import { VALID_ROLES, ROLES_MAP } from "../constants/roles";
+import { usuarios } from "../data/usuario";
 
 export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(false);
@@ -20,10 +20,10 @@ export const AuthProvider = ({ children }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const foundUser = users.find(
+      const foundUser = usuarios.find(
         (u) =>
           u.email === userData.email &&
-          u.password === userData.password
+          u.contraseña === userData.password
       );
 
       if (!foundUser) {
@@ -31,13 +31,17 @@ export const AuthProvider = ({ children }) => {
         return { success: false };
       }
 
-      if (!VALID_ROLES.includes(foundUser.role)) {
+      const roleName = ROLES_MAP[foundUser.id_rol];
+
+      if (!VALID_ROLES.includes(roleName)) {
         setAuthError("Rol no permitido en el sistema");
         return { success: false };
       }
 
-      setAuthUser(foundUser);
-      localStorage.setItem("authUser", JSON.stringify(foundUser));
+      const userWithRole = { ...foundUser, role: roleName };
+
+      setAuthUser(userWithRole);
+      localStorage.setItem("authUser", JSON.stringify(userWithRole));
       return { success: true };
     } catch (e) {
       setAuthError(`Error inesperado al iniciar sesión: ${e.message}`);
