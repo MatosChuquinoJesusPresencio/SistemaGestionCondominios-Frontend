@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { DataContext } from "../contexts/DataContext";
 
 import { VALID_ROLES, ROLES_MAP } from "../constants/roles";
-import { usuarios } from "../data/usuario";
-
 export const AuthProvider = ({ children }) => {
+  const { getTable } = useContext(DataContext);
   const [authLoading, setAuthLoading] = useState(false);
   const [authUser, setAuthUser] = useState(() => {
     const storedUser = localStorage.getItem("authUser");
@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
       setAuthLoading(true);
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const usuarios = getTable('usuarios');
 
       const foundUser = usuarios.find(
         (u) =>
