@@ -3,9 +3,9 @@ import { DataContext } from '../contexts/DataContext';
 
 // Import all initial data
 import { apartamentos } from '../data/apartamento';
-import { carrito_carga } from '../data/carrito_carga';
+import { carritos_carga } from '../data/carrito_carga';
 import { condominios } from '../data/condominio';
-import { configuracion } from '../data/configuracion';
+import { configuraciones } from '../data/configuracion';
 import { estacionamientos } from '../data/estacionamiento';
 import { inquilinos_temporales } from '../data/inquilino_temporal';
 import { logs_acceso_vehicular } from '../data/log_access_vehicular';
@@ -31,9 +31,9 @@ export const DataProvider = ({ children }) => {
         
         return {
             apartamentos,
-            carrito_carga,
+            carritos_carga,
             condominios,
-            configuracion,
+            configuraciones,
             estacionamientos,
             inquilinos_temporales,
             logs_acceso_vehicular,
