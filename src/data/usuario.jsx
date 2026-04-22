@@ -2,7 +2,7 @@ export const usuarios = [
     {
         id: 1,
         id_condominio: null,
-        id_rol: 1, // SUPER_ADMIN
+        id_rol: 1,
         nombre: "Juan Pérez",
         email: "juan@gmail.com",
         contraseña: "123123",
@@ -11,7 +11,7 @@ export const usuarios = [
     {
         id: 2,
         id_condominio: 1,
-        id_rol: 2, // ADMIN_CONDOMINIO
+        id_rol: 2,
         nombre: "María López",
         email: "maria@gmail.com",
         contraseña: "123123",
@@ -20,7 +20,7 @@ export const usuarios = [
     {
         id: 3,
         id_condominio: 2,
-        id_rol: 2, // ADMIN_CONDOMINIO
+        id_rol: 2,
         nombre: "Ricardo Sosa",
         email: "ricardo@gmail.com",
         contraseña: "123123",
@@ -29,7 +29,7 @@ export const usuarios = [
     {
         id: 4,
         id_condominio: 1,
-        id_rol: 3, // PROPIETARIO
+        id_rol: 3,
         nombre: "Carlos Díaz",
         email: "carlos@gmail.com",
         contraseña: "123123",
@@ -38,7 +38,7 @@ export const usuarios = [
     {
         id: 5,
         id_condominio: 1,
-        id_rol: 3, // PROPIETARIO
+        id_rol: 3,
         nombre: "Elena Torres",
         email: "elena@gmail.com",
         contraseña: "123123",
@@ -47,7 +47,7 @@ export const usuarios = [
     {
         id: 6,
         id_condominio: 2,
-        id_rol: 3, // PROPIETARIO
+        id_rol: 3,
         nombre: "Marcos Ruiz",
         email: "marcos@gmail.com",
         contraseña: "123123",
@@ -56,7 +56,7 @@ export const usuarios = [
     {
         id: 7,
         id_condominio: 3,
-        id_rol: 2, // ADMIN_CONDOMINIO
+        id_rol: 2,
         nombre: "Ana Martínez",
         email: "ana@gmail.com",
         contraseña: "123123",
@@ -65,7 +65,7 @@ export const usuarios = [
     {
         id: 8,
         id_condominio: 1,
-        id_rol: 4, // AGENTE_SEGURIDAD
+        id_rol: 4,
         nombre: "Roberto Gómez",
         email: "roberto@gmail.com",
         contraseña: "123123",
@@ -74,7 +74,7 @@ export const usuarios = [
     {
         id: 9,
         id_condominio: 2,
-        id_rol: 4, // AGENTE_SEGURIDAD
+        id_rol: 4,
         nombre: "Felipe Soto",
         email: "felipe@gmail.com",
         contraseña: "123123",

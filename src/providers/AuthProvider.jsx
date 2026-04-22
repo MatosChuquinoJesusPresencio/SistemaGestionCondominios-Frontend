@@ -1,10 +1,10 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { DataContext } from "../contexts/DataContext";
+import { useData } from "../hooks/useData";
 
 import { VALID_ROLES, ROLES_MAP } from "../constants/roles";
 export const AuthProvider = ({ children }) => {
-  const { getTable } = useContext(DataContext);
+  const { getTable } = useData();
   const [authLoading, setAuthLoading] = useState(false);
   const [authUser, setAuthUser] = useState(() => {
     const storedUser = localStorage.getItem("authUser");
