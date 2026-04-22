@@ -99,6 +99,21 @@ body {
   box-shadow: none !important;
 }
 
+.input-group-text, 
+.form-control {
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control {
+  border-color: #86b7fe !important;
+}
+
+.input-group:focus-within .form-control.is-invalid,
+.input-group:focus-within .input-group-text.border-danger {
+  border-color: #dc3545 !important;
+}
+
 .btn-login {
   background-color: var(--primary-color);
   border: none;
