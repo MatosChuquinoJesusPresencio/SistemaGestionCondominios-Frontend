@@ -1,5 +1,5 @@
 import { useData } from "../../hooks/useData";
-import { FaBuilding, FaUsers, FaUserShield, FaPlusCircle, FaArrowRight, FaMapMarkerAlt, FaGlobeAmericas, FaEnvelope, FaCircle } from "react-icons/fa";
+import { FaBuilding, FaUsers, FaUserShield, FaPlusCircle, FaMapMarkerAlt, FaGlobeAmericas, FaEnvelope, FaCircle } from "react-icons/fa";
 
 const SADashboardPage = () => {
     const { getTable } = useData();
@@ -12,7 +12,6 @@ const SADashboardPage = () => {
     const totalUsuarios = usuarios.length;
     const totalRoles = roles.length;
 
-    // Recent data
     const recentCondominios = [...condominios].sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion)).slice(0, 5);
     const recentUsuarios = [...usuarios].slice(-5).reverse();
 
@@ -23,7 +22,6 @@ const SADashboardPage = () => {
 
     return (
         <div className="container-fluid py-4 bg-light min-vh-100">
-            {/* Header section */}
             <div className="row mb-5 align-items-center">
                 <div className="col-12 col-md-8">
                     <div className="d-flex align-items-center gap-3 mb-2">
@@ -47,7 +45,6 @@ const SADashboardPage = () => {
                 </div>
             </div>
 
-            {/* Stats Cards */}
             <div className="row g-4 mb-5">
                 <div className="col-12 col-md-4">
                     <div className="card border-0 shadow-sm rounded-4 p-3 h-100 border-start border-primary border-5">
@@ -90,9 +87,7 @@ const SADashboardPage = () => {
                 </div>
             </div>
 
-            {/* Tables Section */}
             <div className="row g-4">
-                {/* Condominios Table */}
                 <div className="col-12 col-xl-6">
                     <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white">
                         <div className="card-header border-0 py-4 px-4 bg-white d-flex justify-content-between align-items-center">
@@ -136,7 +131,6 @@ const SADashboardPage = () => {
                     </div>
                 </div>
 
-                {/* Users Table */}
                 <div className="col-12 col-xl-6">
                     <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white">
                         <div className="card-header border-0 py-4 px-4 bg-white d-flex justify-content-between align-items-center">
