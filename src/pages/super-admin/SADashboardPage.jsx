@@ -1,13 +1,15 @@
 import { useData } from "../../hooks/useData";
+import { useAuth } from "../../hooks/useAuth";
 import { FaBuilding, FaUsers, FaUserShield, FaPlusCircle, FaMapMarkerAlt, FaGlobeAmericas, FaEnvelope, FaCircle } from "react-icons/fa";
 
 const SADashboardPage = () => {
     const { getTable } = useData();
+    const { authUser } = useAuth();
 
     const condominios = getTable('condominios');
     const usuarios = getTable('usuarios');
     const roles = getTable('roles');
-    
+
     const totalCondominios = condominios.length;
     const totalUsuarios = usuarios.length;
     const totalRoles = roles.length;
@@ -34,7 +36,7 @@ const SADashboardPage = () => {
                     </div>
                     <p className="text-muted mb-0 ms-1 d-flex align-items-center gap-2">
                         <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 px-2 py-1 rounded-1 small">Super Admin</span>
-                        <span className="text-secondary opacity-75">Gestión centralizada de la plataforma y condominios.</span>
+                        <span className="text-secondary opacity-75">Bienvenido, {authUser?.nombre || "Administrador"}. Control total de la plataforma.</span>
                     </p>
                 </div>
                 <div className="col-12 col-md-4 text-md-end mt-3 mt-md-0">

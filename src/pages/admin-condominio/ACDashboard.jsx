@@ -1,8 +1,10 @@
 import { useData } from "../../hooks/useData";
+import { useAuth } from "../../hooks/useAuth";
 import { FaHome, FaCar, FaShoppingCart, FaUserFriends, FaHistory, FaPlus, FaBuilding, FaSearch, FaArrowRight, FaUser, FaEnvelope, FaCircle } from "react-icons/fa";
 
 const ACDashboard = () => {
     const { getTable } = useData();
+    const { authUser } = useAuth();
 
     const apartamentos = getTable('apartamentos');
     const usuarios = getTable('usuarios');
@@ -11,15 +13,16 @@ const ACDashboard = () => {
     const logs_prestamo_carrito = getTable('logs_prestamo_carrito');
     const condominios = getTable('condominios');
     
-    const currentCondoId = 1;
+    const currentCondoId = authUser?.id_condominio;
     const condo = condominios.find(c => c.id === currentCondoId);
 
     const condoUsers = usuarios.filter(u => u.id_condominio === currentCondoId);
-    const totalAptos = 48;
+    
+    const totalAptos = apartamentos.length; 
     const totalPropietarios = condoUsers.filter(u => u.id_rol === 3).length;
     
+
     const activeVehicles = logs_acceso_vehicular.filter(log => !log.fecha_salida).length;
-    
     const activeCarLoans = logs_prestamo_carrito.filter(log => !log.fecha_salida).length;
 
     const recentAccess = [...logs_acceso_vehicular].slice(0, 4);
@@ -45,7 +48,7 @@ const ACDashboard = () => {
                     </div>
                     <p className="text-muted mb-0 ms-1 d-flex align-items-center gap-2">
                         <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 px-2 py-1 rounded-1 small">Admin Condominio</span>
-                        <span className="text-secondary opacity-75">Control operativo y gestión de residentes.</span>
+                        <span className="text-secondary opacity-75">Bienvenido, {authUser?.nombre || "Admin"}. Gestión operativa y residentes.</span>
                     </p>
                 </div>
                 <div className="col-12 col-md-4 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
@@ -228,30 +231,36 @@ const ACDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {recentCondoUsers.map((u) => (
-                                            <tr key={u.id} className="border-bottom border-light">
-                                                <td className="px-4 py-3">
-                                                    <div className="fw-bold text-dark">{u.nombre}</div>
-                                                    <div className="x-small text-muted">ID: {u.id.toString().padStart(3, '0')}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small text-dark d-flex align-items-center gap-2">
-                                                        <FaEnvelope className="text-muted x-small" /> {u.email}
-                                                    </div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <span className="small fw-semibold text-secondary">
-                                                        {getRoleName(u.id_rol)}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-end">
-                                                    <div className="d-flex align-items-center justify-content-end gap-2">
-                                                        <FaCircle className={u.activo ? 'text-success' : 'text-danger'} style={{ fontSize: "8px" }} />
-                                                        <span className="small text-muted fw-medium">{u.activo ? "Activo" : "Inactivo"}</span>
-                                                    </div>
-                                                </td>
+                                        {recentCondoUsers.length > 0 ? (
+                                            recentCondoUsers.map((u) => (
+                                                <tr key={u.id} className="border-bottom border-light">
+                                                    <td className="px-4 py-3">
+                                                        <div className="fw-bold text-dark">{u.nombre}</div>
+                                                        <div className="x-small text-muted">ID: {u.id.toString().padStart(3, '0')}</div>
+                                                    </td>
+                                                    <td className="py-3">
+                                                        <div className="small text-dark d-flex align-items-center gap-2">
+                                                            <FaEnvelope className="text-muted x-small" /> {u.email}
+                                                        </div>
+                                                    </td>
+                                                    <td className="py-3">
+                                                        <span className="small fw-semibold text-secondary">
+                                                            {getRoleName(u.id_rol)}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-end">
+                                                        <div className="d-flex align-items-center justify-content-end gap-2">
+                                                            <FaCircle className={u.activo ? 'text-success' : 'text-danger'} style={{ fontSize: "8px" }} />
+                                                            <span className="small text-muted fw-medium">{u.activo ? "Activo" : "Inactivo"}</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="4" className="text-center py-5 text-muted small italic">No hay usuarios registrados en este condominio.</td>
                                             </tr>
-                                        ))}
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

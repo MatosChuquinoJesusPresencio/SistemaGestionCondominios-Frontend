@@ -31,5 +31,16 @@ export const logs_prestamo_carrito = [
         penalizacion: 0.0,
         fecha_entrada: "2026-04-20T15:00:00Z",
         fecha_salida: null
+    },
+    {
+        id: 4,
+        id_carrito: 3,
+        id_apartamento: 1,
+        id_usuario: 4,
+        id_inquilino_temporal: null,
+        solicitante: "Propietario",
+        penalizacion: 0.0,
+        fecha_entrada: "2026-04-21T18:00:00Z",
+        fecha_salida: null
     }
 ];
