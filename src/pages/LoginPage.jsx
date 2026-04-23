@@ -100,6 +100,27 @@ const LoginPage = () => {
                         </div>
                     </div>
 
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input custom-checkbox"
+                                type="checkbox"
+                                id="rememberMe"
+                                {...register("rememberMe")}
+                            />
+                            <label className="form-check-label small text-secondary fw-semibold" htmlFor="rememberMe">
+                                Recuérdame
+                            </label>
+                        </div>
+                        <button 
+                            type="button" 
+                            className="btn btn-link p-0 text-decoration-none small fw-semibold forgot-password-link"
+                            onClick={() => {/* Redirigir a recuperación */}}
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    </div>
+
                     <button
                         type="submit"
                         className="btn w-100 text-light py-2 rounded-3 fw-semibold shadow-sm transition btn-login"
