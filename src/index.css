@@ -138,3 +138,23 @@ body {
   background-color: var(--text-color);
   border-radius: 0 4px 4px 0;
 }
+
+.custom-checkbox:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.custom-checkbox:focus {
+  box-shadow: 0 0 0 0.25rem rgba(17, 45, 77, 0.25);
+  border-color: var(--primary-color);
+}
+
+.forgot-password-link {
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.forgot-password-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline !important;
+}
