@@ -4,6 +4,7 @@ import { FaBuilding, FaCarSide, FaCartPlus, FaUser, FaClock, FaUsers } from "rea
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import DashboardTable from "../../components/dashboard/DashboardTable";
+import AnimatedPage from "../../components/animations/AnimatedPage";
 
 const PDashboardPage = () => {
     const { getTable } = useData();
@@ -33,87 +34,89 @@ const PDashboardPage = () => {
     const myTenants = inquilinos_temporales.filter(it => myApartmentIds.includes(it.id_apartamento));
 
     return (
-        <div className="container-fluid py-4 bg-light min-vh-100">
-            <DashboardHeader 
-                icon={FaUser}
-                title={`¡Hola, ${currentUser.nombre.split(' ')[0]}!`}
-                badgeText="Propietario"
-                welcomeText="Bienvenido a tu portal personal de residente."
-            />
+        <AnimatedPage>
+            <div className="container-fluid py-4 bg-light min-vh-100">
+                <DashboardHeader 
+                    icon={FaUser}
+                    title={`¡Hola, ${currentUser.nombre.split(' ')[0]}!`}
+                    badgeText="Propietario"
+                    welcomeText="Bienvenido a tu portal personal de residente."
+                />
 
-            <div className="row g-4 mb-5">
-                <StatCard icon={FaBuilding} label="Propiedades" value={myApartments.length} colorClass="primary" />
-                <StatCard icon={FaCarSide} label="Mis Vehículos" value={myVehicles.length} colorClass="success" />
-                <StatCard icon={FaUsers} label="Mis Inquilinos" value={myTenants.length} colorClass="warning" />
-                <StatCard icon={FaCartPlus} label="Servicios Activos" value={activeLoan ? 1 : 0} colorClass="info" />
-            </div>
+                <div className="row g-4 mb-5">
+                    <StatCard icon={FaBuilding} label="Propiedades" value={myApartments.length} colorClass="primary" />
+                    <StatCard icon={FaCarSide} label="Mis Vehículos" value={myVehicles.length} colorClass="success" />
+                    <StatCard icon={FaUsers} label="Mis Inquilinos" value={myTenants.length} colorClass="warning" />
+                    <StatCard icon={FaCartPlus} label="Servicios Activos" value={activeLoan ? 1 : 0} colorClass="info" />
+                </div>
 
-            <div className="row g-4">
-                <DashboardTable 
-                    title="Mis Accesos Recientes"
-                    buttonText="Ver todos"
-                    headers={["Vehículo", "Ingreso", "Estado"]}
-                >
-                    {myRecentAccess.length > 0 ? (
-                        myRecentAccess.map((log) => (
-                            <tr key={log.id} className="border-bottom border-light">
-                                <td className="px-4 py-3">
-                                    <div className="fw-bold text-dark">{log.placa}</div>
-                                    <div className="x-small text-muted">Apto: {myApartments.find(a => true)?.numero || "N/A"}</div>
-                                </td>
-                                <td className="py-3">
-                                    <div className="small fw-medium text-dark">{new Date(log.fecha_entrada).toLocaleDateString()}</div>
-                                    <div className="x-small text-muted"><FaClock className="me-1" />{new Date(log.fecha_entrada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                                </td>
-                                <td className="px-4 py-3 text-end">
-                                    {log.fecha_salida ? (
-                                        <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">Salió</span>
-                                    ) : (
-                                        <span className="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill border border-success border-opacity-10">En recinto</span>
-                                    )}
-                                </td>
+                <div className="row g-4">
+                    <DashboardTable 
+                        title="Mis Accesos Recientes"
+                        buttonText="Ver todos"
+                        headers={["Vehículo", "Ingreso", "Estado"]}
+                    >
+                        {myRecentAccess.length > 0 ? (
+                            myRecentAccess.map((log) => (
+                                <tr key={log.id} className="border-bottom border-light">
+                                    <td className="px-4 py-3">
+                                        <div className="fw-bold text-dark">{log.placa}</div>
+                                        <div className="x-small text-muted">Apto: {myApartments.find(a => true)?.numero || "N/A"}</div>
+                                    </td>
+                                    <td className="py-3">
+                                        <div className="small fw-medium text-dark">{new Date(log.fecha_entrada).toLocaleDateString()}</div>
+                                        <div className="x-small text-muted"><FaClock className="me-1" />{new Date(log.fecha_entrada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                    </td>
+                                    <td className="px-4 py-3 text-end">
+                                        {log.fecha_salida ? (
+                                            <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">Salió</span>
+                                        ) : (
+                                            <span className="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill border border-success border-opacity-10">En recinto</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center py-5 text-muted italic small">No hay registros de acceso recientes.</td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3" className="text-center py-5 text-muted italic small">No hay registros de acceso recientes.</td>
-                        </tr>
-                    )}
-                </DashboardTable>
+                        )}
+                    </DashboardTable>
 
-                <DashboardTable 
-                    title="Préstamos de Carritos"
-                    buttonText="Gestionar"
-                    headers={["Carrito / Usuario", "Solicitud", "Estado"]}
-                >
-                    {recentLoans.length > 0 ? (
-                        recentLoans.map((loan) => (
-                            <tr key={loan.id} className="border-bottom border-light">
-                                <td className="px-4 py-3">
-                                    <div className="fw-bold text-dark">Carrito #{loan.id_carrito}</div>
-                                    <div className="x-small text-muted"><FaUser className="me-1 x-small" /> {currentUser.nombre}</div>
-                                </td>
-                                <td className="py-3">
-                                    <div className="small fw-medium text-dark">{new Date(loan.fecha_entrada).toLocaleDateString()}</div>
-                                    <div className="x-small text-muted"><FaClock className="me-1" />{new Date(loan.fecha_entrada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                                </td>
-                                <td className="px-4 py-3 text-end">
-                                    {loan.fecha_salida ? (
-                                        <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">Finalizado</span>
-                                    ) : (
-                                        <span className="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill border border-danger border-opacity-10">En uso</span>
-                                    )}
-                                </td>
+                    <DashboardTable 
+                        title="Préstamos de Carritos"
+                        buttonText="Gestionar"
+                        headers={["Carrito / Usuario", "Solicitud", "Estado"]}
+                    >
+                        {recentLoans.length > 0 ? (
+                            recentLoans.map((loan) => (
+                                <tr key={loan.id} className="border-bottom border-light">
+                                    <td className="px-4 py-3">
+                                        <div className="fw-bold text-dark">Carrito #{loan.id_carrito}</div>
+                                        <div className="x-small text-muted"><FaUser className="me-1 x-small" /> {currentUser.nombre}</div>
+                                    </td>
+                                    <td className="py-3">
+                                        <div className="small fw-medium text-dark">{new Date(loan.fecha_entrada).toLocaleDateString()}</div>
+                                        <div className="x-small text-muted"><FaClock className="me-1" />{new Date(loan.fecha_entrada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                    </td>
+                                    <td className="px-4 py-3 text-end">
+                                        {loan.fecha_salida ? (
+                                            <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">Finalizado</span>
+                                        ) : (
+                                            <span className="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill border border-danger border-opacity-10">En uso</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center py-5 text-muted italic small">No hay préstamos recientes.</td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3" className="text-center py-5 text-muted italic small">No hay préstamos recientes.</td>
-                        </tr>
-                    )}
-                </DashboardTable>
+                        )}
+                    </DashboardTable>
+                </div>
             </div>
-        </div>
+        </AnimatedPage>
     );
 };
 
