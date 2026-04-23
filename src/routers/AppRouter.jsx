@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+
 
 import RedirectPage from "../pages/RedirectPage";
 import LoginPage from "../pages/LoginPage";
@@ -18,8 +20,12 @@ import RoleRoute from "./RoleRoute";
 import PrivateLayout from "../layouts/PrivateLayout";
 
 const AppRouter = () => {
+    const location = useLocation();
+
     return (
-        <Routes>
+        <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+
 
             <Route
                 path="/login"
@@ -57,7 +63,8 @@ const AppRouter = () => {
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="*" element={<NotFoundPage />} />
 
-        </Routes>
+            </Routes>
+        </AnimatePresence>
     );
 };
 

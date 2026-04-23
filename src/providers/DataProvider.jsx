@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DataContext } from '../contexts/DataContext';
 
-// Import all initial data
 import { apartamentos } from '../data/apartamento';
 import { carritos_carga } from '../data/carrito_carga';
 import { condominios } from '../data/condominio';
@@ -28,7 +27,7 @@ export const DataProvider = ({ children }) => {
                 console.error("Error parsing local database, resetting...", e);
             }
         }
-        
+
         return {
             apartamentos,
             carritos_carga,

@@ -99,6 +99,21 @@ body {
   box-shadow: none !important;
 }
 
+.input-group-text, 
+.form-control {
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control {
+  border-color: #86b7fe !important;
+}
+
+.input-group:focus-within .form-control.is-invalid,
+.input-group:focus-within .input-group-text.border-danger {
+  border-color: #dc3545 !important;
+}
+
 .btn-login {
   background-color: var(--primary-color);
   border: none;
@@ -114,6 +129,34 @@ body {
 
 .btn-login:hover {
   background-color: var(--secondary-color);
+}
+
+.btn-primary-theme {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid var(--primary-color) !important;
+}
+
+.btn-primary-theme:hover {
+  background-color: white !important;
+  color: var(--primary-color) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(17, 45, 77, 0.2);
+}
+
+.btn-secondary-theme {
+  background-color: var(--secondary-color) !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid var(--secondary-color) !important;
+}
+
+.btn-secondary-theme:hover {
+  background-color: white !important;
+  color: var(--secondary-color) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 82, 129, 0.2);
 }
 
 .alert-close-small {
@@ -171,9 +214,4 @@ body {
   height: 100vh;
   background-color: transparent;
   z-index: 9999;
-}
-
-.global-loader-spinner {
-  width: 3rem;
-  height: 3rem;
 }
