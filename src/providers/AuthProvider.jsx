@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const { getTable } = useData();
   const [authLoading, setAuthLoading] = useState(false);
   const [authUser, setAuthUser] = useState(() => {
-    const storedUser = localStorage.getItem("authUser");
+    const storedUser = localStorage.getItem("authUser") || sessionStorage.getItem("authUser");
     return storedUser ? JSON.parse(storedUser) : null;
   });
   const [authError, setAuthError] = useState(null);
@@ -40,10 +40,21 @@ export const AuthProvider = ({ children }) => {
         return { success: false };
       }
 
-      const userWithRole = { ...foundUser, role: roleName };
+      const sessionUser = {
+        id: foundUser.id,
+        nombre: foundUser.nombre,
+        id_condominio: foundUser.id_condominio,
+        role: roleName
+      };
 
-      setAuthUser(userWithRole);
-      localStorage.setItem("authUser", JSON.stringify(userWithRole));
+      setAuthUser(sessionUser);
+      
+      if (userData.rememberMe) {
+        localStorage.setItem("authUser", JSON.stringify(sessionUser));
+      } else {
+        sessionStorage.setItem("authUser", JSON.stringify(sessionUser));
+      }
+
       return { success: true };
     } catch (e) {
       setAuthError(`Error inesperado al iniciar sesión: ${e.message}`);
@@ -61,6 +72,7 @@ export const AuthProvider = ({ children }) => {
 
       setAuthUser(null);
       localStorage.removeItem("authUser");
+      sessionStorage.removeItem("authUser");
       return { success: true };
     } catch (e) {
       setAuthError(`Error inesperado al cerrar sesión: ${e.message}`);

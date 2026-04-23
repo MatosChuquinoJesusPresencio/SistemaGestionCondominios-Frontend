@@ -189,7 +189,12 @@ body {
 
 .custom-checkbox:focus {
   box-shadow: none !important;
-  border-color: var(--primary-color);
+  border-color: #ced4da !important; /* Color gris suave original */
+  outline: none !important;
+}
+
+.custom-checkbox:checked:focus {
+  border-color: var(--primary-color) !important;
 }
 
 .custom-checkbox:active {
