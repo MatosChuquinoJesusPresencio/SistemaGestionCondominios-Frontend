@@ -6,9 +6,8 @@ import NotFoundPage from "../pages/NotFoundPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
-
 import PDashboardPage from "../pages/propietario/PDashboardPage";
-
+import InquilinosPage from "../pages/propietario/InquilinosPage"; // 1. Importa tu nueva página
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 
 import PrivateRoute from "./PrivateRoute";
@@ -37,7 +36,6 @@ const AppRouter = () => {
                     </PrivateRoute>
                 }
             >
-
                 <Route path="/" element={<RedirectPage />} />
 
                 <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
@@ -48,8 +46,10 @@ const AppRouter = () => {
                     <Route index element={<ACDashboardPage />} />
                 </Route>
 
+                {/* 2. Rutas del PROPIETARIO */}
                 <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>
                     <Route index element={<PDashboardPage />} />
+                    <Route path="inquilinos" element={<InquilinosPage />} /> {/* Nueva Ruta Anidada */}
                 </Route>
 
             </Route>
