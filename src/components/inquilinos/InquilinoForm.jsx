@@ -12,7 +12,7 @@ const InquilinoForm = ({ onClose, inquilinoAEditar }) => {
     // Sincronizar datos si estamos editando
    useEffect(() => {
         if (inquilinoAEditar) {
-            // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setFormData(inquilinoAEditar);
         } else {
             // Limpiar formulario si es una creación nueva
