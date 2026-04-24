@@ -104,7 +104,7 @@ const LoginPage = () => {
                             {/* Botón Ingresar */}
                             <button
                                 type="submit"
-                                className="btn btn-lg w-100 py-2 mb-4 text-light shadow-sm"
+                                className="btn btn-lg w-100 py-2 mb-3 text-light shadow-sm"
                                 style={{ 
                                     backgroundColor: "var(--secondary-color)", 
                                     border: "none", 
@@ -120,9 +120,23 @@ const LoginPage = () => {
                                 )}
                             </button>
 
+                            {/* Enlace Registro */}
+                            <div className="text-center mt-3">
+                                <p className="text-muted small">
+                                    ¿Aún no tienes una cuenta?{" "}
+                                    <Link 
+                                        to="/register" 
+                                        className="text-decoration-none fw-bold"
+                                        style={{ color: "var(--secondary-color)" }}
+                                    >
+                                        Regístrate aquí
+                                    </Link>
+                                </p>
+                            </div>
+
                             {/* Error Alert */}
                             {authError && (
-                                <div className="alert alert-danger py-2 text-center" style={{ borderRadius: "8px" }}>
+                                <div className="alert alert-danger py-2 text-center mt-3" style={{ borderRadius: "8px" }}>
                                     {authError}
                                 </div>
                             )}
