@@ -1,24 +1,21 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { FaPlus, FaTrashAlt, FaPencilAlt, FaUsers } from "react-icons/fa";
+import { FaPlus, FaTrashAlt, FaPencilAlt, FaUsers, FaTimes } from "react-icons/fa";
+import InquilinoForm from "./InquilinoForm";
 
 const InquilinosPage = () => {
     const { authUser } = useAuth();
-
+    
     // eslint-disable-next-line no-unused-vars
     const [inquilinos, setInquilinos] = useState([]); 
+    const [showModal, setShowModal] = useState(false);
 
-    // eslint-disable-next-line no-unused-vars
-    const propietarioId = authUser.id;
-
-    // Función para manejar la eliminación
     const handleDelete = (id) => {
         console.log("Eliminando inquilino:", id);
     };
 
     return (
         <div className="container-fluid px-4 py-5">
-            
             {/* Cabecera de la sección */}
             <div className="d-flex justify-content-between align-items-center mb-5 p-4 bg-white rounded-3 shadow-sm border">
                 <div className="d-flex align-items-center">
@@ -32,11 +29,31 @@ const InquilinosPage = () => {
                 </div>
                 
                 {(authUser.role === 'PROPIETARIO' || authUser.role === 'SUPER_ADMIN') && (
-                    <button className="btn btn-primary btn-lg d-flex align-items-center shadow-sm">
+                    <button 
+                        className="btn btn-primary btn-lg d-flex align-items-center shadow-sm"
+                        onClick={() => setShowModal(true)}
+                    >
                         <FaPlus className="me-2" /> Registrar Inquilino
                     </button>
                 )}
             </div>
+
+            {/* MODAL DE REGISTRO (GRANDE) */}
+            {showModal && (
+                <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+                    <div className="modal-dialog modal-dialog-centered modal-lg">
+                        <div className="modal-content border-0 shadow-lg rounded-4 p-3">
+                            <div className="modal-header border-0 pb-0">
+                                <h5 className="modal-title fw-bold fs-4">Registrar nuevo inquilino</h5>
+                                <button className="btn btn-sm btn-light" onClick={() => setShowModal(false)}><FaTimes /></button>
+                            </div>
+                            <div className="modal-body">
+                                <InquilinoForm onClose={() => setShowModal(false)} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Contenedor principal de la tabla */}
             <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
@@ -64,22 +81,10 @@ const InquilinosPage = () => {
                                         <td className="py-3 text-secondary">{inquilino.fechaInicio}</td>
                                         <td className="py-3 text-secondary">{inquilino.fechaFin}</td>
                                         <td className="text-center py-3 pe-4">
-                                            {(authUser.role === 'PROPIETARIO' || authUser.role === 'SUPER_ADMIN') && (
-                                                <div className="d-flex justify-content-center gap-2">
-                                                    <button className="btn btn-sm btn-outline-warning d-flex align-items-center">
-                                                        <FaPencilAlt />
-                                                    </button>
-                                                    <button 
-                                                        className="btn btn-sm btn-outline-danger d-flex align-items-center"
-                                                        onClick={() => handleDelete(inquilino.id)}
-                                                    >
-                                                        <FaTrashAlt />
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {authUser.role === 'ADMIN_CONDOMINIO' && (
-                                                <span className="badge bg-light text-muted fw-normal">Solo lectura</span>
-                                            )}
+                                            <div className="d-flex justify-content-center gap-2">
+                                                <button className="btn btn-sm btn-outline-warning"><FaPencilAlt /></button>
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(inquilino.id)}><FaTrashAlt /></button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
