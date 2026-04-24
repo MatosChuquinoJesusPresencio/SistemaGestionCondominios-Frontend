@@ -7,7 +7,7 @@ import UnauthorizedPage from "../pages/UnauthorizedPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import PDashboardPage from "../pages/propietario/PDashboardPage";
-import InquilinosPage from "../pages/propietario/InquilinosPage"; // 1. Importa tu nueva página
+import InquilinosPage from "../components/inquilinos/InquilinosPage"; // 1. Importa tu nueva página
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 
 import PrivateRoute from "./PrivateRoute";
