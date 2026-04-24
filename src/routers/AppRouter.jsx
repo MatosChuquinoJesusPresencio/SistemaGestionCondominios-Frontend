@@ -7,14 +7,14 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
 
-import LoginPage from "../pages/LoginPage";
-import ForgotPasswordPage from "../pages/ForgotPasswordPage";
-import ResetPasswordPage from "../pages/ResetPasswordPage";
+import LoginPage from "../pages/auth/LoginPage";
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 
-import UnauthorizedPage from "../pages/UnauthorizedPage";
-import NotFoundPage from "../pages/NotFoundPage";
+import UnauthorizedPage from "../pages/error/UnauthorizedPage";
+import NotFoundPage from "../pages/error/NotFoundPage";
 
-import RedirectPage from "../pages/RedirectPage";
+import RedirectPage from "../pages/utility/RedirectPage";
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import PDashboardPage from "../pages/propietario/PDashboardPage";

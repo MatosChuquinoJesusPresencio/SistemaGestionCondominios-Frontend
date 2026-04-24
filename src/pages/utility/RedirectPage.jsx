@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { ROLES, VALID_ROLES } from "../constants/roles";
+import { useAuth } from "../../hooks/useAuth";
+import { ROLES } from "../../constants/roles";
 
 const RedirectPage = () => {
     const { authUser } = useAuth();

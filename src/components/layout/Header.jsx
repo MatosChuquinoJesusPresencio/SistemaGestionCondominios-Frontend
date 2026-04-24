@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
-import logo from "../assets/logo.svg";
+import logo from "../../assets/logo.svg";
 
 const Header = () => {
     const navigate = useNavigate();
