@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { useAuth } from "../hooks/useAuth";
 import AnimatedPage from "../components/animations/AnimatedPage";
@@ -114,13 +114,12 @@ const LoginPage = () => {
                                     Recuérdame
                                 </label>
                             </div>
-                            <button 
-                                type="button" 
+                            <Link 
+                                to="/forgot-password" 
                                 className="btn btn-link p-0 text-decoration-none small fw-semibold forgot-password-link"
-                                onClick={() => {/* Redirigir a recuperación */}}
                             >
                                 ¿Olvidaste tu contraseña?
-                            </button>
+                            </Link>
                         </div>
 
                         <button
