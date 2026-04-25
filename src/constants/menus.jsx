@@ -1,4 +1,4 @@
-import { FaHome, FaUserShield, FaBuilding, FaSitemap } from "react-icons/fa";
+import { FaHome, FaUserShield, FaBuilding, FaSitemap, FaUsers } from "react-icons/fa";
 
 export const MENU_BY_ROLE = {
     ADMIN_CONDOMINIO: [
@@ -10,6 +10,7 @@ export const MENU_BY_ROLE = {
     SUPER_ADMIN: [
         { path: "/super-admin", label: "Inicio", icon: <FaUserShield />, exact: true },
         { path: "/super-admin/condominios", label: "Condominios", icon: <FaBuilding /> },
+        { path: "/super-admin/usuarios", label: "Usuarios", icon: <FaUsers /> },
     ],
 
     PROPIETARIO: [

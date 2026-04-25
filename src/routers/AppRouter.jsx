@@ -18,6 +18,7 @@ import RedirectPage from "../pages/utility/RedirectPage";
 
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
+import SAUsersPage from "../pages/super-admin/SAUsersPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
@@ -42,6 +43,7 @@ const AppRouter = () => {
                     <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
                         <Route index element={<SADashboardPage />} />
                         <Route path="condominios" element={<SACondominiosPage />} />
+                        <Route path="usuarios" element={<SAUsersPage />} />
                     </Route>
 
                     <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
