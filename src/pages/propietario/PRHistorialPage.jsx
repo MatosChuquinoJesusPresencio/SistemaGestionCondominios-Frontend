@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, Row, Form, InputGroup, Pagination, Tabs, Tab } from "react-bootstrap";
 import { FaHistory, FaShoppingCart, FaCar, FaSearch, FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
@@ -11,6 +12,7 @@ import ActivityTable from "../../components/tables/ActivityTable";
 const PRHistorialPage = () => {
     const { authUser } = useAuth();
     const { getTable } = useData();
+    const [searchParams] = useSearchParams();
     
     // Datos
     const logsCarritos = getTable('logs_prestamo_carrito');
@@ -24,8 +26,18 @@ const PRHistorialPage = () => {
     // Unidad del propietario
     const miApto = useMemo(() => apartamentos.find(a => a.id_usuario === authUser?.id), [apartamentos, authUser]);
 
+    const initialTab = searchParams.get("tab") || "carritos";
+
     // Estados
-    const [activeTab, setActiveTab] = useState("carritos");
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        if (tab && (tab === "carritos" || tab === "estacionamiento")) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
+
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;

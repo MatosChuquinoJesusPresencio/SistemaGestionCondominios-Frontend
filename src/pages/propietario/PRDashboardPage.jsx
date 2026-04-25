@@ -1,5 +1,5 @@
-import { useData } from "../../hooks/useData";
-import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
 import {
   FaBuilding,
   FaCarSide,
@@ -8,6 +8,10 @@ import {
   FaClock,
   FaUsers,
 } from "react-icons/fa";
+
+import { useData } from "../../hooks/useData";
+import { useAuth } from "../../hooks/useAuth";
+
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import DashboardTable from "../../components/dashboard/DashboardTable";
@@ -15,6 +19,8 @@ import AnimatedPage from "../../components/animations/AnimatedPage";
 import EmptyState from "../../components/ui/EmptyState";
 
 const PRDashboardPage = () => {
+  const navigate = useNavigate();
+
   const { getTable } = useData();
   const { authUser } = useAuth();
 
@@ -89,16 +95,23 @@ const PRDashboardPage = () => {
         <div className="row g-4">
           <DashboardTable
             title="Mis Accesos Recientes"
-            buttonText="Ver todos"
-            headers={["Vehículo", "Ingreso", "Estado"]}
+            buttonText="Ver historial"
+            onButtonClick={() =>
+              navigate("/propietario/historial?tab=estacionamiento")
+            }
+            headers={["Vehículo", "Método", "Ingreso", "Estado"]}
           >
             {myRecentAccess.length > 0 ? (
               myRecentAccess.map((log) => (
                 <tr key={log.id} className="border-bottom border-light">
                   <td className="px-4 py-3">
-                    <div className="fw-bold text-dark">{log.placa}</div>
-                    <div className="x-small text-muted">
-                      Apto: {myApartments.find((a) => true)?.numero || "N/A"}
+                    <div className="fw-bold text-primary-theme">
+                      {log.placa}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="small fw-medium text-dark">
+                      {log.metodo}
                     </div>
                   </td>
                   <td className="py-3">
@@ -127,17 +140,20 @@ const PRDashboardPage = () => {
                 </tr>
               ))
             ) : (
-              <EmptyState 
-                colSpan={3} 
-                message="No hay registros de acceso recientes." 
-                icon={FaCarSide} 
+              <EmptyState
+                colSpan={3}
+                message="No hay registros de acceso recientes."
+                icon={FaCarSide}
               />
             )}
           </DashboardTable>
 
           <DashboardTable
             title="Préstamos de Carritos"
-            buttonText="Gestionar"
+            buttonText="Ver historial"
+            onButtonClick={() =>
+              navigate("/propietario/historial?tab=carritos")
+            }
             headers={["Carrito / Usuario", "Solicitud", "Estado"]}
           >
             {recentLoans.length > 0 ? (
@@ -177,10 +193,52 @@ const PRDashboardPage = () => {
                 </tr>
               ))
             ) : (
-              <EmptyState 
-                colSpan={3} 
-                message="No hay préstamos recientes." 
-                icon={FaCartPlus} 
+              <EmptyState
+                colSpan={3}
+                message="No hay préstamos recientes."
+                icon={FaCartPlus}
+              />
+            )}
+          </DashboardTable>
+
+          <DashboardTable
+            title="Mis Inquilinos"
+            buttonText="Gestionar"
+            onButtonClick={() => navigate("/propietario/mi-apartamento")}
+            headers={[
+              "Nombre del Inquilino",
+              "Documento (DNI)",
+              "Departamento",
+            ]}
+          >
+            {myTenants.length > 0 ? (
+              myTenants.map((tenant) => (
+                <tr key={tenant.id} className="border-bottom border-light">
+                  <td className="px-4 py-3">
+                    <div className="fw-bold text-dark">{tenant.nombre}</div>
+                    <div className="x-small text-muted">
+                      ID: {tenant.id.toString().padStart(3, "0")}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      {tenant.dni}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      Apto:{" "}
+                      {apartamentos.find((a) => a.id === tenant.id_apartamento)
+                        ?.numero || "N/A"}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <EmptyState
+                colSpan={3}
+                message="No tienes inquilinos registrados en tus unidades."
+                icon={FaUsers}
               />
             )}
           </DashboardTable>

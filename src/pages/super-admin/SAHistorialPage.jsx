@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, Col, Row, Table, Badge, Form, InputGroup, Pagination, Tabs, Tab } from "react-bootstrap";
 import { FaListAlt, FaShoppingCart, FaCar, FaSearch, FaFilter, FaCalendarAlt, FaClock, FaCheckCircle, FaUser, FaHome, FaBuilding } from "react-icons/fa";
 import { useData } from "../../hooks/useData";
@@ -9,6 +10,7 @@ import ActivityTable from "../../components/tables/ActivityTable";
 
 const SAHistorialPage = () => {
     const { getTable } = useData();
+    const [searchParams] = useSearchParams();
     
     // Tablas
     const logsCarritos = getTable('logs_prestamo_carrito');
@@ -22,9 +24,19 @@ const SAHistorialPage = () => {
     const pisos = getTable('pisos');
     const torres = getTable('torres');
 
+    const initialTab = searchParams.get("tab") || "carritos";
+
     // Estados
     const [selectedCondo, setSelectedCondo] = useState("all");
-    const [activeTab, setActiveTab] = useState("carritos");
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        if (tab && (tab === "carritos" || tab === "estacionamiento")) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
+
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);

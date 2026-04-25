@@ -9,6 +9,7 @@ import {
   FaUser,
   FaEnvelope,
   FaCircle,
+  FaClock,
 } from "react-icons/fa";
 
 import { useData } from "../../hooks/useData";
@@ -121,26 +122,34 @@ const ACDashboardPage = () => {
           <DashboardTable
             title="Accesos Vehiculares"
             buttonText="Historial"
-            onButtonClick={() => navigate("/admin-condominio/historial")}
-            headers={["Placa", "Método", "Ocupante", "Estado"]}
+            onButtonClick={() => navigate("/admin-condominio/historial?tab=estacionamiento")}
+            headers={["Vehículo", "Ocupante", "Ingreso", "Estado"]}
           >
             {recentAccess.length > 0 ? (
               recentAccess.map((log) => (
                 <tr key={log.id} className="border-bottom border-light">
                   <td className="px-4 py-3">
-                    <div className="fw-bold text-primary">{log.placa}</div>
+                    <div className="fw-bold text-primary-theme">{log.placa}</div>
+                    <div className="x-small text-muted">{log.metodo}</div>
                   </td>
                   <td className="py-3">
-                    <div className="small fw-medium text-dark">
-                      {log.metodo}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
                     <div className="small fw-medium text-dark">
                       {log.tipo_ocupante}
                     </div>
                     <div className="x-small text-muted">
                       {log.datos_inquilino || "Propietario"}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      {new Date(log.fecha_entrada).toLocaleDateString()}
+                    </div>
+                    <div className="x-small text-muted">
+                      <FaClock className="me-1" />
+                      {new Date(log.fecha_entrada).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-end">
@@ -158,7 +167,7 @@ const ACDashboardPage = () => {
               ))
             ) : (
               <EmptyState
-                colSpan={3}
+                colSpan={4}
                 message="No hay actividad vehicular reciente."
                 icon={FaCar}
               />
@@ -168,8 +177,8 @@ const ACDashboardPage = () => {
           <DashboardTable
             title="Préstamos de Carritos"
             buttonText="Historial"
-            onButtonClick={() => navigate("/admin-condominio/historial")}
-            headers={["Carrito / Usuario", "Departamento", "Estado"]}
+            onButtonClick={() => navigate("/admin-condominio/historial?tab=carritos")}
+            headers={["Carrito / Usuario", "Departamento", "Solicitud", "Estado"]}
           >
             {recentLoans.length > 0 ? (
               recentLoans.map((loan) => (
@@ -186,8 +195,13 @@ const ACDashboardPage = () => {
                     <div className="small fw-medium text-dark">
                       Apto: {loan.id_apartamento}
                     </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      {new Date(loan.fecha_entrada).toLocaleDateString()}
+                    </div>
                     <div className="x-small text-muted">
-                      Solicitud:{" "}
+                      <FaClock className="me-1" />
                       {new Date(loan.fecha_entrada).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -209,7 +223,7 @@ const ACDashboardPage = () => {
               ))
             ) : (
               <EmptyState
-                colSpan={3}
+                colSpan={4}
                 message="No hay préstamos de carritos recientes."
                 icon={FaShoppingCart}
               />
@@ -262,7 +276,7 @@ const ACDashboardPage = () => {
             ) : (
               <EmptyState
                 colSpan={4}
-                message="No hay usuarios registrados en este condominio."
+                message="No hay personal registrado en este condominio."
                 icon={FaUserFriends}
               />
             )}

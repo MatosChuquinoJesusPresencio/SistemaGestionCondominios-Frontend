@@ -8,6 +8,9 @@ import {
   FaMapMarkerAlt,
   FaEnvelope,
   FaCircle,
+  FaCar,
+  FaShoppingCart,
+  FaClock,
 } from "react-icons/fa";
 
 import { useData } from "../../hooks/useData";
@@ -31,6 +34,8 @@ const SADashboardPage = () => {
   const condominios = getTable("condominios");
   const usuarios = getTable("usuarios");
   const roles = getTable("roles");
+  const logsVehicular = getTable("logs_acceso_vehicular");
+  const logsCarrito = getTable("logs_prestamo_carrito");
 
   const totalCondominios = condominios.length;
   const totalUsuarios = usuarios.length;
@@ -40,6 +45,14 @@ const SADashboardPage = () => {
     .sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion))
     .slice(0, 5);
   const recentUsuarios = [...usuarios].slice(-5).reverse();
+
+  const recentAccess = [...logsVehicular]
+    .sort((a, b) => new Date(b.fecha_entrada) - new Date(a.fecha_entrada))
+    .slice(0, 5);
+
+  const recentLoans = [...logsCarrito]
+    .sort((a, b) => new Date(b.fecha_entrada) - new Date(a.fecha_entrada))
+    .slice(0, 5);
 
   const getRoleName = (roleId) => {
     const role = roles.find((r) => r.id === roleId);
@@ -175,6 +188,111 @@ const SADashboardPage = () => {
                 colSpan={3} 
                 message="No hay usuarios registrados recientemente." 
                 icon={FaUsers} 
+              />
+            )}
+          </DashboardTable>
+        </div>
+
+        <div className="row g-4 mt-2">
+          <DashboardTable
+            title="Accesos Vehiculares (Global)"
+            buttonText="Ver historial"
+            onButtonClick={() => navigate("/super-admin/historial?tab=estacionamiento")}
+            headers={["Vehículo", "Condominio", "Ingreso", "Estado"]}
+          >
+            {recentAccess.length > 0 ? (
+              recentAccess.map((log) => (
+                <tr key={log.id}>
+                  <td className="px-4 py-3">
+                    <div className="fw-bold text-dark">{log.placa}</div>
+                    <div className="x-small text-muted">{log.metodo}</div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      {condominios.find((c) => c.id === usuarios.find(u => u.id_condominio)?.id_condominio)?.nombre || "N/A"}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      {new Date(log.fecha_entrada).toLocaleDateString()}
+                    </div>
+                    <div className="x-small text-muted">
+                      <FaClock className="me-1" />
+                      {new Date(log.fecha_entrada).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-end">
+                    {log.fecha_salida ? (
+                      <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">
+                        Salió
+                      </span>
+                    ) : (
+                      <span className="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill border border-success border-opacity-10">
+                        En recinto
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <EmptyState
+                colSpan={4}
+                message="No hay registros de acceso vehicular global."
+                icon={FaCar}
+              />
+            )}
+          </DashboardTable>
+
+          <DashboardTable
+            title="Préstamos de Carritos (Global)"
+            buttonText="Ver historial"
+            onButtonClick={() => navigate("/super-admin/historial?tab=carritos")}
+            headers={["Carrito / Usuario", "Departamento", "Estado"]}
+          >
+            {recentLoans.length > 0 ? (
+              recentLoans.map((loan) => (
+                <tr key={loan.id}>
+                  <td className="px-4 py-3">
+                    <div className="fw-bold text-dark">
+                      Carrito #{loan.id_carrito}
+                    </div>
+                    <div className="x-small text-muted">
+                      <FaUsers className="me-1 x-small" /> {loan.solicitante}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="small fw-medium text-dark">
+                      ID Apto: {loan.id_apartamento}
+                    </div>
+                    <div className="x-small text-muted">
+                      Inicio:{" "}
+                      {new Date(loan.fecha_entrada).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-end">
+                    {loan.fecha_salida ? (
+                      <span className="badge bg-light text-muted fw-normal px-3 py-2 rounded-pill">
+                        Finalizado
+                      </span>
+                    ) : (
+                      <span className="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill border border-danger border-opacity-10">
+                        En uso
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <EmptyState
+                colSpan={3}
+                message="No hay préstamos de carritos activos."
+                icon={FaShoppingCart}
               />
             )}
           </DashboardTable>
