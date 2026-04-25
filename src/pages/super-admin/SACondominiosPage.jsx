@@ -5,6 +5,7 @@ import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import DashboardTable from "../../components/dashboard/DashboardTable";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
+import CondoDetailModal from "../../components/modals/CondoDetailModal";
 import { FaBuilding, FaUsersCog, FaCog, FaPlusCircle, FaEye, FaEdit, FaTrashAlt, FaMapMarkerAlt, FaCalendarAlt, FaGlobe, FaSave, FaTimes, FaExclamationTriangle, FaInfoCircle, FaSearch } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
@@ -23,7 +24,6 @@ const SACondominiosPage = () => {
     // Estados para detalles
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedCondo, setSelectedCondo] = useState(null);
-    const [condoStats, setCondoStats] = useState(null);
     
     const [showRelationsModal, setShowRelationsModal] = useState(false);
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
@@ -72,7 +72,6 @@ const SACondominiosPage = () => {
     const handleDetailClose = () => {
         setShowDetailModal(false);
         setSelectedCondo(null);
-        setCondoStats(null);
     };
 
     const handleRelationsClose = () => {
@@ -103,26 +102,6 @@ const SACondominiosPage = () => {
     };
 
     const handleDetailClick = (condo) => {
-        const torres = getTable('torres').filter(t => t.id_condominio === condo.id);
-        const torreIds = torres.map(t => t.id);
-        
-        const pisos = getTable('pisos').filter(p => torreIds.includes(p.id_torre));
-        const pisoIds = pisos.map(p => p.id);
-        
-        const aptos = getTable('apartamentos').filter(a => pisoIds.includes(a.id_piso));
-        
-        const users = getTable('usuarios').filter(u => u.id_condominio === condo.id);
-        const carts = getTable('carritos_carga').filter(c => c.id_condominio === condo.id);
-        const config = getTable('configuraciones').find(c => c.id_condominio === condo.id);
-
-        setCondoStats({
-            torres: torres.length,
-            pisos: pisos.length,
-            apartamentos: aptos.length,
-            usuarios: users.length,
-            carritos: carts.length,
-            config: config
-        });
         setSelectedCondo(condo);
         setShowDetailModal(true);
     };
@@ -300,114 +279,11 @@ const SACondominiosPage = () => {
                 </div>
             </div>
 
-            <Modal show={showDetailModal} onHide={handleDetailClose} centered size="lg" className="border-0">
-                <Modal.Header closeButton className="border-0 pb-0">
-                    <Modal.Title className="fw-bold text-primary-theme d-flex align-items-center gap-2">
-                        <div className="p-2 rounded-3 bg-info bg-opacity-10 text-info">
-                            <FaInfoCircle />
-                        </div>
-                        Detalles del Condominio
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="p-4">
-                    {selectedCondo && (
-                        <div className="row g-4">
-                            <div className="col-12 col-md-6">
-                                <div className="card border-0 bg-light rounded-4 p-4 h-100">
-                                    <h6 className="text-muted small text-uppercase fw-bold mb-3">Información General</h6>
-                                    <h3 className="fw-bold text-dark mb-1">{selectedCondo.nombre}</h3>
-                                    <p className="text-secondary mb-3">{selectedCondo.direccion}, {selectedCondo.ciudad}</p>
-                                    <div className="d-flex align-items-center gap-2 text-muted small">
-                                        <FaCalendarAlt /> Registrado el {new Date(selectedCondo.fecha_creacion).toLocaleDateString()}
-                                    </div>
-                                    
-                                    <div className="mt-4 pt-3 border-top border-secondary border-opacity-10">
-                                        <h6 className="text-muted small text-uppercase fw-bold mb-2 text-secondary">Administrador Asignado</h6>
-                                        {adminUsers.find(u => u.id_condominio === selectedCondo.id) ? (
-                                            <div className="d-flex align-items-center gap-3 bg-white p-2 rounded-3 border">
-                                                <div className="p-3 rounded-circle bg-primary bg-opacity-10 text-primary">
-                                                    <FaUsersCog />
-                                                </div>
-                                                <div>
-                                                    <div className="fw-bold text-dark">{adminUsers.find(u => u.id_condominio === selectedCondo.id).nombre}</div>
-                                                    <div className="small text-muted">{adminUsers.find(u => u.id_condominio === selectedCondo.id).email}</div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="alert alert-light border small text-muted">No hay un administrador asignado actualmente.</div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 col-md-6">
-                                <div className="row g-3">
-                                    <div className="col-6">
-                                        <div className="bg-white border rounded-4 p-3 text-center shadow-sm">
-                                            <div className="text-primary fs-4 mb-1"><FaBuilding /></div>
-                                            <div className="fw-bold fs-5">{condoStats?.torres}</div>
-                                            <div className="x-small text-muted text-uppercase fw-bold">Torres</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="bg-white border rounded-4 p-3 text-center shadow-sm">
-                                            <div className="text-success fs-4 mb-1"><FaMapMarkerAlt /></div>
-                                            <div className="fw-bold fs-5">{condoStats?.apartamentos}</div>
-                                            <div className="x-small text-muted text-uppercase fw-bold">Aptos.</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="bg-white border rounded-4 p-3 text-center shadow-sm">
-                                            <div className="text-warning fs-4 mb-1"><FaUsersCog size={24} /></div>
-                                            <div className="fw-bold fs-5">{condoStats?.usuarios}</div>
-                                            <div className="x-small text-muted text-uppercase fw-bold">Usuarios</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="bg-white border rounded-4 p-3 text-center shadow-sm">
-                                            <div className="text-info fs-4 mb-1"><FaPlusCircle /></div>
-                                            <div className="fw-bold fs-5">{condoStats?.carritos}</div>
-                                            <div className="x-small text-muted text-uppercase fw-bold">Carritos</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {condoStats?.config && (
-                                <div className="col-12">
-                                    <div className="card border-0 bg-primary bg-opacity-10 rounded-4 p-4">
-                                        <h6 className="text-primary small text-uppercase fw-bold mb-3 d-flex align-items-center gap-2">
-                                            <FaCog /> Configuración del Sistema
-                                        </h6>
-                                        <div className="row g-4">
-                                            <div className="col-md-3">
-                                                <div className="small text-muted">Máx. Autos</div>
-                                                <div className="fw-bold text-dark">{condoStats.config.max_autos}</div>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <div className="small text-muted">Máx. Motos</div>
-                                                <div className="fw-bold text-dark">{condoStats.config.max_motos}</div>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <div className="small text-muted">Préstamo Carrito</div>
-                                                <div className="fw-bold text-dark">{condoStats.config.tiempo_max_prestamo_min} min.</div>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <div className="small text-muted">Penalización</div>
-                                                <div className="fw-bold text-dark">S/ {condoStats.config.penalizacion_por_minuto.toFixed(2)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                    <div className="text-end mt-4">
-                        <Button variant="light" onClick={handleDetailClose} className="rounded-pill px-5 fw-bold text-secondary border-0">
-                            Cerrar
-                        </Button>
-                    </div>
-                </Modal.Body>
-            </Modal>
+            <CondoDetailModal 
+                show={showDetailModal} 
+                onHide={handleDetailClose} 
+                condo={selectedCondo} 
+            />
 
             <Modal show={showModal} onHide={handleClose} centered size="lg" className="border-0">
                 <Modal.Header closeButton className="border-0 pb-0">

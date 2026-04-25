@@ -1,14 +1,22 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import DashboardTable from "../../components/dashboard/DashboardTable";
+import CondoDetailModal from "../../components/modals/CondoDetailModal";
 import { useData } from "../../hooks/useData";
 import { useAuth } from "../../hooks/useAuth";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import { FaUserShield, FaPlusCircle, FaBuilding, FaUsers, FaMapMarkerAlt, FaEnvelope, FaCircle } from "react-icons/fa";
 
 const SADashboardPage = () => {
+    const navigate = useNavigate();
     const { getTable } = useData();
     const { authUser } = useAuth();
+
+    // Estados para el modal de detalles
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedCondo, setSelectedCondo] = useState(null);
 
     const condominios = getTable('condominios');
     const usuarios = getTable('usuarios');
@@ -24,6 +32,11 @@ const SADashboardPage = () => {
     const getRoleName = (roleId) => {
         const role = roles.find(r => r.id === roleId);
         return role ? role.nombre : "N/A";
+    };
+
+    const handleDetailClick = (condo) => {
+        setSelectedCondo(condo);
+        setShowDetailModal(true);
     };
 
     return (
@@ -47,6 +60,7 @@ const SADashboardPage = () => {
                     <DashboardTable 
                         title="Condominios"
                         buttonText="Ver todos"
+                        onButtonClick={() => navigate("/super-admin/condominios")}
                         headers={["Información", "Ubicación", "Acción"]}
                     >
                         {recentCondominios.map((condo) => (
@@ -60,7 +74,10 @@ const SADashboardPage = () => {
                                     <div className="x-small text-muted"><FaMapMarkerAlt className="me-1" />{condo.ciudad}</div>
                                 </td>
                                 <td className="px-4 py-3 text-end">
-                                    <button className="btn btn-sm btn-outline-secondary rounded-pill px-3 border-opacity-25 transition">
+                                    <button 
+                                        className="btn btn-sm btn-outline-info rounded-pill px-3 border-opacity-25 transition fw-bold"
+                                        onClick={() => handleDetailClick(condo)}
+                                    >
                                         Detalles
                                     </button>
                                 </td>
@@ -71,6 +88,7 @@ const SADashboardPage = () => {
                     <DashboardTable 
                         title="Usuarios"
                         buttonText="Ver todos"
+                        onButtonClick={() => navigate("/super-admin/usuarios")}
                         headers={["Usuario", "Rol", "Acción"]}
                     >
                         {recentUsuarios.map((u) => (
@@ -96,6 +114,12 @@ const SADashboardPage = () => {
                     </DashboardTable>
                 </div>
             </div>
+
+            <CondoDetailModal 
+                show={showDetailModal}
+                onHide={() => setShowDetailModal(false)}
+                condo={selectedCondo}
+            />
         </AnimatedPage>
     );
 };

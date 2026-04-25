@@ -47,16 +47,6 @@ const ACDashboard = () => {
                     badgeText="Admin Condominio"
                     welcomeText={`Bienvenido, ${authUser?.nombre || "Admin"}. Gestión operativa y residentes.`}
                 >
-                    <div className="d-flex gap-2 justify-content-md-end">
-                        <button className="btn btn-secondary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold text-nowrap">
-                            <FaSearch className="small" />
-                            <span>Logs</span>
-                        </button>
-                        <button className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold text-nowrap">
-                            <FaPlus />
-                            <span>Registrar</span>
-                        </button>
-                    </div>
                 </DashboardHeader>
 
                 <div className="row g-4 mb-5">

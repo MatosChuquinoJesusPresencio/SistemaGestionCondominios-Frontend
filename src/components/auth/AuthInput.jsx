@@ -1,4 +1,4 @@
-const AuthInput = ({ label, type, placeholder, register, name, validation, error }) => {
+const AuthInput = ({ label, type, placeholder, register, name, validation, error, ...rest }) => {
     return (
         <div className="mb-4">
             <label className="form-label text-secondary fw-semibold small mb-1">
@@ -10,6 +10,7 @@ const AuthInput = ({ label, type, placeholder, register, name, validation, error
                 placeholder={placeholder}
                 className={`form-control input-no-shadow ${error ? "is-invalid" : ""}`}
                 {...register(name, validation)}
+                {...rest}
             />
 
             {error && (
