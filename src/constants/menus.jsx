@@ -6,11 +6,13 @@ export const MENU_BY_ROLE = {
         { path: "/admin-condominio/mi-condominio", label: "Mi Condominio", icon: <FaBuilding /> },
         { path: "/admin-condominio/infraestructura", label: "Infraestructura", icon: <FaSitemap /> },
         { path: "/admin-condominio/residentes", label: "Residentes", icon: <FaUsers /> },
+        { path: "/admin-condominio/apartamentos", label: "Apartamentos", icon: <FaHome /> },
     ],
 
     SUPER_ADMIN: [
         { path: "/super-admin", label: "Inicio", icon: <FaUserShield />, exact: true },
         { path: "/super-admin/condominios", label: "Condominios", icon: <FaBuilding /> },
+        { path: "/super-admin/unidades", label: "Unidades", icon: <FaSitemap /> },
         { path: "/super-admin/usuarios", label: "Usuarios", icon: <FaUsers /> },
     ],
 

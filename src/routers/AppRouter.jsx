@@ -19,11 +19,13 @@ import RedirectPage from "../pages/utility/RedirectPage";
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
 import SAUsersPage from "../pages/super-admin/SAUsersPage";
+import SAUnidadesPage from "../pages/super-admin/SAUnidadesPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
 import ACInfraestructuraPage from "../pages/admin-condominio/ACInfraestructuraPage";
 import ACResidentesPage from "../pages/admin-condominio/ACResidentesPage";
+import ACApartamentosPage from "../pages/admin-condominio/ACApartamentosPage";
 
 import PDashboardPage from "../pages/propietario/PDashboardPage";
 
@@ -45,6 +47,7 @@ const AppRouter = () => {
                         <Route index element={<SADashboardPage />} />
                         <Route path="condominios" element={<SACondominiosPage />} />
                         <Route path="usuarios" element={<SAUsersPage />} />
+                        <Route path="unidades" element={<SAUnidadesPage />} />
                     </Route>
 
                     <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
@@ -52,6 +55,7 @@ const AppRouter = () => {
                         <Route path="mi-condominio" element={<ACMiCondominioPage />} />
                         <Route path="infraestructura" element={<ACInfraestructuraPage />} />
                         <Route path="residentes" element={<ACResidentesPage />} />
+                        <Route path="apartamentos" element={<ACApartamentosPage />} />
                     </Route>
 
                     <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>
