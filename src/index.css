@@ -1,7 +1,49 @@
 :root {
   --primary-color: #112D4D;
+  --primary-rgb: 17, 45, 77;
   --secondary-color: #2c5281;
   --text-color: #F9F7F7;
+}
+
+.text-primary-theme {
+  color: var(--primary-color) !important;
+}
+
+.text-secondary-theme {
+  color: var(--secondary-color) !important;
+}
+
+.border-primary-theme {
+  border-color: var(--primary-color) !important;
+}
+
+.hover-up:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-color) !important;
+}
+
+.transition-all { transition: all 0.2s ease-in-out; }
+
+.search-group-table {
+  background-color: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.search-group-table:focus-within {
+  background-color: white;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.transition-all { transition: all 0.2s ease-in-out; }
+
+.table-custom-bordered td:not(:last-child), 
+.table-custom-bordered th:not(:last-child) {
+  border-right: 1px solid #d8d8d8ff !important;
+}
+
+.table-custom-bordered thead th {
+  border-bottom: 2px solid #d8d8d8ff !important;
 }
 
 * {

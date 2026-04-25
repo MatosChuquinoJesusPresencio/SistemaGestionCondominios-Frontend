@@ -70,8 +70,8 @@ export const logs_acceso_vehicular = [
         id_vehiculo: null,
         id_estacionamiento: 2,
         placa: "MNO-444",
-        tipo_ocupante: "Visitante",
-        datos_inquilino: "Visita de Apto 101",
+        tipo_ocupante: "Inquilino Temporal",
+        datos_inquilino: "Ana Maria Ramirez",
         fecha_entrada: "2026-04-21T10:15:00Z",
         fecha_salida: null,
         metodo: "Manual"

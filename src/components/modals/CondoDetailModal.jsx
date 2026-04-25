@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { FaBuilding, FaUsersCog, FaCog, FaPlusCircle, FaMapMarkerAlt, FaCalendarAlt, FaInfoCircle, FaExclamationTriangle } from "react-icons/fa";
 import { useData } from "../../hooks/useData";
 
@@ -7,7 +7,6 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
     
     if (!condo) return null;
 
-    // Obtener datos relacionados usando useData
     const usuarios = getTable('usuarios');
     const admin = usuarios.find(u => u.id_condominio === condo.id && u.id_rol === 2);
     
@@ -35,13 +34,13 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
         <Modal show={show} onHide={onHide} centered size="lg" className="border-0 shadow-lg">
             <Modal.Header closeButton className="border-0 pb-0 bg-white">
                 <Modal.Title className="fw-bold text-primary-theme d-flex align-items-center gap-2">
-                    <div className="p-2 rounded-3 bg-info bg-opacity-10 text-info">
+                    <div className="p-2 rounded-3 bg-primary-theme bg-opacity-10 text-primary-theme">
                         <FaInfoCircle />
                     </div>
                     Detalles del Condominio
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="p-4 bg-white">
+            <Modal.Body className="p-3 bg-white">
                 <div className="row g-4">
                     <div className="col-12 col-md-6">
                         <div className="card border-0 bg-light rounded-4 p-4 h-100">
@@ -56,7 +55,7 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
                                 <h6 className="text-muted small text-uppercase fw-bold mb-2 text-secondary">Administrador Asignado</h6>
                                 {admin ? (
                                     <div className="d-flex align-items-center gap-3 bg-white p-3 rounded-3 border">
-                                        <div className="p-2 rounded-circle bg-primary bg-opacity-10 text-primary">
+                                        <div className="p-2 rounded-circle bg-primary-theme bg-opacity-10 text-primary-theme">
                                             <FaUsersCog size={20} />
                                         </div>
                                         <div className="overflow-hidden">
@@ -75,28 +74,28 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
                         <div className="row g-3">
                             <div className="col-6">
                                 <div className="bg-white border rounded-4 p-3 text-center shadow-sm h-100 transition-all hover-up">
-                                    <div className="text-primary fs-4 mb-1"><FaBuilding /></div>
+                                    <div className="text-primary-theme fs-4 mb-1"><FaBuilding /></div>
                                     <div className="fw-bold fs-5">{stats.torres}</div>
                                     <div className="x-small text-muted text-uppercase fw-bold">Torres</div>
                                 </div>
                             </div>
                             <div className="col-6">
                                 <div className="bg-white border rounded-4 p-3 text-center shadow-sm h-100 transition-all hover-up">
-                                    <div className="text-success fs-4 mb-1"><FaMapMarkerAlt /></div>
+                                    <div className="text-secondary-theme fs-4 mb-1"><FaMapMarkerAlt /></div>
                                     <div className="fw-bold fs-5">{stats.apartamentos}</div>
                                     <div className="x-small text-muted text-uppercase fw-bold">Aptos.</div>
                                 </div>
                             </div>
                             <div className="col-6">
                                 <div className="bg-white border rounded-4 p-3 text-center shadow-sm h-100 transition-all hover-up">
-                                    <div className="text-warning fs-4 mb-1"><FaUsersCog size={24} /></div>
+                                    <div className="text-primary-theme fs-4 mb-1"><FaUsersCog size={24} /></div>
                                     <div className="fw-bold fs-5">{stats.usuarios}</div>
                                     <div className="x-small text-muted text-uppercase fw-bold">Usuarios</div>
                                 </div>
                             </div>
                             <div className="col-6">
                                 <div className="bg-white border rounded-4 p-3 text-center shadow-sm h-100 transition-all hover-up">
-                                    <div className="text-info fs-4 mb-1"><FaPlusCircle /></div>
+                                    <div className="text-secondary-theme fs-4 mb-1"><FaPlusCircle /></div>
                                     <div className="fw-bold fs-5">{stats.carritos}</div>
                                     <div className="x-small text-muted text-uppercase fw-bold">Carritos</div>
                                 </div>
@@ -106,8 +105,8 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
                     
                     {stats.config ? (
                         <div className="col-12">
-                            <div className="card border-0 bg-primary bg-opacity-10 rounded-4 p-4 shadow-sm">
-                                <h6 className="text-primary small text-uppercase fw-bold mb-3 d-flex align-items-center gap-2">
+                            <div className="card border-0 bg-primary-theme bg-opacity-10 rounded-4 p-4 shadow-sm">
+                                <h6 className="text-primary-theme small text-uppercase fw-bold mb-3 d-flex align-items-center gap-2">
                                     <FaCog /> Configuración del Sistema
                                 </h6>
                                 <div className="row g-3">
@@ -143,25 +142,6 @@ const CondoDetailModal = ({ show, onHide, condo }) => {
                     )}
                 </div>
             </Modal.Body>
-            <Modal.Footer className="border-0 pt-0 bg-white">
-                <Button 
-                    variant="light" 
-                    onClick={onHide} 
-                    className="rounded-pill px-5 fw-bold text-secondary border-0 transition-all"
-                >
-                    Cerrar
-                </Button>
-            </Modal.Footer>
-
-            <style>
-                {`
-                .hover-up:hover {
-                    transform: translateY(-5px);
-                    border-color: var(--primary-color) !important;
-                }
-                .transition-all { transition: all 0.2s ease-in-out; }
-                `}
-            </style>
         </Modal>
     );
 };

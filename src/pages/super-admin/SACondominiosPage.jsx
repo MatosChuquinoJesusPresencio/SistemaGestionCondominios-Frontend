@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { Modal, Button, Form, ListGroup, Card, Row, Col, Table } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+
+import { Modal, Button, Form, ListGroup, Card, Row, Col, Table } from "react-bootstrap";
+import { FaBuilding, FaEye, FaEdit, FaPlusCircle, FaGlobe, FaMapMarkerAlt, FaUsersCog, FaCalendarAlt, FaTrashAlt, FaInfoCircle, FaTimes, FaSave, FaExclamationTriangle } from "react-icons/fa";
+
+import { useAuth } from "../../hooks/useAuth";
+import { useData } from "../../hooks/useData";
+
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
@@ -8,10 +14,6 @@ import CondoDetailModal from "../../components/modals/CondoDetailModal";
 import SearchBar from "../../components/ui/SearchBar";
 import TablePagination from "../../components/ui/TablePagination";
 import EmptyState from "../../components/ui/EmptyState";
-import { useAuth } from "../../hooks/useAuth";
-import { useData } from "../../hooks/useData";
-import { FaBuilding, FaEye, FaEdit, FaPlusCircle, FaGlobe, FaMapMarkerAlt, FaUsersCog, FaCalendarAlt, FaTrashAlt, FaInfoCircle, FaTimes, FaSave, FaExclamationTriangle } from "react-icons/fa";
-
 
 const SACondominiosPage = () => {
     const { authUser } = useAuth();
@@ -20,11 +22,9 @@ const SACondominiosPage = () => {
     const [editingCondo, setEditingCondo] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     
-    // Paginación
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    // Estados para detalles
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedCondo, setSelectedCondo] = useState(null);
     
@@ -46,17 +46,14 @@ const SACondominiosPage = () => {
     const condominios = getTable('condominios');
     const usuarios = getTable('usuarios');
     
-    // Filtrar administradores de condominio (Rol ID 2)
     const adminUsers = usuarios.filter(u => u.id_rol === 2);
 
-    // Filtrar condominios por nombre
     const filteredCondominios = condominios.filter(condo => 
         condo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
         condo.pais.toLowerCase().includes(searchTerm.toLowerCase()) ||
         condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Lógica de Paginación
     const totalPages = Math.ceil(filteredCondominios.length / itemsPerPage);
     const currentItems = filteredCondominios.slice(
         (currentPage - 1) * itemsPerPage,

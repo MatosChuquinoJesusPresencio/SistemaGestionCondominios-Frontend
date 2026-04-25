@@ -20,7 +20,7 @@ const DashboardTable = ({
             <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white">
                 <div className="card-header border-0 py-4 px-4 bg-white d-flex flex-wrap justify-content-between align-items-center gap-3">
                     <div className="d-flex align-items-center gap-3 flex-grow-1">
-                        <h5 className="fw-bold mb-0" style={{ color: "var(--secondary-color)" }}>{title}</h5>
+                        <h5 className="fw-bold mb-0 text-secondary-theme">{title}</h5>
                         
                         {onSearchChange && (
                             <InputGroup className="search-group-table rounded-pill border overflow-hidden ms-2" style={{ maxWidth: '280px' }}>
@@ -40,7 +40,7 @@ const DashboardTable = ({
 
                     {buttonText && (
                         <button 
-                            className="btn btn-secondary-theme btn-sm px-4 rounded-pill fw-bold shadow-sm"
+                            className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
                             onClick={onButtonClick}
                         >
                             {buttonText}
@@ -49,13 +49,13 @@ const DashboardTable = ({
                 </div>
                 <div className="card-body p-0">
                     <div className="table-responsive">
-                        <table className="table table-hover align-middle mb-0">
+                        <table className="table table-hover align-middle mb-0 table-custom-bordered">
                             <thead className="bg-light">
                                 <tr className="text-secondary x-small text-uppercase fw-bold">
                                     {headers.map((header, index) => (
                                         <th 
                                             key={index} 
-                                            className={`${index === 0 ? 'px-4' : ''} ${index === headers.length - 1 ? 'px-4 text-end' : ''} py-3 border-0`}
+                                            className={`${index === 0 ? 'px-4' : ''} ${index === headers.length - 1 ? 'px-4 text-end' : ''} py-3`}
                                         >
                                             {header}
                                         </th>
@@ -69,7 +69,6 @@ const DashboardTable = ({
                     </div>
                 </div>
 
-                {/* Footer con Paginación */}
                 {onPageChange && totalPages > 1 && (
                     <div className="card-footer border-0 bg-white py-3 px-4 d-flex justify-content-between align-items-center border-top">
                         <div className="small text-muted fw-medium">
@@ -115,20 +114,6 @@ const DashboardTable = ({
                     </div>
                 )}
             </div>
-            <style>
-                {`
-                .search-group-table {
-                    background-color: #f8f9fa;
-                    transition: all 0.2s;
-                }
-                .search-group-table:focus-within {
-                    background-color: white;
-                    border-color: var(--primary-color) !important;
-                    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
-                }
-                .transition-all { transition: all 0.2s ease-in-out; }
-                `}
-            </style>
         </div>
     );
 };

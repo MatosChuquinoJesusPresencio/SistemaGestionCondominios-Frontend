@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Row, Table, Badge, Modal, Form, InputGroup, Pagination } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { FaUsers, FaUserPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaUserShield, FaBuilding, FaEnvelope, FaLock, FaCheckCircle, FaTimesCircle, FaSave, FaExclamationTriangle } from "react-icons/fa";
@@ -16,13 +17,23 @@ import { ROLES_MAP } from "../../constants/roles";
 const SAUsuariosPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
+    const [searchParams] = useSearchParams();
     
     // Datos
     const usuarios = getTable('usuarios');
     const condominios = getTable('condominios');
+    
+    const initialSearch = searchParams.get("search") || "";
 
     // Estados
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(initialSearch);
+
+    useEffect(() => {
+        const search = searchParams.get("search");
+        if (search) {
+            setSearchTerm(search);
+        }
+    }, [searchParams]);
     const [roleFilter, setRoleFilter] = useState("all");
     const [condoFilter, setCondoFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);
