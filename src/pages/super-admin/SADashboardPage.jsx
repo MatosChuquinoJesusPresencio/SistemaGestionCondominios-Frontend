@@ -35,10 +35,6 @@ const SADashboardPage = () => {
                     badgeText="Super Admin"
                     welcomeText={`Bienvenido, ${authUser?.nombre || "Administrador"}. Control total de la plataforma.`}
                 >
-                    <button className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold">
-                        <FaPlusCircle />
-                        <span>Nuevo Condominio</span>
-                    </button>
                 </DashboardHeader>
 
                 <div className="row g-4 mb-5">

@@ -15,8 +15,13 @@ import UnauthorizedPage from "../pages/error/UnauthorizedPage";
 import NotFoundPage from "../pages/error/NotFoundPage";
 
 import RedirectPage from "../pages/utility/RedirectPage";
+
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
+import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
+
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
+import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
+
 import PDashboardPage from "../pages/propietario/PDashboardPage";
 
 const AppRouter = () => {
@@ -35,10 +40,12 @@ const AppRouter = () => {
 
                     <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
                         <Route index element={<SADashboardPage />} />
+                        <Route path="condominios" element={<SACondominiosPage />} />
                     </Route>
 
                     <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
                         <Route index element={<ACDashboardPage />} />
+                        <Route path="mi-condominio" element={<ACMiCondominioPage />} />
                     </Route>
 
                     <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>

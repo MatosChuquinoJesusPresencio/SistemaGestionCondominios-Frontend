@@ -106,5 +106,32 @@ export const usuarios = [
         email: "beatriz@gmail.com",
         contraseña: "123123",
         activo: true
+    },
+    {
+        id: 13,
+        id_condominio: null,
+        id_rol: 2,
+        nombre: "Manuela Miraz",
+        email: "manuela@gmail.com",
+        contraseña: "123123",
+        activo: true
+    },
+    {
+        id: 14,
+        id_condominio: null,
+        id_rol: 2,
+        nombre: "Alfalfa Ñandu",
+        email: "alfalfa@gmail.com",
+        contraseña: "123123",
+        activo: true
+    },
+    {
+        id: 15,
+        id_condominio: null,
+        id_rol: 2,
+        nombre: "Nica Lopez",
+        email: "nica@gmail.com",
+        contraseña: "123123",
+        activo: true
     }
 ];
