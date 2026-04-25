@@ -37,10 +37,43 @@ export const logs_acceso_vehicular = [
         id_vehiculo: 4,
         id_estacionamiento: 5,
         placa: "GHI-789",
-        tipo_ocupante: "Propietario",
+        tipo_occupante: "Propietario",
         datos_inquilino: null,
         fecha_entrada: "2026-04-20T14:00:00Z",
         fecha_salida: "2026-04-20T16:00:00Z",
         metodo: "OCR"
+    },
+    {
+        id: 5,
+        id_vehiculo: 1,
+        id_estacionamiento: 1,
+        placa: "ABC-123",
+        tipo_ocupante: "Propietario",
+        datos_inquilino: null,
+        fecha_entrada: "2026-04-21T07:30:00Z",
+        fecha_salida: null,
+        metodo: "OCR"
+    },
+    {
+        id: 6,
+        id_vehiculo: 3,
+        id_estacionamiento: 3,
+        placa: "DEF-456",
+        tipo_ocupante: "Propietario",
+        datos_inquilino: null,
+        fecha_entrada: "2026-04-21T09:00:00Z",
+        fecha_salida: "2026-04-21T11:45:00Z",
+        metodo: "Manual"
+    },
+    {
+        id: 7,
+        id_vehiculo: null,
+        id_estacionamiento: 2,
+        placa: "MNO-444",
+        tipo_ocupante: "Visitante",
+        datos_inquilino: "Visita de Apto 101",
+        fecha_entrada: "2026-04-21T10:15:00Z",
+        fecha_salida: null,
+        metodo: "Manual"
     }
 ];

@@ -20,14 +20,19 @@ import SADashboardPage from "../pages/super-admin/SADashboardPage";
 import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
 import SAUsersPage from "../pages/super-admin/SAUsersPage";
 import SAUnidadesPage from "../pages/super-admin/SAUnidadesPage";
+import SABitacoraPage from "../pages/super-admin/SABitacoraPage";
 
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
 import ACInfraestructuraPage from "../pages/admin-condominio/ACInfraestructuraPage";
 import ACResidentesPage from "../pages/admin-condominio/ACResidentesPage";
 import ACApartamentosPage from "../pages/admin-condominio/ACApartamentosPage";
+import ACLogsPage from "../pages/admin-condominio/ACLogsPage";
 
 import PDashboardPage from "../pages/propietario/PDashboardPage";
+import PRUnidadPage from "../pages/propietario/PRUnidadPage";
+import PRVehiculosPage from "../pages/propietario/PRVehiculosPage";
+import PRActividadPage from "../pages/propietario/PRActividadPage";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -48,6 +53,7 @@ const AppRouter = () => {
                         <Route path="condominios" element={<SACondominiosPage />} />
                         <Route path="usuarios" element={<SAUsersPage />} />
                         <Route path="unidades" element={<SAUnidadesPage />} />
+                        <Route path="bitacora" element={<SABitacoraPage />} />
                     </Route>
 
                     <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
@@ -56,10 +62,14 @@ const AppRouter = () => {
                         <Route path="infraestructura" element={<ACInfraestructuraPage />} />
                         <Route path="residentes" element={<ACResidentesPage />} />
                         <Route path="apartamentos" element={<ACApartamentosPage />} />
+                        <Route path="bitacora" element={<ACLogsPage />} />
                     </Route>
 
                     <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>
                         <Route index element={<PDashboardPage />} />
+                        <Route path="unidad" element={<PRUnidadPage />} />
+                        <Route path="vehiculos" element={<PRVehiculosPage />} />
+                        <Route path="actividad" element={<PRActividadPage />} />
                     </Route>
                 </Route>
 
