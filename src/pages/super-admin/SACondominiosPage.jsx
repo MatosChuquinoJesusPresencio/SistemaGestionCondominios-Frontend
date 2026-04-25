@@ -158,17 +158,18 @@ const SACondominiosPage = () => {
             updateTable('condominios', updatedCondominios);
         }
 
-        const updatedUsers = usuarios.map(u => {
-            if (u.id_condominio === condoId && u.id_rol === 2 && u.id.toString() !== id_administrador) {
-                return { ...u, id_condominio: null };
-            }
-            if (u.id.toString() === id_administrador) {
-                return { ...u, id_condominio: condoId };
-            }
-            return u;
-        });
-        
-        updateTable('usuarios', updatedUsers);
+        if (id_administrador) {
+            const updatedUsers = usuarios.map(u => {
+                if (u.id_condominio === condoId && u.id_rol === 2 && u.id.toString() !== id_administrador) {
+                    return { ...u, id_condominio: null };
+                }
+                if (u.id.toString() === id_administrador) {
+                    return { ...u, id_condominio: condoId };
+                }
+                return u;
+            });
+            updateTable('usuarios', updatedUsers);
+        }
         handleClose();
     };
 
@@ -349,9 +350,9 @@ const SACondominiosPage = () => {
                                     </label>
                                     <Form.Select
                                         className={`form-control input-no-shadow ${errors.id_administrador ? "is-invalid" : ""}`}
-                                        {...register("id_administrador", { required: "Debes asignar un administrador" })}
+                                        {...register("id_administrador")}
                                     >
-                                        <option value="">Selecciona un administrador...</option>
+                                        <option value="">Sin asignar (puedes hacerlo después)...</option>
                                         {adminUsers
                                             .filter(u => u.id_condominio === null || (editingCondo && u.id_condominio === editingCondo.id))
                                             .map(u => (

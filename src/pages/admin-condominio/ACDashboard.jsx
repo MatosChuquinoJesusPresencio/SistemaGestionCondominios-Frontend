@@ -20,17 +20,28 @@ const ACDashboard = () => {
     const currentCondoId = authUser?.id_condominio;
     const condo = condominios.find(c => c.id === currentCondoId);
 
+    // --- FILTRADO JERÁRQUICO PARA DATA DINÁMICA ---
+    const torres = getTable('torres').filter(t => t.id_condominio === currentCondoId);
+    const torresIds = torres.map(t => t.id);
+    const pisosIds = getTable('pisos').filter(p => torresIds.includes(p.id_torre)).map(p => p.id);
+    const aptosCondo = apartamentos.filter(a => pisosIds.includes(a.id_piso));
+    const aptosIds = aptosCondo.map(a => a.id);
+    const estIds = getTable('estacionamientos').filter(e => aptosIds.includes(e.id_apartamento)).map(e => e.id);
+
+    // Estadísticas
     const condoUsers = usuarios.filter(u => u.id_condominio === currentCondoId);
-    
-    const totalAptos = apartamentos.length; 
+    const totalAptos = aptosCondo.length; 
     const totalPropietarios = condoUsers.filter(u => u.id_rol === 3).length;
-    
 
-    const activeVehicles = logs_acceso_vehicular.filter(log => !log.fecha_salida).length;
-    const activeCarLoans = logs_prestamo_carrito.filter(log => !log.fecha_salida).length;
+    // Logs filtrados
+    const filteredVehiculoLogs = logs_acceso_vehicular.filter(log => estIds.includes(log.id_estacionamiento));
+    const filteredCarritoLogs = logs_prestamo_carrito.filter(log => aptosIds.includes(log.id_apartamento));
 
-    const recentAccess = [...logs_acceso_vehicular].slice(0, 4);
-    const recentLoans = [...logs_prestamo_carrito].slice(0, 4);
+    const activeVehicles = filteredVehiculoLogs.filter(log => !log.fecha_salida).length;
+    const activeCarLoans = filteredCarritoLogs.filter(log => !log.fecha_salida).length;
+
+    const recentAccess = [...filteredVehiculoLogs].sort((a, b) => new Date(b.fecha_entrada) - new Date(a.fecha_entrada)).slice(0, 4);
+    const recentLoans = [...filteredCarritoLogs].sort((a, b) => new Date(b.fecha_entrada) - new Date(a.fecha_entrada)).slice(0, 4);
     const recentCondoUsers = [...condoUsers].slice(0, 4);
 
     const getRoleName = (roleId) => {
@@ -62,7 +73,7 @@ const ACDashboard = () => {
                         buttonText="Historial"
                         headers={["Placa / Método", "Ocupante", "Estado"]}
                     >
-                        {recentAccess.map((log) => (
+                        {recentAccess.length > 0 ? recentAccess.map((log) => (
                             <tr key={log.id} className="border-bottom border-light">
                                 <td className="px-4 py-3">
                                     <div className="fw-bold text-primary">{log.placa}</div>
@@ -80,7 +91,11 @@ const ACDashboard = () => {
                                     )}
                                 </td>
                             </tr>
-                        ))}
+                        )) : (
+                            <tr>
+                                <td colSpan="3" className="text-center py-4 text-muted small italic">No hay actividad vehicular reciente.</td>
+                            </tr>
+                        )}
                     </DashboardTable>
 
                     <DashboardTable 
@@ -88,7 +103,7 @@ const ACDashboard = () => {
                         buttonText="Gestionar"
                         headers={["Carrito / Usuario", "Departamento", "Estado"]}
                     >
-                        {recentLoans.map((loan) => (
+                        {recentLoans.length > 0 ? recentLoans.map((loan) => (
                             <tr key={loan.id} className="border-bottom border-light">
                                 <td className="px-4 py-3">
                                     <div className="fw-bold text-dark">Carrito #{loan.id_carrito}</div>
@@ -106,7 +121,11 @@ const ACDashboard = () => {
                                     )}
                                 </td>
                             </tr>
-                        ))}
+                        )) : (
+                            <tr>
+                                <td colSpan="3" className="text-center py-4 text-muted small italic">No hay préstamos de carritos recientes.</td>
+                            </tr>
+                        )}
                     </DashboardTable>
                 </div>
 
