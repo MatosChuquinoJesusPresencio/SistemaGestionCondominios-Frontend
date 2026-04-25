@@ -38,7 +38,6 @@ const LoginPage = () => {
                     <form noValidate onSubmit={handleSubmit(onSubmit)}>
                         <AuthInput
                             label="Correo Electrónico"
-                            icon="envelope"
                             type="email"
                             placeholder="ejemplo@correo.com"
                             register={register}
@@ -55,7 +54,6 @@ const LoginPage = () => {
 
                         <AuthInput
                             label="Contraseña"
-                            icon="lock"
                             type="password"
                             placeholder="********"
                             register={register}
