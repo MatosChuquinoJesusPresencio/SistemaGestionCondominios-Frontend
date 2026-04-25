@@ -23,6 +23,7 @@ import SAUsersPage from "../pages/super-admin/SAUsersPage";
 import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
 import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
 import ACInfraestructuraPage from "../pages/admin-condominio/ACInfraestructuraPage";
+import ACResidentesPage from "../pages/admin-condominio/ACResidentesPage";
 
 import PDashboardPage from "../pages/propietario/PDashboardPage";
 
@@ -50,6 +51,7 @@ const AppRouter = () => {
                         <Route index element={<ACDashboardPage />} />
                         <Route path="mi-condominio" element={<ACMiCondominioPage />} />
                         <Route path="infraestructura" element={<ACInfraestructuraPage />} />
+                        <Route path="residentes" element={<ACResidentesPage />} />
                     </Route>
 
                     <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>

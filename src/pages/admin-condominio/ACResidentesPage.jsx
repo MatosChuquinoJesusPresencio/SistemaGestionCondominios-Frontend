@@ -1,27 +1,28 @@
 import { useState, useMemo } from "react";
 import { Button, Card, Col, Row, Table, Badge, Modal, Form, InputGroup, Pagination } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { FaUsers, FaUserPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaUserShield, FaBuilding, FaEnvelope, FaLock, FaCheckCircle, FaTimesCircle, FaSave, FaExclamationTriangle } from "react-icons/fa";
+import { FaUsers, FaUserPlus, FaEdit, FaTrash, FaSearch, FaUserShield, FaBuilding, FaEnvelope, FaCheckCircle, FaExclamationTriangle, FaSave, FaHome } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
-import { ROLES_MAP } from "../../constants/roles";
 
-const SAUsersPage = () => {
+const ACResidentesPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
     
     // Datos
     const usuarios = getTable('usuarios');
-    const condominios = getTable('condominios');
+    const apartamentos = getTable('apartamentos');
+    const pisos = getTable('pisos');
+    const torres = getTable('torres');
+    const condominio = getTable('condominios').find(c => c.id === authUser?.id_condominio);
 
     // Estados
     const [searchTerm, setSearchTerm] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
-    const [condoFilter, setCondoFilter] = useState("all");
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
     
@@ -33,31 +34,34 @@ const SAUsersPage = () => {
 
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
+    // Filtrar usuarios del condominio actual
+    const residentes = useMemo(() => {
+        return usuarios.filter(u => u.id_condominio === authUser?.id_condominio);
+    }, [usuarios, authUser]);
+
     // Estadísticas
     const stats = useMemo(() => ({
-        total: usuarios.length,
-        admins: usuarios.filter(u => u.id_rol === 2).length,
-        propietarios: usuarios.filter(u => u.id_rol === 3).length,
-        activos: usuarios.filter(u => u.activo).length
-    }), [usuarios]);
+        total: residentes.length,
+        propietarios: residentes.filter(u => u.id_rol === 3).length,
+        seguridad: residentes.filter(u => u.id_rol === 4).length,
+        activos: residentes.filter(u => u.activo).length
+    }), [residentes]);
 
-    // Filtrado
-    const filteredUsers = useMemo(() => {
-        setCurrentPage(1); // Reset to first page on filter change
-        return usuarios.filter(user => {
+    // Filtrado para la tabla
+    const filteredResidentes = useMemo(() => {
+        setCurrentPage(1); // Reset page on filter change
+        return residentes.filter(user => {
             const matchesSearch = user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                 user.email.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesRole = roleFilter === "all" || user.id_rol.toString() === roleFilter;
-            const matchesCondo = condoFilter === "all" || 
-                                (condoFilter === "none" ? user.id_condominio === null : user.id_condominio?.toString() === condoFilter);
             
-            return matchesSearch && matchesRole && matchesCondo;
+            return matchesSearch && matchesRole;
         });
-    }, [usuarios, searchTerm, roleFilter, condoFilter]);
+    }, [residentes, searchTerm, roleFilter]);
 
     // Paginación
-    const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
-    const paginatedUsers = filteredUsers.slice(
+    const totalPages = Math.ceil(filteredResidentes.length / ITEMS_PER_PAGE);
+    const paginatedResidentes = filteredResidentes.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
@@ -69,14 +73,12 @@ const SAUsersPage = () => {
             setValue("nombre", user.nombre);
             setValue("email", user.email);
             setValue("id_rol", user.id_rol);
-            setValue("id_condominio", user.id_condominio || "");
             setValue("activo", user.activo);
         } else {
             setEditingUser(null);
             reset({
                 activo: true,
-                id_rol: 2,
-                id_condominio: ""
+                id_rol: 3
             });
         }
         setShowModal(true);
@@ -93,8 +95,7 @@ const SAUsersPage = () => {
             const updated = usuarios.map(u => u.id === editingUser.id ? {
                 ...u,
                 ...data,
-                id_rol: parseInt(data.id_rol),
-                id_condominio: data.id_condominio ? parseInt(data.id_condominio) : null
+                id_rol: parseInt(data.id_rol)
             } : u);
             updateTable('usuarios', updated);
         } else {
@@ -103,26 +104,30 @@ const SAUsersPage = () => {
                 id: newId,
                 ...data,
                 id_rol: parseInt(data.id_rol),
-                id_condominio: data.id_condominio ? parseInt(data.id_condominio) : null,
-                contraseña: "123123" // Contraseña por defecto
+                id_condominio: authUser.id_condominio,
+                contraseña: "123123",
+                activo: true
             };
             updateTable('usuarios', [...usuarios, newUser]);
 
             // Simulación de envío de correo
-            console.group("Simulación: Correo Enviado");
+            console.group("Simulación: Correo Enviado (Residente)");
             console.log(`Para: ${data.email}`);
-            console.log(`Asunto: Bienvenida al Sistema de Gestión de Condominios`);
-            console.log(`Mensaje: Hola ${data.nombre}, tu cuenta ha sido creada.`);
-            console.log(`Credenciales temporales:`);
+            console.log(`Asunto: Acceso al Sistema de Gestión - ${condominio?.nombre}`);
+            console.log(`Mensaje: Hola ${data.nombre}, el administrador te ha registrado.`);
+            console.log(`Tus credenciales son:`);
             console.log(`- Email: ${data.email}`);
             console.log(`- Contraseña: 123123`);
-            console.log(`Por favor, cambia tu contraseña al iniciar sesión.`);
             console.groupEnd();
         }
         handleCloseModal();
     };
 
     const handleDeleteClick = (user) => {
+        // Validación: No borrar si tiene departamentos asignados
+        const hasAptos = apartamentos.some(a => a.id_usuario === user.id);
+        if (hasAptos) return alert("No puedes eliminar a este propietario porque tiene departamentos asignados. Desvincúlalo de la infraestructura primero.");
+
         setUserToDelete(user);
         setShowConfirmDelete(true);
     };
@@ -136,8 +141,7 @@ const SAUsersPage = () => {
 
     const getRoleBadge = (roleId) => {
         const roles = {
-            1: { bg: "danger", label: "Super Admin" },
-            2: { bg: "primary", label: "Admin Condo" },
+            2: { bg: "primary", label: "Admin" },
             3: { bg: "success", label: "Propietario" },
             4: { bg: "info", label: "Seguridad" }
         };
@@ -145,63 +149,55 @@ const SAUsersPage = () => {
         return <Badge bg={role.bg} className="rounded-pill px-3 py-2">{role.label}</Badge>;
     };
 
+    const getAptosString = (userId) => {
+        const userAptos = apartamentos.filter(a => a.id_usuario === userId);
+        if (userAptos.length === 0) return "Sin asignar";
+        return userAptos.map(a => a.numero).join(", ");
+    };
+
     return (
         <AnimatedPage>
             <div className="container-fluid py-4 bg-light min-vh-100">
                 <DashboardHeader 
                     icon={FaUsers}
-                    title="Gestión de Usuarios"
-                    badgeText="Administración"
-                    welcomeText="Gestiona todos los usuarios del sistema, sus roles y condominios asignados."
+                    title="Gestión de Residentes"
+                    badgeText={condominio?.nombre || "Condominio"}
+                    welcomeText="Administra a los propietarios, residentes y personal de seguridad de tu condominio."
                 />
 
                 <Row className="g-4 mb-5">
-                    <StatCard icon={FaUsers} label="Total Usuarios" value={stats.total} colorClass="primary" />
-                    <StatCard icon={FaUserShield} label="Administradores" value={stats.admins} colorClass="warning" />
-                    <StatCard icon={FaBuilding} label="Propietarios" value={stats.propietarios} colorClass="success" />
-                    <StatCard icon={FaCheckCircle} label="Cuentas Activas" value={stats.activos} colorClass="info" />
+                    <StatCard icon={FaUsers} label="Total Residentes" value={stats.total} colorClass="primary" />
+                    <StatCard icon={FaHome} label="Propietarios" value={stats.propietarios} colorClass="success" />
+                    <StatCard icon={FaUserShield} label="Seguridad" value={stats.seguridad} colorClass="info" />
+                    <StatCard icon={FaCheckCircle} label="Activos" value={stats.activos} colorClass="primary" />
                 </Row>
 
                 <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
                     <Card.Header className="bg-white border-0 py-4 px-4">
                         <Row className="align-items-center g-3">
-                            <Col md={4}>
+                            <Col md={5}>
                                 <InputGroup className="input-no-shadow bg-light rounded-pill px-3 py-1 border-0">
                                     <InputGroup.Text className="bg-transparent border-0 text-muted">
                                         <FaSearch />
                                     </InputGroup.Text>
                                     <Form.Control 
-                                        placeholder="Buscar por nombre o correo..." 
+                                        placeholder="Buscar residente por nombre o email..." 
                                         className="bg-transparent border-0 py-2 shadow-none"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
                                 </InputGroup>
                             </Col>
-                            <Col md={2}>
+                            <Col md={3}>
                                 <Form.Select 
                                     className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
                                     value={roleFilter}
                                     onChange={(e) => setRoleFilter(e.target.value)}
                                 >
                                     <option value="all">Todos los Roles</option>
-                                    <option value="1">Super Admin</option>
-                                    <option value="2">Admin Condo</option>
                                     <option value="3">Propietario</option>
                                     <option value="4">Seguridad</option>
-                                </Form.Select>
-                            </Col>
-                            <Col md={2}>
-                                <Form.Select 
-                                    className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
-                                    value={condoFilter}
-                                    onChange={(e) => setCondoFilter(e.target.value)}
-                                >
-                                    <option value="all">Todos los Condominios</option>
-                                    <option value="none">Sin Condominio</option>
-                                    {condominios.map(c => (
-                                        <option key={c.id} value={c.id}>{c.nombre}</option>
-                                    ))}
+                                    <option value="2">Administrador</option>
                                 </Form.Select>
                             </Col>
                             <Col md={4} className="text-md-end">
@@ -209,7 +205,7 @@ const SAUsersPage = () => {
                                     className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0 d-flex align-items-center gap-2 ms-auto"
                                     onClick={() => handleShowModal()}
                                 >
-                                    <FaUserPlus /> Nuevo Usuario
+                                    <FaUserPlus /> Nuevo Residente
                                 </Button>
                             </Col>
                         </Row>
@@ -219,15 +215,15 @@ const SAUsersPage = () => {
                             <Table hover className="align-middle mb-0 custom-table">
                                 <thead className="bg-light text-muted small text-uppercase">
                                     <tr>
-                                        <th className="px-4 py-3 border-0">Usuario</th>
+                                        <th className="px-4 py-3 border-0">Residente</th>
                                         <th className="py-3 border-0">Rol</th>
-                                        <th className="py-3 border-0">Condominio</th>
+                                        <th className="py-3 border-0">Departamentos</th>
                                         <th className="py-3 border-0 text-center">Estado</th>
                                         <th className="px-4 py-3 border-0 text-end">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {paginatedUsers.length > 0 ? paginatedUsers.map((user) => (
+                                    {paginatedResidentes.length > 0 ? paginatedResidentes.map((user) => (
                                         <tr key={user.id} className="border-bottom border-light">
                                             <td className="px-4 py-3">
                                                 <div className="d-flex align-items-center gap-3">
@@ -244,10 +240,9 @@ const SAUsersPage = () => {
                                                 {getRoleBadge(user.id_rol)}
                                             </td>
                                             <td className="py-3">
-                                                <div className="small fw-medium text-secondary">
-                                                    {user.id_condominio 
-                                                        ? condominios.find(c => c.id === user.id_condominio)?.nombre 
-                                                        : "Plataforma Global"}
+                                                <div className="d-flex align-items-center gap-2 small fw-medium text-secondary">
+                                                    <FaHome className="text-muted" />
+                                                    {getAptosString(user.id)}
                                                 </div>
                                             </td>
                                             <td className="py-3 text-center">
@@ -279,7 +274,7 @@ const SAUsersPage = () => {
                                     )) : (
                                         <tr>
                                             <td colSpan="5" className="text-center py-5 text-muted">
-                                                No se encontraron usuarios con los criterios de búsqueda.
+                                                No hay residentes que coincidan con la búsqueda.
                                             </td>
                                         </tr>
                                     )}
@@ -290,7 +285,7 @@ const SAUsersPage = () => {
                     {totalPages > 1 && (
                         <Card.Footer className="bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
                             <div className="small text-muted">
-                                Mostrando {paginatedUsers.length} de {filteredUsers.length} usuarios
+                                Mostrando {paginatedResidentes.length} de {filteredResidentes.length} residentes
                             </div>
                             <Pagination className="mb-0 pagination-sm">
                                 <Pagination.Prev 
@@ -323,7 +318,7 @@ const SAUsersPage = () => {
                         <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
                             {editingUser ? <FaEdit /> : <FaUserPlus />}
                         </div>
-                        {editingUser ? "Editar Usuario" : "Crear Nuevo Usuario"}
+                        {editingUser ? "Editar Residente" : "Registrar Nuevo Residente"}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
@@ -336,7 +331,7 @@ const SAUsersPage = () => {
                                     register={register}
                                     validation={{ required: "El nombre es requerido" }}
                                     error={errors.nombre}
-                                    placeholder="Nombre y Apellidos"
+                                    placeholder="Ej: Juan Pérez"
                                 />
                             </Col>
                             <Col md={6}>
@@ -358,48 +353,43 @@ const SAUsersPage = () => {
                         <Row>
                             <Col md={6}>
                                 <div className="mb-4">
-                                    <label className="form-label text-secondary fw-semibold small mb-1">Rol en el Sistema</label>
+                                    <label className="form-label text-secondary fw-semibold small mb-1">Tipo de Usuario</label>
                                     <Form.Select 
                                         {...register("id_rol", { required: "Selecciona un rol" })}
                                         className={`form-control input-no-shadow ${errors.id_rol ? "is-invalid" : ""}`}
                                     >
-                                        <option value="1">Super Admin</option>
-                                        <option value="2">Admin Condominio</option>
-                                        <option value="3">Propietario</option>
-                                        <option value="4">Seguridad</option>
+                                        <option value="3">Propietario / Residente</option>
+                                        <option value="4">Agente de Seguridad</option>
+                                        <option value="2">Administrador</option>
                                     </Form.Select>
                                     {errors.id_rol && <div className="invalid-feedback">{errors.id_rol.message}</div>}
                                 </div>
                             </Col>
                             <Col md={6}>
                                 <div className="mb-4">
-                                    <label className="form-label text-secondary fw-semibold small mb-1">Condominio Asignado</label>
-                                    <Form.Select 
-                                        {...register("id_condominio")}
-                                        className="form-control input-no-shadow"
-                                    >
-                                        <option value="">Ninguno (Acceso Global)</option>
-                                        {condominios.map(c => (
-                                            <option key={c.id} value={c.id}>{c.nombre}</option>
-                                        ))}
-                                    </Form.Select>
-                                    <div className="x-small text-muted mt-1">Obligatorio para Admins de Condo y Residentes.</div>
+                                    <label className="form-label text-secondary fw-semibold small mb-1">Condominio</label>
+                                    <Form.Control 
+                                        value={condominio?.nombre || ""} 
+                                        disabled 
+                                        className="form-control input-no-shadow bg-light border-0"
+                                    />
+                                    <div className="x-small text-muted mt-1">El usuario se registrará automáticamente en este condominio.</div>
                                 </div>
                             </Col>
                         </Row>
 
                         <div className="p-3 mb-4 rounded-4 bg-light border-0 d-flex justify-content-between align-items-center">
                             <div>
-                                <span className="fw-bold text-dark d-block">Estado de la cuenta</span>
+                                <span className="fw-bold text-dark d-block">Acceso al Sistema</span>
                                 <span className="text-muted small">
                                     {editingUser?.id === authUser?.id 
-                                        ? "No puedes desactivar tu propia cuenta." 
-                                        : "Los usuarios inactivos no podrán iniciar sesión."}
+                                        ? "No puedes suspender tu propio acceso." 
+                                        : "Desactiva esta opción para suspender el acceso de este usuario."}
                                 </span>
                             </div>
                             <Form.Check 
                                 type="switch"
-                                id="user-status-switch"
+                                id="residente-status-switch"
                                 {...register("activo")}
                                 disabled={editingUser?.id === authUser?.id}
                             />
@@ -410,7 +400,7 @@ const SAUsersPage = () => {
                                 Cancelar
                             </Button>
                             <Button type="submit" className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0">
-                                <FaSave className="me-2" /> {editingUser ? "Actualizar Datos" : "Registrar Usuario"}
+                                <FaSave className="me-2" /> {editingUser ? "Guardar Cambios" : "Completar Registro"}
                             </Button>
                         </div>
                     </Form>
@@ -421,8 +411,8 @@ const SAUsersPage = () => {
             <Modal show={showConfirmDelete} onHide={() => setShowConfirmDelete(false)} centered size="sm">
                 <Modal.Body className="text-center p-4">
                     <FaExclamationTriangle size={40} className="text-danger mb-3" />
-                    <h5 className="fw-bold text-dark">¿Eliminar usuario?</h5>
-                    <p className="text-secondary small">Esta acción borrará al usuario <b>{userToDelete?.nombre}</b> permanentemente.</p>
+                    <h5 className="fw-bold text-dark">Eliminar Residente</h5>
+                    <p className="text-secondary small">¿Estás seguro de eliminar a <b>{userToDelete?.nombre}</b>?</p>
                     <div className="d-flex justify-content-center gap-2 mt-3">
                         <Button variant="light" onClick={() => setShowConfirmDelete(false)} className="rounded-pill px-3 small fw-bold">Cancelar</Button>
                         <Button variant="danger" onClick={handleConfirmDelete} className="rounded-pill px-3 small fw-bold shadow-sm border-0">Eliminar</Button>
@@ -466,4 +456,4 @@ const SAUsersPage = () => {
     );
 };
 
-export default SAUsersPage;
+export default ACResidentesPage;
