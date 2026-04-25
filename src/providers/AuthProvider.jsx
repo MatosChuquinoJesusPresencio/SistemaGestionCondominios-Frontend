@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (authUser) {
       const currentUser = usuariosData.find(u => u.id === authUser.id);
-      
+
       if (!currentUser || !currentUser.activo) {
         logout();
       }
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (!foundUser.activo) {
-        setAuthError("Tu cuenta ha sido desactivada por un administrador.");
+        setAuthError("Tu cuenta ha sido desactivada.");
         return { success: false };
       }
 

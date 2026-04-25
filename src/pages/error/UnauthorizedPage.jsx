@@ -31,4 +31,4 @@ const UnauthorizedPage = () => {
     );
 };
 
-export default UnauthorizedPage;
+export default UnauthorizedPage;

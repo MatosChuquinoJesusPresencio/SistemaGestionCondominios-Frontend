@@ -1,13 +1,16 @@
 import { useState, useMemo } from "react";
-import { Button, Card, Col, Row, Table, Badge, Modal, Form, InputGroup, Pagination } from "react-bootstrap";
+import { Button, Card, Col, Row, Table, Badge, Modal, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { FaHome, FaUser, FaUsers, FaPlus, FaSearch, FaFilter, FaEdit, FaTrash, FaInfoCircle, FaBuilding, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+import { FaHome, FaUser, FaUsers, FaPlus, FaTrash, FaInfoCircle, FaBuilding, FaChevronRight, FaCheckCircle } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
+import SearchBar from "../../components/ui/SearchBar";
+import TablePagination from "../../components/ui/TablePagination";
+import EmptyState from "../../components/ui/EmptyState";
 
 const ACApartamentosPage = () => {
     const { authUser } = useAuth();
@@ -140,33 +143,18 @@ const ACApartamentosPage = () => {
 
                 <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
                     <Card.Header className="bg-white border-0 py-4 px-4">
-                        <Row className="align-items-center g-3">
-                            <Col md={5}>
-                                <InputGroup className="input-no-shadow bg-light rounded-pill px-3 py-1 border-0">
-                                    <InputGroup.Text className="bg-transparent border-0 text-muted">
-                                        <FaSearch />
-                                    </InputGroup.Text>
-                                    <Form.Control 
-                                        placeholder="Buscar por número o propietario..." 
-                                        className="bg-transparent border-0 py-2 shadow-none"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </InputGroup>
-                            </Col>
-                            <Col md={3}>
-                                <Form.Select 
-                                    className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
-                                    value={towerFilter}
-                                    onChange={(e) => setTowerFilter(e.target.value)}
-                                >
-                                    <option value="all">Todas las Torres</option>
-                                    {torresCondo.map(t => (
-                                        <option key={t.id} value={t.nombre}>{t.nombre}</option>
-                                    ))}
-                                </Form.Select>
-                            </Col>
-                        </Row>
+                        <SearchBar 
+                            searchTerm={searchTerm}
+                            onSearchChange={setSearchTerm}
+                            placeholder="Buscar por número o propietario..."
+                            filterValue={towerFilter}
+                            onFilterChange={setTowerFilter}
+                            filterOptions={[
+                                { value: "all", label: "Todas las Torres" },
+                                ...torresCondo.map(t => ({ value: t.nombre, label: t.nombre }))
+                            ]}
+                            colSize={{ search: 5, filter: 3 }}
+                        />
                     </Card.Header>
                     <Card.Body className="p-0">
                         <div className="table-responsive">
@@ -231,32 +219,23 @@ const ACApartamentosPage = () => {
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr>
-                                            <td colSpan="5" className="text-center py-5 text-muted">
-                                                No se encontraron unidades con los filtros aplicados.
-                                            </td>
-                                        </tr>
+                                        <EmptyState 
+                                            colSpan={5} 
+                                            message="No se encontraron unidades con los filtros aplicados." 
+                                            icon={FaHome} 
+                                        />
                                     )}
                                 </tbody>
                             </Table>
                         </div>
                     </Card.Body>
-                    {totalPages > 1 && (
-                        <Card.Footer className="bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center border-top">
-                            <div className="small text-muted">
-                                Mostrando {paginatedAptos.length} de {filteredAptos.length} unidades
-                            </div>
-                            <Pagination className="mb-0 pagination-sm">
-                                <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} />
-                                {[...Array(totalPages)].map((_, i) => (
-                                    <Pagination.Item key={i+1} active={i+1 === currentPage} onClick={() => setCurrentPage(i+1)}>
-                                        {i+1}
-                                    </Pagination.Item>
-                                ))}
-                                <Pagination.Next disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} />
-                            </Pagination>
-                        </Card.Footer>
-                    )}
+                    <TablePagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredAptos.length}
+                        itemsShowing={paginatedAptos.length}
+                    />
                 </Card>
             </div>
 

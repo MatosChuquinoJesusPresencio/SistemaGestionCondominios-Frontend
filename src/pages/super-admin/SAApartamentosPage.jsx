@@ -5,8 +5,11 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
+import SearchBar from "../../components/ui/SearchBar";
+import TablePagination from "../../components/ui/TablePagination";
+import EmptyState from "../../components/ui/EmptyState";
 
-const SAUnidadesPage = () => {
+const SAApartamentosPage = () => {
     const { getTable } = useData();
     
     // Datos globales
@@ -57,7 +60,6 @@ const SAUnidadesPage = () => {
 
     // Filtrado de la tabla
     const filteredAptos = useMemo(() => {
-        setCurrentPage(1);
         return allAptos.filter(apto => {
             const matchesSearch = apto.numero.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                 apto.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -104,34 +106,18 @@ const SAUnidadesPage = () => {
 
                 <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
                     <Card.Header className="bg-white border-0 py-4 px-4">
-                        <Row className="align-items-center g-3">
-                            <Col lg={4}>
-                                <InputGroup className="input-no-shadow bg-light rounded-pill px-3 py-1 border-0">
-                                    <InputGroup.Text className="bg-transparent border-0 text-muted">
-                                        <FaSearch />
-                                    </InputGroup.Text>
-                                    <Form.Control 
-                                        placeholder="Buscar por unidad, propietario o condo..." 
-                                        className="bg-transparent border-0 py-2 shadow-none"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </InputGroup>
-                            </Col>
-                            <Col lg={3}>
-                                <Form.Select 
-                                    className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
-                                    value={condoFilter}
-                                    onChange={(e) => setCondoFilter(e.target.value)}
-                                >
-                                    <option value="all">Todos los Condominios</option>
-                                    {condominios.map(c => (
-                                        <option key={c.id} value={c.id}>{c.nombre}</option>
-                                    ))}
-                                </Form.Select>
-                            </Col>
-
-                        </Row>
+                        <SearchBar 
+                            searchTerm={searchTerm}
+                            onSearchChange={(val) => { setSearchTerm(val); setCurrentPage(1); }}
+                            placeholder="Buscar por unidad, propietario o condo..."
+                            filterValue={condoFilter}
+                            onFilterChange={(val) => { setCondoFilter(val); setCurrentPage(1); }}
+                            filterOptions={[
+                                { value: "all", label: "Todos los Condominios" },
+                                ...condominios.map(c => ({ value: c.id.toString(), label: c.nombre }))
+                            ]}
+                            colSize={{ search: 4, filter: 3 }}
+                        />
                     </Card.Header>
                     <Card.Body className="p-0">
                         <div className="table-responsive">
@@ -182,32 +168,23 @@ const SAUnidadesPage = () => {
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr>
-                                            <td colSpan="6" className="text-center py-5 text-muted italic">
-                                                No hay unidades que coincidan con los criterios de búsqueda global.
-                                            </td>
-                                        </tr>
+                                        <EmptyState 
+                                            colSpan={6} 
+                                            message="No hay unidades que coincidan con los criterios de búsqueda global." 
+                                            icon={FaHome} 
+                                        />
                                     )}
                                 </tbody>
                             </Table>
                         </div>
                     </Card.Body>
-                    {totalPages > 1 && (
-                        <Card.Footer className="bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center border-top">
-                            <div className="small text-muted">
-                                Mostrando {paginatedAptos.length} de {filteredAptos.length} unidades totales
-                            </div>
-                            <Pagination className="mb-0 pagination-sm">
-                                <Pagination.Prev disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} />
-                                {[...Array(totalPages)].map((_, i) => (
-                                    <Pagination.Item key={i+1} active={i+1 === currentPage} onClick={() => setCurrentPage(i+1)}>
-                                        {i+1}
-                                    </Pagination.Item>
-                                ))}
-                                <Pagination.Next disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} />
-                            </Pagination>
-                        </Card.Footer>
-                    )}
+                    <TablePagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredAptos.length}
+                        itemsShowing={paginatedAptos.length}
+                    />
                 </Card>
             </div>
 
@@ -272,4 +249,4 @@ const SAUnidadesPage = () => {
     );
 };
 
-export default SAUnidadesPage;
+export default SAApartamentosPage;

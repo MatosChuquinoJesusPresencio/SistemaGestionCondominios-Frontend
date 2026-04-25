@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Modal, Button, Form, ListGroup, InputGroup } from "react-bootstrap";
+import { Modal, Button, Form, ListGroup, Card, Row, Col, Table } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import DashboardTable from "../../components/dashboard/DashboardTable";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
 import CondoDetailModal from "../../components/modals/CondoDetailModal";
-import { FaBuilding, FaUsersCog, FaCog, FaPlusCircle, FaEye, FaEdit, FaTrashAlt, FaMapMarkerAlt, FaCalendarAlt, FaGlobe, FaSave, FaTimes, FaExclamationTriangle, FaInfoCircle, FaSearch } from "react-icons/fa";
+import SearchBar from "../../components/ui/SearchBar";
+import TablePagination from "../../components/ui/TablePagination";
+import EmptyState from "../../components/ui/EmptyState";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
+import { FaBuilding, FaEye, FaEdit, FaPlusCircle, FaGlobe, FaMapMarkerAlt, FaUsersCog, FaCalendarAlt, FaTrashAlt, FaInfoCircle, FaTimes, FaSave, FaExclamationTriangle } from "react-icons/fa";
+
 
 const SACondominiosPage = () => {
     const { authUser } = useAuth();
@@ -48,7 +51,9 @@ const SACondominiosPage = () => {
 
     // Filtrar condominios por nombre
     const filteredCondominios = condominios.filter(condo => 
-        condo.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        condo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        condo.pais.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Lógica de Paginación
@@ -57,11 +62,6 @@ const SACondominiosPage = () => {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1); // Resetear a página 1 al buscar
-    };
 
     const handleClose = () => {
         setShowModal(false);
@@ -191,93 +191,117 @@ const SACondominiosPage = () => {
                     </button>
                 </DashboardHeader>
 
-                <div className="row g-4">
-                    <DashboardTable 
-                        title="Lista de Condominios"
-                        headers={["#", "Nombre", "Ubicación", "Administrador", "Fecha Registro", "Acciones"]}
-                        colSize="col-xl-12"
-                        searchPlaceholder="Buscar por nombre..."
-                        searchValue={searchTerm}
-                        onSearchChange={handleSearchChange}
+                <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                    <Card.Header className="bg-white border-0 py-4 px-4">
+                        <Row className="align-items-center g-3">
+                            <Col md={8}>
+                                <SearchBar 
+                                    searchTerm={searchTerm}
+                                    onSearchChange={(val) => { setSearchTerm(val); setCurrentPage(1); }}
+                                    placeholder="Buscar por nombre, país o dirección..."
+                                />
+                            </Col>
+                        </Row>
+                    </Card.Header>
+                    <div className="table-responsive">
+                        <Table hover className="align-middle mb-0 custom-table">
+                            <thead className="bg-light text-muted small text-uppercase">
+                                <tr>
+                                    <th className="px-4 py-3 border-0 text-center">#</th>
+                                    <th className="py-3 border-0">Condominio</th>
+                                    <th className="py-3 border-0">Ubicación</th>
+                                    <th className="py-3 border-0">Administrador</th>
+                                    <th className="py-3 border-0">Registro</th>
+                                    <th className="px-4 py-3 border-0 text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentItems.length > 0 ? currentItems.map((condo, index) => {
+                                    const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
+                                    const admin = adminUsers.find(u => u.id_condominio === condo.id);
+                                    return (
+                                        <tr key={condo.id} className="border-bottom border-light">
+                                            <td className="px-4 py-3 text-center">
+                                                <span className="text-secondary fw-bold">{(actualIndex).toString().padStart(2, '0')}</span>
+                                            </td>
+                                            <td className="py-3">
+                                                <div className="fw-bold text-dark mb-0">{condo.nombre}</div>
+                                                <div className="x-small text-muted d-flex align-items-center gap-1">
+                                                    <FaGlobe className="text-primary opacity-50" /> {condo.pais}
+                                                </div>
+                                            </td>
+                                            <td className="py-3">
+                                                <div className="small fw-medium text-dark">{condo.direccion}</div>
+                                                <div className="x-small text-muted d-flex align-items-center gap-1">
+                                                    <FaMapMarkerAlt className="text-danger opacity-50" /> {condo.ciudad}
+                                                </div>
+                                            </td>
+                                            <td className="py-3">
+                                                {admin ? (
+                                                    <div className="d-flex align-items-center gap-2">
+                                                        <div className="p-2 rounded-circle bg-primary bg-opacity-10 text-primary small">
+                                                            <FaUsersCog />
+                                                        </div>
+                                                        <div>
+                                                            <div className="small fw-bold text-dark">{admin.nombre}</div>
+                                                            <div className="x-small text-muted">{admin.email}</div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <span className="badge bg-light text-muted fw-normal border">Sin asignar</span>
+                                                )}
+                                            </td>
+                                            <td className="py-3">
+                                                <div className="small text-dark d-flex align-items-center gap-2">
+                                                    <FaCalendarAlt className="text-secondary opacity-50" />
+                                                    {new Date(condo.fecha_creacion).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-end">
+                                                <div className="d-flex justify-content-end gap-2">
+                                                    <Button 
+                                                        variant="light" 
+                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-info bg-opacity-10 text-info fw-bold small" 
+                                                        onClick={() => handleDetailClick(condo)}
+                                                    >
+                                                        <FaEye size={14} /> <span>Detalles</span>
+                                                    </Button>
+                                                    <Button 
+                                                        variant="light" 
+                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-warning bg-opacity-10 text-warning fw-bold small" 
+                                                        onClick={() => handleShow(condo)}
+                                                    >
+                                                        <FaEdit size={14} /> <span>Editar</span>
+                                                    </Button>
+                                                    <Button 
+                                                        variant="light" 
+                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-danger bg-opacity-10 text-danger fw-bold small" 
+                                                        onClick={() => handleDeleteClick(condo)}
+                                                    >
+                                                        <FaTrashAlt size={14} /> <span>Borrar</span>
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                }) : (
+                                    <EmptyState 
+                                        colSpan={6} 
+                                        message={searchTerm ? `No se encontraron condominios que coincidan con "${searchTerm}"` : "No hay condominios registrados."} 
+                                        icon={FaBuilding} 
+                                    />
+                                )}
+                            </tbody>
+                        </Table>
+                    </div>
+                    <TablePagination 
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
-                    >
-                        {currentItems.map((condo, index) => {
-                            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
-                            const admin = adminUsers.find(u => u.id_condominio === condo.id);
-                            return (
-                                <tr key={condo.id} className="border-bottom border-light">
-                                    <td className="px-4 py-3 text-center">
-                                        <span className="text-secondary fw-bold">{(actualIndex).toString().padStart(2, '0')}</span>
-                                    </td>
-                                    <td className="py-3">
-                                        <div className="fw-bold text-dark mb-0">{condo.nombre}</div>
-                                        <div className="x-small text-muted d-flex align-items-center gap-1">
-                                            <FaGlobe className="text-primary opacity-50" /> {condo.pais}
-                                        </div>
-                                    </td>
-                                    <td className="py-3">
-                                        <div className="small fw-medium text-dark">{condo.direccion}</div>
-                                        <div className="x-small text-muted d-flex align-items-center gap-1">
-                                            <FaMapMarkerAlt className="text-danger opacity-50" /> {condo.ciudad}
-                                        </div>
-                                    </td>
-                                    <td className="py-3">
-                                        {admin ? (
-                                            <div className="d-flex align-items-center gap-2">
-                                                <div className="p-2 rounded-circle bg-primary bg-opacity-10 text-primary small">
-                                                    <FaUsersCog />
-                                                </div>
-                                                <div>
-                                                    <div className="small fw-bold text-dark">{admin.nombre}</div>
-                                                    <div className="x-small text-muted">{admin.email}</div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <span className="badge bg-light text-muted fw-normal border">Sin asignar</span>
-                                        )}
-                                    </td>
-                                    <td className="py-3">
-                                        <div className="small text-dark d-flex align-items-center gap-2">
-                                            <FaCalendarAlt className="text-secondary opacity-50" />
-                                            {new Date(condo.fecha_creacion).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-3 text-end">
-                                        <div className="d-flex justify-content-end gap-2">
-                                            <button 
-                                                className="btn btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-info bg-opacity-10 text-info fw-bold small" 
-                                                onClick={() => handleDetailClick(condo)}
-                                            >
-                                                <FaEye size={14} /> <span>Detalles</span>
-                                            </button>
-                                            <button 
-                                                className="btn btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-warning bg-opacity-10 text-warning fw-bold small" 
-                                                onClick={() => handleShow(condo)}
-                                            >
-                                                <FaEdit size={14} /> <span>Editar</span>
-                                            </button>
-                                            <button 
-                                                className="btn btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-danger bg-opacity-10 text-danger fw-bold small" 
-                                                onClick={() => handleDeleteClick(condo)}
-                                            >
-                                                <FaTrashAlt size={14} /> <span>Borrar</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        {currentItems.length === 0 && (
-                            <tr>
-                                <td colSpan="6" className="text-center py-5 text-muted">
-                                    {searchTerm ? `No se encontraron condominios que coincidan con "${searchTerm}"` : "No hay condominios registrados."}
-                                </td>
-                            </tr>
-                        )}
-                    </DashboardTable>
-                </div>
+                        totalItems={filteredCondominios.length}
+                        itemsShowing={currentItems.length}
+                    />
+                </Card>
             </div>
 
             <CondoDetailModal 
@@ -445,12 +469,9 @@ const SACondominiosPage = () => {
                 .btn-action.text-warning:hover { background-color: #ffc107 !important; color: white !important; }
                 .btn-action.text-danger:hover { background-color: #dc3545 !important; color: white !important; }
                 
-                .search-group {
-                    width: 300px;
-                    border-radius: 0.75rem;
-                    overflow: hidden;
-                    background-color: white;
-                    border: 1px solid #e5e7eb;
+                .custom-table th {
+                    font-weight: 600;
+                    letter-spacing: 0.5px;
                 }
 
                 .transition-all { transition: all 0.2s ease-in-out; }

@@ -8,9 +8,12 @@ import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
+import SearchBar from "../../components/ui/SearchBar";
+import TablePagination from "../../components/ui/TablePagination";
+import EmptyState from "../../components/ui/EmptyState";
 import { ROLES_MAP } from "../../constants/roles";
 
-const SAUsersPage = () => {
+const SAUsuariosPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
     
@@ -43,7 +46,6 @@ const SAUsersPage = () => {
 
     // Filtrado
     const filteredUsers = useMemo(() => {
-        setCurrentPage(1); // Reset to first page on filter change
         return usuarios.filter(user => {
             const matchesSearch = user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                 user.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -107,17 +109,6 @@ const SAUsersPage = () => {
                 contraseña: "123123" // Contraseña por defecto
             };
             updateTable('usuarios', [...usuarios, newUser]);
-
-            // Simulación de envío de correo
-            console.group("Simulación: Correo Enviado");
-            console.log(`Para: ${data.email}`);
-            console.log(`Asunto: Bienvenida al Sistema de Gestión de Condominios`);
-            console.log(`Mensaje: Hola ${data.nombre}, tu cuenta ha sido creada.`);
-            console.log(`Credenciales temporales:`);
-            console.log(`- Email: ${data.email}`);
-            console.log(`- Contraseña: 123123`);
-            console.log(`Por favor, cambia tu contraseña al iniciar sesión.`);
-            console.groupEnd();
         }
         handleCloseModal();
     };
@@ -166,23 +157,17 @@ const SAUsersPage = () => {
                     <Card.Header className="bg-white border-0 py-4 px-4">
                         <Row className="align-items-center g-3">
                             <Col md={4}>
-                                <InputGroup className="input-no-shadow bg-light rounded-pill px-3 py-1 border-0">
-                                    <InputGroup.Text className="bg-transparent border-0 text-muted">
-                                        <FaSearch />
-                                    </InputGroup.Text>
-                                    <Form.Control 
-                                        placeholder="Buscar por nombre o correo..." 
-                                        className="bg-transparent border-0 py-2 shadow-none"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </InputGroup>
+                                <SearchBar 
+                                    searchTerm={searchTerm}
+                                    onSearchChange={(val) => { setSearchTerm(val); setCurrentPage(1); }}
+                                    placeholder="Buscar por nombre o correo..."
+                                />
                             </Col>
                             <Col md={2}>
                                 <Form.Select 
                                     className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
                                     value={roleFilter}
-                                    onChange={(e) => setRoleFilter(e.target.value)}
+                                    onChange={(e) => { setRoleFilter(e.target.value); setCurrentPage(1); }}
                                 >
                                     <option value="all">Todos los Roles</option>
                                     <option value="1">Super Admin</option>
@@ -195,7 +180,7 @@ const SAUsersPage = () => {
                                 <Form.Select 
                                     className="form-control rounded-pill border-light shadow-sm py-2 px-3 small"
                                     value={condoFilter}
-                                    onChange={(e) => setCondoFilter(e.target.value)}
+                                    onChange={(e) => { setCondoFilter(e.target.value); setCurrentPage(1); }}
                                 >
                                     <option value="all">Todos los Condominios</option>
                                     <option value="none">Sin Condominio</option>
@@ -277,42 +262,23 @@ const SAUsersPage = () => {
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr>
-                                            <td colSpan="5" className="text-center py-5 text-muted">
-                                                No se encontraron usuarios con los criterios de búsqueda.
-                                            </td>
-                                        </tr>
+                                        <EmptyState 
+                                            colSpan={5} 
+                                            message="No se encontraron usuarios con los criterios de búsqueda." 
+                                            icon={FaUsers} 
+                                        />
                                     )}
                                 </tbody>
                             </Table>
                         </div>
                     </Card.Body>
-                    {totalPages > 1 && (
-                        <Card.Footer className="bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
-                            <div className="small text-muted">
-                                Mostrando {paginatedUsers.length} de {filteredUsers.length} usuarios
-                            </div>
-                            <Pagination className="mb-0 pagination-sm">
-                                <Pagination.Prev 
-                                    disabled={currentPage === 1} 
-                                    onClick={() => setCurrentPage(prev => prev - 1)} 
-                                />
-                                {[...Array(totalPages)].map((_, i) => (
-                                    <Pagination.Item 
-                                        key={i + 1} 
-                                        active={i + 1 === currentPage}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                    >
-                                        {i + 1}
-                                    </Pagination.Item>
-                                ))}
-                                <Pagination.Next 
-                                    disabled={currentPage === totalPages} 
-                                    onClick={() => setCurrentPage(prev => prev + 1)} 
-                                />
-                            </Pagination>
-                        </Card.Footer>
-                    )}
+                    <TablePagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredUsers.length}
+                        itemsShowing={paginatedUsers.length}
+                    />
                 </Card>
             </div>
 
@@ -466,4 +432,4 @@ const SAUsersPage = () => {
     );
 };
 
-export default SAUsersPage;
+export default SAUsuariosPage;

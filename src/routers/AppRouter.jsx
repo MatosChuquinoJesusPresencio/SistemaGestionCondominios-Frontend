@@ -18,21 +18,21 @@ import RedirectPage from "../pages/utility/RedirectPage";
 
 import SADashboardPage from "../pages/super-admin/SADashboardPage";
 import SACondominiosPage from "../pages/super-admin/SACondominiosPage";
-import SAUsersPage from "../pages/super-admin/SAUsersPage";
-import SAUnidadesPage from "../pages/super-admin/SAUnidadesPage";
-import SABitacoraPage from "../pages/super-admin/SABitacoraPage";
+import SAUsuariosPage from "../pages/super-admin/SAUsuariosPage";
+import SAApartamentosPage from "../pages/super-admin/SAApartamentosPage";
+import SAHistorialPage from "../pages/super-admin/SAHistorialPage";
 
-import ACDashboardPage from "../pages/admin-condominio/ACDashboard";
+import ACDashboardPage from "../pages/admin-condominio/ACDashboardPage";
 import ACMiCondominioPage from "../pages/admin-condominio/ACMiCondominioPage";
 import ACInfraestructuraPage from "../pages/admin-condominio/ACInfraestructuraPage";
-import ACResidentesPage from "../pages/admin-condominio/ACResidentesPage";
 import ACApartamentosPage from "../pages/admin-condominio/ACApartamentosPage";
-import ACLogsPage from "../pages/admin-condominio/ACLogsPage";
+import ACUsuariosPage from "../pages/admin-condominio/ACUsuariosPage";
+import ACHistorialPage from "../pages/admin-condominio/ACHistorialPage";
 
-import PDashboardPage from "../pages/propietario/PDashboardPage";
-import PRUnidadPage from "../pages/propietario/PRUnidadPage";
+import PRDashboardPage from "../pages/propietario/PRDashboardPage";
+import PRMiApartamentoPage from "../pages/propietario/PRMiApartamentoPage";
 import PRVehiculosPage from "../pages/propietario/PRVehiculosPage";
-import PRActividadPage from "../pages/propietario/PRActividadPage";
+import PRHistorialPage from "../pages/propietario/PRHistorialPage";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -51,25 +51,25 @@ const AppRouter = () => {
                     <Route path="/super-admin" element={<RoleRoute allowedRoles={["SUPER_ADMIN"]} />}>
                         <Route index element={<SADashboardPage />} />
                         <Route path="condominios" element={<SACondominiosPage />} />
-                        <Route path="usuarios" element={<SAUsersPage />} />
-                        <Route path="unidades" element={<SAUnidadesPage />} />
-                        <Route path="bitacora" element={<SABitacoraPage />} />
+                        <Route path="usuarios" element={<SAUsuariosPage />} />
+                        <Route path="apartamentos" element={<SAApartamentosPage />} />
+                        <Route path="historial" element={<SAHistorialPage />} />
                     </Route>
 
                     <Route path="/admin-condominio" element={<RoleRoute allowedRoles={["ADMIN_CONDOMINIO"]} />}>
                         <Route index element={<ACDashboardPage />} />
                         <Route path="mi-condominio" element={<ACMiCondominioPage />} />
                         <Route path="infraestructura" element={<ACInfraestructuraPage />} />
-                        <Route path="residentes" element={<ACResidentesPage />} />
                         <Route path="apartamentos" element={<ACApartamentosPage />} />
-                        <Route path="bitacora" element={<ACLogsPage />} />
+                        <Route path="usuarios" element={<ACUsuariosPage />} />
+                        <Route path="historial" element={<ACHistorialPage />} />
                     </Route>
 
                     <Route path="/propietario" element={<RoleRoute allowedRoles={["PROPIETARIO"]} />}>
-                        <Route index element={<PDashboardPage />} />
-                        <Route path="unidad" element={<PRUnidadPage />} />
+                        <Route index element={<PRDashboardPage />} />
+                        <Route path="mi-apartamento" element={<PRMiApartamentoPage />} />
                         <Route path="vehiculos" element={<PRVehiculosPage />} />
-                        <Route path="actividad" element={<PRActividadPage />} />
+                        <Route path="historial" element={<PRHistorialPage />} />
                     </Route>
                 </Route>
 

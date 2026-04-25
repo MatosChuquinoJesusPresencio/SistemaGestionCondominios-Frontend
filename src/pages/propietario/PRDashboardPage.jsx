@@ -6,7 +6,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import DashboardTable from "../../components/dashboard/DashboardTable";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 
-const PDashboardPage = () => {
+const PRDashboardPage = () => {
     const { getTable } = useData();
     const { authUser } = useAuth();
 
@@ -120,4 +120,4 @@ const PDashboardPage = () => {
     );
 };
 
-export default PDashboardPage;
+export default PRDashboardPage;

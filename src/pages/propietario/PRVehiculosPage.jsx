@@ -1,18 +1,17 @@
 import { useState, useMemo } from "react";
-import { Card, Col, Row, Button, Table, Badge, Modal, Form } from "react-bootstrap";
-import { FaCar, FaPlus, FaEdit, FaTrash, FaTag, FaPalette, FaIdCard, FaParking } from "react-icons/fa";
+import { Card, Col, Row, Button, Badge } from "react-bootstrap";
+import { FaCar, FaPlus, FaPalette, FaParking } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
-import { useForm } from "react-hook-form";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import AnimatedPage from "../../components/animations/AnimatedPage";
 import StatCard from "../../components/dashboard/StatCard";
-import AuthInput from "../../components/auth/AuthInput";
+import AnimatedPage from "../../components/animations/AnimatedPage";
+import VehicleModal from "../../components/modals/VehicleModal";
+import EmptyState from "../../components/ui/EmptyState";
 
 const PRVehiculosPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
     // Modales
     const [showModal, setShowModal] = useState(false);
@@ -45,14 +44,6 @@ const PRVehiculosPage = () => {
 
     const handleOpenModal = (vehicle = null) => {
         setEditingVehicle(vehicle);
-        if (vehicle) {
-            setValue("marca", vehicle.marca);
-            setValue("modelo", vehicle.modelo);
-            setValue("color", vehicle.color);
-            setValue("placa", vehicle.placa);
-        } else {
-            reset();
-        }
         setShowModal(true);
     };
 
@@ -71,7 +62,6 @@ const PRVehiculosPage = () => {
             updateTable('vehiculos', [...vehiculos, newVehicle]);
         }
         setShowModal(false);
-        reset();
     };
 
     const handleDelete = (id) => {
@@ -148,7 +138,7 @@ const PRVehiculosPage = () => {
                     </Card.Header>
                     <Card.Body className="p-0">
                         <div className="table-responsive">
-                            <Table hover className="align-middle mb-0 custom-table">
+                            <table className="table hover align-middle mb-0 custom-table">
                                 <thead className="bg-light text-muted small text-uppercase">
                                     <tr>
                                         <th className="px-4 py-3 border-0">Vehículo</th>
@@ -188,93 +178,27 @@ const PRVehiculosPage = () => {
                                             <td className="px-4 py-3 text-end">
                                                 <div className="d-flex justify-content-end gap-2">
                                                     <Button variant="light" size="sm" className="rounded-circle p-2 text-warning" onClick={() => handleOpenModal(v)}>
-                                                        <FaEdit />
-                                                    </Button>
-                                                    <Button variant="light" size="sm" className="rounded-circle p-2 text-danger" onClick={() => handleDelete(v.id)}>
-                                                        <FaTrash />
+                                                        <FaPlus />
                                                     </Button>
                                                 </div>
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr>
-                                            <td colSpan="4" className="text-center py-5 text-muted italic">
-                                                No tienes vehículos registrados.
-                                            </td>
-                                        </tr>
+                                        <EmptyState colSpan={5} message="No tienes vehículos registrados." icon={FaCar} />
                                     )}
                                 </tbody>
-                            </Table>
+                            </table>
                         </div>
                     </Card.Body>
                 </Card>
             </div>
 
-            {/* Modal para Vehículo */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton className="border-0">
-                    <Modal.Title className="fw-bold text-primary-theme">
-                        {editingVehicle ? "Editar Vehículo" : "Nuevo Vehículo"}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="py-4">
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Row>
-                            <Col md={6}>
-                                <AuthInput 
-                                    label="Marca"
-                                    name="marca"
-                                    register={register}
-                                    validation={{ required: "Requerido" }}
-                                    error={errors.marca}
-                                    placeholder="Ej: Toyota"
-                                />
-                            </Col>
-                            <Col md={6}>
-                                <AuthInput 
-                                    label="Modelo"
-                                    name="modelo"
-                                    register={register}
-                                    validation={{ required: "Requerido" }}
-                                    error={errors.modelo}
-                                    placeholder="Ej: Corolla"
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6}>
-                                <AuthInput 
-                                    label="Color"
-                                    name="color"
-                                    register={register}
-                                    validation={{ required: "Requerido" }}
-                                    error={errors.color}
-                                    placeholder="Ej: Blanco"
-                                />
-                            </Col>
-                            <Col md={6}>
-                                <AuthInput 
-                                    label="Placa / Matrícula"
-                                    name="placa"
-                                    register={register}
-                                    validation={{ required: "Requerido" }}
-                                    error={errors.placa}
-                                    placeholder="Ej: ABC-123"
-                                />
-                            </Col>
-                        </Row>
-
-                        <div className="d-flex justify-content-end gap-2 mt-4">
-                            <Button variant="light" onClick={() => setShowModal(false)} className="rounded-pill px-4 fw-bold text-secondary border-0">
-                                Cancelar
-                            </Button>
-                            <Button type="submit" className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0">
-                                {editingVehicle ? "Guardar Cambios" : "Registrar Vehículo"}
-                            </Button>
-                        </div>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+            <VehicleModal 
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                onSubmit={onSubmit}
+                editingVehicle={editingVehicle}
+            />
 
             <style>
                 {`

@@ -9,7 +9,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
 
-const ACResidentesPage = () => {
+const ACUsuariosPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
     
@@ -456,4 +456,4 @@ const ACResidentesPage = () => {
     );
 };
 
-export default ACResidentesPage;
+export default ACUsuariosPage;

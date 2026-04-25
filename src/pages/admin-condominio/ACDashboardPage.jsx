@@ -5,8 +5,9 @@ import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import DashboardTable from "../../components/dashboard/DashboardTable";
 import AnimatedPage from "../../components/animations/AnimatedPage";
+import EmptyState from "../../components/ui/EmptyState";
 
-const ACDashboard = () => {
+const ACDashboardPage = () => {
     const { getTable } = useData();
     const { authUser } = useAuth();
 
@@ -92,9 +93,7 @@ const ACDashboard = () => {
                                 </td>
                             </tr>
                         )) : (
-                            <tr>
-                                <td colSpan="3" className="text-center py-4 text-muted small italic">No hay actividad vehicular reciente.</td>
-                            </tr>
+                            <EmptyState colSpan={3} message="No hay actividad vehicular reciente." icon={FaCar} />
                         )}
                     </DashboardTable>
 
@@ -122,9 +121,7 @@ const ACDashboard = () => {
                                 </td>
                             </tr>
                         )) : (
-                            <tr>
-                                <td colSpan="3" className="text-center py-4 text-muted small italic">No hay préstamos de carritos recientes.</td>
-                            </tr>
+                            <EmptyState colSpan={3} message="No hay préstamos de carritos recientes." icon={FaShoppingCart} />
                         )}
                     </DashboardTable>
                 </div>
@@ -162,9 +159,7 @@ const ACDashboard = () => {
                                 </tr>
                             ))
                         ) : (
-                            <tr>
-                                <td colSpan="4" className="text-center py-5 text-muted small italic">No hay usuarios registrados en este condominio.</td>
-                            </tr>
+                            <EmptyState colSpan={4} message="No hay usuarios registrados en este condominio." icon={FaUserFriends} />
                         )}
                     </DashboardTable>
                 </div>
@@ -173,4 +168,4 @@ const ACDashboard = () => {
     );
 };
 
-export default ACDashboard;
+export default ACDashboardPage;

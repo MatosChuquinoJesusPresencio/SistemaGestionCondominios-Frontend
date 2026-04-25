@@ -9,7 +9,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
 
-const MiCondominioPage = () => {
+const ACMiCondominioPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
     const [showEditModal, setShowEditModal] = useState(false);
@@ -318,4 +318,4 @@ const MiCondominioPage = () => {
     );
 };
 
-export default MiCondominioPage;
+export default ACMiCondominioPage;

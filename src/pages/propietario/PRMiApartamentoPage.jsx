@@ -1,18 +1,17 @@
 import { useState, useMemo } from "react";
-import { Card, Col, Row, Button, Table, Badge, Modal, Form } from "react-bootstrap";
+import { Card, Col, Row, Button, Table, Badge } from "react-bootstrap";
 import { FaHome, FaUsers, FaPlus, FaEdit, FaTrash, FaInfoCircle, FaUserTag, FaIdCard, FaBuilding, FaLayerGroup } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
-import { useForm } from "react-hook-form";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import AnimatedPage from "../../components/animations/AnimatedPage";
 import StatCard from "../../components/dashboard/StatCard";
-import AuthInput from "../../components/auth/AuthInput";
+import AnimatedPage from "../../components/animations/AnimatedPage";
+import ResidentModal from "../../components/modals/ResidentModal";
+import EmptyState from "../../components/ui/EmptyState";
 
-const PRUnidadPage = () => {
+const PRMiApartamentoPage = () => {
     const { authUser } = useAuth();
     const { getTable, updateTable } = useData();
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
     // Modales
     const [showModal, setShowModal] = useState(false);
@@ -36,12 +35,6 @@ const PRUnidadPage = () => {
 
     const handleOpenModal = (resident = null) => {
         setEditingResident(resident);
-        if (resident) {
-            setValue("nombre", resident.nombre);
-            setValue("dni", resident.dni);
-        } else {
-            reset();
-        }
         setShowModal(true);
     };
 
@@ -61,7 +54,6 @@ const PRUnidadPage = () => {
             updateTable('inquilinos_temporales', [...residentes, newResident]);
         }
         setShowModal(false);
-        reset();
     };
 
     const handleDelete = (id) => {
@@ -230,11 +222,11 @@ const PRUnidadPage = () => {
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr>
-                                            <td colSpan="4" className="text-center py-5 text-muted italic">
-                                                No hay residentes registrados. Haz clic en "Añadir Residente" para empezar.
-                                            </td>
-                                        </tr>
+                                        <EmptyState 
+                                            colSpan={4} 
+                                            message="No hay residentes registrados. Haz clic en 'Añadir Residente' para empezar." 
+                                            icon={FaUsers} 
+                                        />
                                     )}
                                 </tbody>
                             </Table>
@@ -243,46 +235,12 @@ const PRUnidadPage = () => {
                 </Card>
             </div>
 
-            {/* Modal para Residente */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton className="border-0">
-                    <Modal.Title className="fw-bold text-primary-theme">
-                        {editingResident ? "Editar Residente" : "Nuevo Residente"}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="py-4">
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <AuthInput 
-                            label="Nombre Completo"
-                            name="nombre"
-                            register={register}
-                            validation={{ required: "El nombre es obligatorio" }}
-                            error={errors.nombre}
-                            placeholder="Ej: Juan Pérez..."
-                        />
-                        <AuthInput 
-                            label="DNI / Documento de Identidad"
-                            name="dni"
-                            register={register}
-                            validation={{ 
-                                required: "El DNI es obligatorio",
-                                pattern: { value: /^[0-9]+$/, message: "Solo números permitidos" }
-                            }}
-                            error={errors.dni}
-                            placeholder="Ej: 77112233..."
-                        />
-
-                        <div className="d-flex justify-content-end gap-2 mt-4">
-                            <Button variant="light" onClick={() => setShowModal(false)} className="rounded-pill px-4 fw-bold text-secondary border-0">
-                                Cancelar
-                            </Button>
-                            <Button type="submit" className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0">
-                                {editingResident ? "Guardar Cambios" : "Registrar"}
-                            </Button>
-                        </div>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+            <ResidentModal 
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                onSubmit={onSubmit}
+                editingResident={editingResident}
+            />
 
             <style>
                 {`
@@ -310,4 +268,4 @@ const PRUnidadPage = () => {
     );
 };
 
-export default PRUnidadPage;
+export default PRMiApartamentoPage;

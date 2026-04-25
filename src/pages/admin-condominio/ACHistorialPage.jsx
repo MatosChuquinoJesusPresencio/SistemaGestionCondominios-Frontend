@@ -4,10 +4,11 @@ import { FaListAlt, FaShoppingCart, FaCar, FaSearch, FaFilter, FaCalendarAlt, Fa
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import AnimatedPage from "../../components/animations/AnimatedPage";
 import StatCard from "../../components/dashboard/StatCard";
+import AnimatedPage from "../../components/animations/AnimatedPage";
+import ActivityTable from "../../components/tables/ActivityTable";
 
-const ACLogsPage = () => {
+const ACHistorialPage = () => {
     const { authUser } = useAuth();
     const { getTable } = useData();
     
@@ -95,11 +96,7 @@ const ACLogsPage = () => {
     const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
     const paginatedData = filteredData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-    const formatDateTime = (isoString) => {
-        if (!isoString) return "---";
-        const date = new Date(isoString);
-        return date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    };
+    // El formateo de fecha se movió al componente ActivityTable
 
     return (
         <AnimatedPage>
@@ -174,115 +171,10 @@ const ACLogsPage = () => {
 
                     <Card.Body className="p-0">
                         <div className="table-responsive">
-                            {activeTab === "carritos" ? (
-                                <Table hover className="align-middle mb-0 custom-table">
-                                    <thead className="bg-light text-muted small text-uppercase">
-                                        <tr>
-                                            <th className="px-4 py-3 border-0">Carrito</th>
-                                            <th className="py-3 border-0">Solicitante</th>
-                                            <th className="py-3 border-0">Unidad</th>
-                                            <th className="py-3 border-0">Entrada</th>
-                                            <th className="py-3 border-0">Salida / Devolución</th>
-                                            <th className="py-3 border-0">Penalización</th>
-                                            <th className="px-4 py-3 border-0 text-center">Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {paginatedData.length > 0 ? paginatedData.map(log => (
-                                            <tr key={log.id} className="border-bottom border-light">
-                                                <td className="px-4 py-3">
-                                                    <div className="fw-bold text-primary-theme">{log.carritoNombre}</div>
-                                                    <div className="x-small text-muted">Log ID: #{log.id}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="d-flex align-items-center gap-2 small">
-                                                        <FaUser className="text-muted x-small" /> {log.usuarioNombre}
-                                                        <Badge bg="light" className="text-secondary fw-normal border">{log.solicitante}</Badge>
-                                                    </div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="d-flex align-items-center gap-2 small">
-                                                        <FaHome className="text-muted x-small" /> {log.aptoNumero}
-                                                    </div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small"><FaClock className="me-1 text-muted" /> {formatDateTime(log.fecha_entrada)}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small">{log.fecha_salida ? <><FaClock className="me-1 text-muted" /> {formatDateTime(log.fecha_salida)}</> : <span className="text-warning fw-bold">Pendiente</span>}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <span className={log.penalizacion > 0 ? "text-danger fw-bold" : "text-success"}>
-                                                        S/ {log.penalizacion.toFixed(2)}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <Badge bg={log.fecha_salida ? "success" : "warning"} className="rounded-pill px-3 py-1">
-                                                        {log.estado}
-                                                    </Badge>
-                                                </td>
-                                            </tr>
-                                        )) : (
-                                            <tr>
-                                                <td colSpan="7" className="text-center py-5 text-muted italic">
-                                                    No se encontraron registros de préstamos de carritos.
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </Table>
-                            ) : (
-                                <Table hover className="align-middle mb-0 custom-table">
-                                    <thead className="bg-light text-muted small text-uppercase">
-                                        <tr>
-                                            <th className="px-4 py-3 border-0">Placa / Vehículo</th>
-                                            <th className="py-3 border-0">Ocupante</th>
-                                            <th className="py-3 border-0 text-center">Estacionamiento</th>
-                                            <th className="py-3 border-0">Entrada</th>
-                                            <th className="py-3 border-0">Salida</th>
-                                            <th className="py-3 border-0">Método</th>
-                                            <th className="px-4 py-3 border-0 text-center">Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {paginatedData.length > 0 ? paginatedData.map(log => (
-                                            <tr key={log.id} className="border-bottom border-light">
-                                                <td className="px-4 py-3">
-                                                    <div className="fw-bold text-dark">{log.placa}</div>
-                                                    <div className="x-small text-muted">{log.vehiculoInfo}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small fw-medium">{log.datos_inquilino || "Propietario"}</div>
-                                                    <div className="x-small text-muted">{log.tipo_ocupante}</div>
-                                                </td>
-                                                <td className="py-3 text-center">
-                                                    <Badge bg="dark" className="rounded-2">{log.estacionamientoNumero}</Badge>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small"><FaCalendarAlt className="me-1 text-muted" /> {formatDateTime(log.fecha_entrada)}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <div className="small">{log.fecha_salida ? <><FaCalendarAlt className="me-1 text-muted" /> {formatDateTime(log.fecha_salida)}</> : <span className="text-info fw-bold">En el sitio</span>}</div>
-                                                </td>
-                                                <td className="py-3">
-                                                    <Badge bg="light" className="text-secondary border fw-normal">{log.metodo}</Badge>
-                                                </td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <Badge bg={log.fecha_salida ? "secondary" : "info"} className="rounded-pill px-3 py-1">
-                                                        {log.estado}
-                                                    </Badge>
-                                                </td>
-                                            </tr>
-                                        )) : (
-                                            <tr>
-                                                <td colSpan="7" className="text-center py-5 text-muted italic">
-                                                    No se encontraron registros de estacionamiento.
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </Table>
-                            )}
+                            <ActivityTable 
+                                type={activeTab} 
+                                data={paginatedData} 
+                            />
                         </div>
                     </Card.Body>
 
@@ -343,4 +235,4 @@ const ACLogsPage = () => {
     );
 };
 
-export default ACLogsPage;
+export default ACHistorialPage;
