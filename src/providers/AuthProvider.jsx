@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useData } from "../hooks/useData";
 
@@ -14,6 +14,18 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
   const [authError, setAuthError] = useState(null);
+  
+  const usuariosData = getTable("usuarios");
+
+  useEffect(() => {
+    if (authUser) {
+      const currentUser = usuariosData.find(u => u.id === authUser.id);
+      
+      if (!currentUser || !currentUser.activo) {
+        logout();
+      }
+    }
+  }, [usuariosData, authUser]);
 
   const isAuthenticated = !!authUser;
 
@@ -36,6 +48,11 @@ export const AuthProvider = ({ children }) => {
       const roleName = ROLES_MAP[foundUser.id_rol];
       if (!VALID_ROLES.includes(roleName)) {
         setAuthError("Rol no permitido en el sistema");
+        return { success: false };
+      }
+
+      if (!foundUser.activo) {
+        setAuthError("Tu cuenta ha sido desactivada por un administrador.");
         return { success: false };
       }
 
