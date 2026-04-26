@@ -9,25 +9,25 @@ Una plataforma web moderna y robusta diseñada para la administración integral 
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
 El sistema está dividido en tres niveles de acceso principales, cada uno con funcionalidades específicas:
 
-### 👑 Super Administrador
+### Super Administrador
 
 - **Gestión Global:** Control total sobre múltiples condominios.
 - **Administración de Usuarios:** Creación y gestión de cuentas administrativas.
 - **Control de Departamentos:** Visualización y gestión de la estructura habitacional.
 - **Historial General:** Seguimiento de todas las actividades críticas en la plataforma.
 
-### 🏢 Administrador de Condominio
+### Administrador de Condominio
 
 - **Dashboard Personalizado:** Estadísticas clave de su condominio.
 - **Gestión de Infraestructura:** Administración de torres, pisos y unidades.
 - **Control de Residentes:** Registro y gestión de propietarios y residentes.
 - **Historial de Acceso:** Monitoreo de entradas y salidas (vehiculares y peatonales).
 
-### 🏠 Propietario / Residente
+### Propietario / Residente
 
 - **Mi Apartamento:** Información detallada de su unidad habitacional.
 - **Gestión de Vehículos:** Registro y control de sus vehículos autorizados.
@@ -35,7 +35,7 @@ El sistema está dividido en tres niveles de acceso principales, cada uno con fu
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 - **Frontend:** [React 19](https://react.dev/)
 - **Build Tool:** [Vite](https://vitejs.dev/)
@@ -47,7 +47,7 @@ El sistema está dividido en tres niveles de acceso principales, cada uno con fu
 
 ---
 
-## 🚀 Instalación y Desarrollo
+## Instalación y Desarrollo
 
 Sigue estos pasos para ejecutar el proyecto localmente:
 
@@ -72,7 +72,7 @@ Sigue estos pasos para ejecutar el proyecto localmente:
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 src/
@@ -89,6 +89,6 @@ src/
 
 ---
 
-## 🎓 Proyecto Académico
+## Proyecto Académico
 
 Este sistema ha sido desarrollado como un proyecto académico para la **Universidad Tecnológica del Perú (UTP)**, para el curso de Herramientas de Desarrollo.
