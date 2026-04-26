@@ -1,4 +1,4 @@
-import { FaHome, FaUserShield, FaBuilding, FaSitemap, FaUsers, FaListAlt, FaCar, FaHistory } from "react-icons/fa";
+import { FaHome, FaUserShield, FaBuilding, FaSitemap, FaUsers, FaListAlt, FaCar, FaHistory, FaLock } from "react-icons/fa";
 
 export const MENU_BY_ROLE = {
     ADMIN_CONDOMINIO: [
@@ -9,6 +9,7 @@ export const MENU_BY_ROLE = {
         { path: "/admin-condominio/apartamentos", label: "Apartamentos", icon: <FaHome /> },
         { path: "/admin-condominio/estacionamientos", label: "Estacionamientos", icon: <FaCar /> },
         { path: "/admin-condominio/historial", label: "Historial", icon: <FaListAlt /> },
+        { path: "/perfil/cambiar-contraseña", label: "Contraseña", icon: <FaLock /> },
     ],
 
     SUPER_ADMIN: [
@@ -18,6 +19,7 @@ export const MENU_BY_ROLE = {
         { path: "/super-admin/estacionamientos", label: "Estacionamientos", icon: <FaCar /> },
         { path: "/super-admin/usuarios", label: "Usuarios", icon: <FaUsers /> },
         { path: "/super-admin/historial", label: "Historial", icon: <FaListAlt /> },
+        { path: "/perfil/cambiar-contraseña", label: "Contraseña", icon: <FaLock /> },
     ],
 
     PROPIETARIO: [
@@ -25,5 +27,6 @@ export const MENU_BY_ROLE = {
         { path: "/propietario/mi-apartamento", label: "Apartamento", icon: <FaHome /> },
         { path: "/propietario/vehiculos", label: "Vehículos", icon: <FaCar /> },
         { path: "/propietario/historial", label: "Historial", icon: <FaHistory /> },
+        { path: "/perfil/cambiar-contraseña", label: "Contraseña", icon: <FaLock /> },
     ],
 };

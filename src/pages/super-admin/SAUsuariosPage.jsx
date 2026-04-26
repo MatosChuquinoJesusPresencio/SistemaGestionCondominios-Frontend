@@ -127,13 +127,16 @@ const SAUsuariosPage = () => {
       };
       updateTable("usuarios", [...usuarios, newUser]);
 
-      console.group("Simulación: Correo Enviado (Residente)");
+      const condoId = data.id_condominio ? parseInt(data.id_condominio) : null;
+      const condominio = condominios.find((c) => c.id === condoId);
+
+      console.group(`Simulación: Correo Enviado (${condominio ? "Usuario de Condominio" : "Usuario de Sistema"})`);
       console.log(`Para: ${data.email}`);
       console.log(
-        `Asunto: Acceso al Sistema de Gestión - ${condominio?.nombre}`,
+        `Asunto: Acceso al Sistema de Gestión ${condominio ? `- ${condominio.nombre}` : "Global"}`,
       );
       console.log(
-        `Mensaje: Hola ${data.nombre}, el administrador te ha registrado.`,
+        `Mensaje: Hola ${data.nombre}, se ha creado tu cuenta de acceso.`,
       );
       console.log(`Tus credenciales son:`);
       console.log(`- Email: ${data.email}`);
