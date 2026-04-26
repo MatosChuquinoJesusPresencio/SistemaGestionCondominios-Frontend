@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Card, Col, Row, Table, Badge, Form, InputGroup, Pagination, Tabs, Tab } from "react-bootstrap";
-import { FaListAlt, FaShoppingCart, FaCar, FaSearch, FaFilter, FaCalendarAlt, FaClock, FaCheckCircle, FaExclamationCircle, FaUser, FaHome } from "react-icons/fa";
+import { FaListAlt, FaShoppingCart, FaCar, FaSearch, FaFilter, FaCalendarAlt, FaClock, FaCheckCircle, FaExclamationCircle, FaUser, FaHome, FaExclamationTriangle } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
@@ -26,7 +26,23 @@ const ACHistorialPage = () => {
     const pisos = getTable('pisos');
     const torres = getTable('torres');
 
-    const condo = condominios.find(c => c.id === authUser?.id_condominio);
+    const condominio = condominios.find(c => c.id === authUser?.id_condominio);
+
+    if (!condominio) {
+        return (
+            <AnimatedPage>
+                <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
+                    <div className="text-center p-5 bg-white rounded-4 shadow-sm" style={{ maxWidth: '500px' }}>
+                        <div className="p-4 rounded-circle bg-warning bg-opacity-10 text-warning d-inline-block mb-4">
+                            <FaExclamationTriangle size={50} />
+                        </div>
+                        <h3 className="fw-bold text-dark">Sin condominio asignado</h3>
+                        <p className="text-secondary">Actualmente no tienes un condominio bajo tu administración. Contacta con el Super Administrador para que se te asigne uno.</p>
+                    </div>
+                </div>
+            </AnimatedPage>
+        );
+    }
 
     const initialTab = searchParams.get("tab") || "carritos";
 
@@ -51,7 +67,7 @@ const ACHistorialPage = () => {
             const apto = apartamentos.find(a => a.id === log.id_apartamento);
             const piso = pisos.find(p => p.id === apto?.id_piso);
             const torre = torres.find(t => t.id === piso?.id_torre);
-            return torre?.id_condominio === authUser?.id_condominio;
+            return authUser?.id_condominio && torre?.id_condominio === authUser.id_condominio;
         }).map(log => {
             const carrito = carritos.find(c => c.id === log.id_carrito);
             const apto = apartamentos.find(a => a.id === log.id_apartamento);
@@ -74,7 +90,7 @@ const ACHistorialPage = () => {
             const apto = apartamentos.find(a => a.id === estacionamiento?.id_apartamento);
             const piso = pisos.find(p => p.id === apto?.id_piso);
             const torre = torres.find(t => t.id === piso?.id_torre);
-            return torre?.id_condominio === authUser?.id_condominio;
+            return authUser?.id_condominio && torre?.id_condominio === authUser.id_condominio;
         }).map(log => {
             const vehiculo = vehiculos.find(v => v.id === log.id_vehiculo);
             const estacionamiento = estacionamientos.find(e => e.id === log.id_estacionamiento);
@@ -116,7 +132,7 @@ const ACHistorialPage = () => {
                 <DashboardHeader 
                     icon={FaListAlt}
                     title="Bitácora de Operaciones"
-                    badgeText={condo?.nombre || "Condominio"}
+                    badgeText={condominio?.nombre || "Condominio"}
                     welcomeText="Monitorea el historial de préstamos de carritos y el flujo de estacionamiento."
                 />
 

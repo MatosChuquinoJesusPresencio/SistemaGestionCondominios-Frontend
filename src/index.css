@@ -262,3 +262,38 @@ body {
   background-color: transparent;
   z-index: 9999;
 }
+
+/* Custom Tabs for Dashboard */
+.custom-tabs {
+  gap: 12px;
+  background: #f8f9fa;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.custom-tabs.nav-pills .nav-link {
+  color: #6c757d !important;
+  background-color: transparent !important;
+  font-weight: 600;
+  padding: 0.8rem 1.8rem;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.custom-tabs.nav-pills .nav-link:hover {
+  color: var(--primary-color) !important;
+  background-color: rgba(17, 45, 77, 0.05) !important;
+}
+
+.custom-tabs.nav-pills .nav-link.active {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(17, 45, 77, 0.25);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}

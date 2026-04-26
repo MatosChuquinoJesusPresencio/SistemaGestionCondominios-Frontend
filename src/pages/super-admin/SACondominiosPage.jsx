@@ -1,481 +1,355 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 
-import { Modal, Button, Form, ListGroup, Card, Row, Col, Table } from "react-bootstrap";
-import { FaBuilding, FaEye, FaEdit, FaPlusCircle, FaGlobe, FaMapMarkerAlt, FaUsersCog, FaCalendarAlt, FaTrashAlt, FaInfoCircle, FaTimes, FaSave, FaExclamationTriangle } from "react-icons/fa";
+import { Button, Row, Col } from "react-bootstrap";
+import {
+  FaBuilding,
+  FaEye,
+  FaEdit,
+  FaPlusCircle,
+  FaGlobe,
+  FaMapMarkerAlt,
+  FaUsersCog,
+  FaCalendarAlt,
+  FaTrashAlt,
+} from "react-icons/fa";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
 import CondoDetailModal from "../../components/modals/CondoDetailModal";
+import CondoFormModal from "../../components/modals/CondoFormModal";
+import CondoRelationsModal from "../../components/modals/CondoRelationsModal";
+import CondoDeleteModal from "../../components/modals/CondoDeleteModal";
 import SearchBar from "../../components/ui/SearchBar";
-import TablePagination from "../../components/ui/TablePagination";
-import EmptyState from "../../components/ui/EmptyState";
+import MainTable from "../../components/ui/MainTable";
 
 const SACondominiosPage = () => {
-    const { authUser } = useAuth();
-    const { getTable, updateTable } = useData();
-    const [showModal, setShowModal] = useState(false);
-    const [editingCondo, setEditingCondo] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+  const { authUser } = useAuth();
+  const { getTable, updateTable } = useData();
+  const [showModal, setShowModal] = useState(false);
+  const [editingCondo, setEditingCondo] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-    const [showDetailModal, setShowDetailModal] = useState(false);
-    const [selectedCondo, setSelectedCondo] = useState(null);
-    
-    const [showRelationsModal, setShowRelationsModal] = useState(false);
-    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-    const [condoToDelete, setCondoToDelete] = useState(null);
-    const [relations, setRelations] = useState([]);
-    
-    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm({
-        defaultValues: {
-            nombre: "",
-            direccion: "",
-            ciudad: "",
-            pais: "",
-            id_administrador: ""
-        }
-    });
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
-    const condominios = getTable('condominios');
-    const usuarios = getTable('usuarios');
-    
-    const adminUsers = usuarios.filter(u => u.id_rol === 2);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedCondo, setSelectedCondo] = useState(null);
 
-    const filteredCondominios = condominios.filter(condo => 
-        condo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        condo.pais.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase())
+  const [showRelationsModal, setShowRelationsModal] = useState(false);
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [condoToDelete, setCondoToDelete] = useState(null);
+  const [relations, setRelations] = useState([]);
+
+  const condominios = getTable("condominios");
+  const usuarios = getTable("usuarios");
+
+  const adminUsers = usuarios.filter((u) => u.id_rol === 2);
+
+  const filteredCondominios = condominios.filter(
+    (condo) =>
+      condo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      condo.pais.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredCondominios.length / ITEMS_PER_PAGE);
+  const currentItems = filteredCondominios.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
+  const handleClose = () => {
+    setShowModal(false);
+    setEditingCondo(null);
+  };
+
+  const handleDetailClose = () => {
+    setShowDetailModal(false);
+    setSelectedCondo(null);
+  };
+
+  const handleRelationsClose = () => {
+    setShowRelationsModal(false);
+    setRelations([]);
+    setCondoToDelete(null);
+  };
+
+  const handleConfirmDeleteClose = () => {
+    setShowConfirmDeleteModal(false);
+    setCondoToDelete(null);
+  };
+
+  const handleShow = (condo = null) => {
+    if (condo) {
+      setEditingCondo(condo);
+    }
+    setShowModal(true);
+  };
+
+  const handleDetailClick = (condo) => {
+    setSelectedCondo(condo);
+    setShowDetailModal(true);
+  };
+
+  const handleDeleteClick = (condo) => {
+    const foundRelations = [];
+
+    const users = getTable("usuarios").filter(
+      (u) => u.id_condominio === condo.id,
     );
+    if (users.length > 0)
+      foundRelations.push(`${users.length} Usuario(s) registrados`);
 
-    const totalPages = Math.ceil(filteredCondominios.length / itemsPerPage);
-    const currentItems = filteredCondominios.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+    const towers = getTable("torres").filter(
+      (t) => t.id_condominio === condo.id,
     );
+    if (towers.length > 0)
+      foundRelations.push(`${towers.length} Torre(s) / Bloque(s)`);
 
-    const handleClose = () => {
-        setShowModal(false);
-        setEditingCondo(null);
-        reset();
-    };
+    const configs = getTable("configuraciones").filter(
+      (c) => c.id_condominio === condo.id,
+    );
+    if (configs.length > 0)
+      foundRelations.push(`Configuración del sistema activa`);
 
-    const handleDetailClose = () => {
-        setShowDetailModal(false);
-        setSelectedCondo(null);
-    };
+    const carts = getTable("carritos_carga").filter(
+      (c) => c.id_condominio === condo.id,
+    );
+    if (carts.length > 0)
+      foundRelations.push(`${carts.length} Carrito(s) de carga`);
 
-    const handleRelationsClose = () => {
-        setShowRelationsModal(false);
-        setRelations([]);
-        setCondoToDelete(null);
-    };
+    setCondoToDelete(condo);
+    setRelations(foundRelations);
 
-    const handleConfirmDeleteClose = () => {
-        setShowConfirmDeleteModal(false);
-        setCondoToDelete(null);
-    };
-    
-    const handleShow = (condo = null) => {
-        if (condo) {
-            setEditingCondo(condo);
-            setValue("nombre", condo.nombre);
-            setValue("direccion", condo.direccion);
-            setValue("ciudad", condo.ciudad);
-            setValue("pais", condo.pais);
-            
-            const currentAdmin = adminUsers.find(u => u.id_condominio === condo.id);
-            setValue("id_administrador", currentAdmin ? currentAdmin.id.toString() : "");
-        } else {
-            setValue("id_administrador", "");
+    if (foundRelations.length > 0) {
+      setShowRelationsModal(true);
+    } else {
+      setShowConfirmDeleteModal(true);
+    }
+  };
+
+  const confirmDelete = () => {
+    const updatedCondominios = condominios.filter(
+      (c) => c.id !== condoToDelete.id,
+    );
+    updateTable("condominios", updatedCondominios);
+    handleConfirmDeleteClose();
+  };
+
+  const onSubmit = (data) => {
+    const { id_administrador, ...condoData } = data;
+    let condoId;
+
+    if (editingCondo) {
+      condoId = editingCondo.id;
+      const updatedCondominios = condominios.map((c) =>
+        c.id === editingCondo.id ? { ...c, ...condoData } : c,
+      );
+      updateTable("condominios", updatedCondominios);
+    } else {
+      condoId =
+        condominios.length > 0
+          ? Math.max(...condominios.map((c) => c.id)) + 1
+          : 1;
+      const nuevoCondominio = {
+        ...condoData,
+        id: condoId,
+        fecha_creacion: new Date().toISOString().split("T")[0],
+      };
+      const updatedCondominios = [...condominios, nuevoCondominio];
+      updateTable("condominios", updatedCondominios);
+    }
+
+    if (id_administrador) {
+      const updatedUsers = usuarios.map((u) => {
+        if (
+          u.id_condominio === condoId &&
+          u.id_rol === 2 &&
+          u.id.toString() !== id_administrador
+        ) {
+          return { ...u, id_condominio: null };
         }
-        setShowModal(true);
-    };
-
-    const handleDetailClick = (condo) => {
-        setSelectedCondo(condo);
-        setShowDetailModal(true);
-    };
-
-    const handleDeleteClick = (condo) => {
-        const foundRelations = [];
-        
-        const users = getTable('usuarios').filter(u => u.id_condominio === condo.id);
-        if (users.length > 0) foundRelations.push(`${users.length} Usuario(s) registrados`);
-        
-        const towers = getTable('torres').filter(t => t.id_condominio === condo.id);
-        if (towers.length > 0) foundRelations.push(`${towers.length} Torre(s) / Bloque(s)`);
-
-        const configs = getTable('configuraciones').filter(c => c.id_condominio === condo.id);
-        if (configs.length > 0) foundRelations.push(`Configuración del sistema activa`);
-        
-        const carts = getTable('carritos_carga').filter(c => c.id_condominio === condo.id);
-        if (carts.length > 0) foundRelations.push(`${carts.length} Carrito(s) de carga`);
-
-        setCondoToDelete(condo);
-        setRelations(foundRelations);
-
-        if (foundRelations.length > 0) {
-            setShowRelationsModal(true);
-        } else {
-            setShowConfirmDeleteModal(true);
+        if (u.id.toString() === id_administrador) {
+          return { ...u, id_condominio: condoId };
         }
-    };
+        return u;
+      });
+      updateTable("usuarios", updatedUsers);
+    }
+    handleClose();
+  };
 
-    const confirmDelete = () => {
-        const updatedCondominios = condominios.filter(c => c.id !== condoToDelete.id);
-        updateTable('condominios', updatedCondominios);
-        handleConfirmDeleteClose();
-    };
+  return (
+    <AnimatedPage>
+      <div className="container-fluid py-4 bg-light min-vh-100">
+        <DashboardHeader
+          icon={FaBuilding}
+          title="Gestión de Condominios"
+          badgeText="Super Admin"
+          welcomeText={`Bienvenido, ${authUser?.nombre || "Administrador"}. Aquí puedes gestionar todos los condominios del sistema.`}
+        >
+          <button
+            className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+            onClick={() => handleShow()}
+          >
+            <FaPlusCircle />
+            <span>Nuevo Condominio</span>
+          </button>
+        </DashboardHeader>
 
-    const onSubmit = (data) => {
-        const { id_administrador, ...condoData } = data;
-        let condoId;
-
-        if (editingCondo) {
-            condoId = editingCondo.id;
-            const updatedCondominios = condominios.map(c => 
-                c.id === editingCondo.id ? { ...c, ...condoData } : c
-            );
-            updateTable('condominios', updatedCondominios);
-        } else {
-            condoId = condominios.length > 0 ? Math.max(...condominios.map(c => c.id)) + 1 : 1;
-            const nuevoCondominio = {
-                ...condoData,
-                id: condoId,
-                fecha_creacion: new Date().toISOString().split('T')[0]
-            };
-            const updatedCondominios = [...condominios, nuevoCondominio];
-            updateTable('condominios', updatedCondominios);
-        }
-
-        if (id_administrador) {
-            const updatedUsers = usuarios.map(u => {
-                if (u.id_condominio === condoId && u.id_rol === 2 && u.id.toString() !== id_administrador) {
-                    return { ...u, id_condominio: null };
-                }
-                if (u.id.toString() === id_administrador) {
-                    return { ...u, id_condominio: condoId };
-                }
-                return u;
-            });
-            updateTable('usuarios', updatedUsers);
-        }
-        handleClose();
-    };
-
-    return (
-        <AnimatedPage>
-            <div className="container-fluid py-4 bg-light min-vh-100">
-                <DashboardHeader 
-                    icon={FaBuilding}
-                    title="Gestión de Condominios"
-                    badgeText="Super Admin"
-                    welcomeText={`Bienvenido, ${authUser?.nombre || "Administrador"}. Aquí puedes gestionar todos los condominios del sistema.`}
-                >
-                    <button 
-                        className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
-                        onClick={() => handleShow()}
+        <MainTable
+          headers={[
+            "#",
+            "Condominio",
+            "Ubicación",
+            "Administrador",
+            "Registro",
+            "Acciones",
+          ]}
+          isEmpty={currentItems.length === 0}
+          emptyMessage={
+            searchTerm
+              ? `No se encontraron condominios que coincidan con "${searchTerm}"`
+              : "No hay condominios registrados."
+          }
+          emptyIcon={FaBuilding}
+          searchBar={
+            <Row className="align-items-center g-3">
+              <Col md={8}>
+                <SearchBar
+                  searchTerm={searchTerm}
+                  onSearchChange={(val) => {
+                    setSearchTerm(val);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Buscar por nombre, país o dirección..."
+                />
+              </Col>
+            </Row>
+          }
+          paginationProps={{
+            currentPage: currentPage,
+            totalPages: totalPages,
+            onPageChange: setCurrentPage,
+            totalItems: filteredCondominios.length,
+            itemsShowing: currentItems.length,
+          }}
+        >
+          {currentItems.map((condo, index) => {
+            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const admin = adminUsers.find((u) => u.id_condominio === condo.id);
+            return (
+              <tr key={condo.id} className="border-bottom border-light">
+                <td className="px-4 py-3 text-center">
+                  <span className="text-secondary fw-bold">
+                    {actualIndex.toString().padStart(2, "0")}
+                  </span>
+                </td>
+                <td className="py-3">
+                  <div className="fw-bold text-dark mb-0">{condo.nombre}</div>
+                  <div className="x-small text-muted d-flex align-items-center gap-1">
+                    <FaGlobe className="m-2" /> {condo.pais}
+                  </div>
+                </td>
+                <td className="py-3">
+                  <div className="small fw-medium text-dark">
+                    {condo.direccion}
+                  </div>
+                  <div className="x-small text-muted d-flex align-items-center gap-1">
+                    <FaMapMarkerAlt className="m-2" /> {condo.ciudad}
+                  </div>
+                </td>
+                <td className="py-3">
+                  {admin ? (
+                    <div className="d-flex align-items-center gap-2">
+                      <div className="p-2 rounded-circle bg-primary bg-opacity-10 small">
+                        <FaUsersCog className="m-2" />
+                      </div>
+                      <div>
+                        <div className="small fw-bold text-dark">
+                          {admin.nombre}
+                        </div>
+                        <div className="x-small text-muted">{admin.email}</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="badge bg-light text-muted fw-normal border">
+                      Sin asignar
+                    </span>
+                  )}
+                </td>
+                <td className="py-3">
+                  <div className="small text-dark d-flex align-items-center gap-2">
+                    <FaCalendarAlt className="m-2" />
+                    {new Date(condo.fecha_creacion).toLocaleDateString(
+                      "es-ES",
+                      { day: "2-digit", month: "short", year: "numeric" },
+                    )}
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-end">
+                  <div className="d-flex justify-content-end gap-2">
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      onClick={() => handleDetailClick(condo)}
                     >
-                        <FaPlusCircle />
-                        <span>Nuevo Condominio</span>
-                    </button>
-                </DashboardHeader>
-
-                <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-                    <Card.Header className="bg-white border-0 py-4 px-4">
-                        <Row className="align-items-center g-3">
-                            <Col md={8}>
-                                <SearchBar 
-                                    searchTerm={searchTerm}
-                                    onSearchChange={(val) => { setSearchTerm(val); setCurrentPage(1); }}
-                                    placeholder="Buscar por nombre, país o dirección..."
-                                />
-                            </Col>
-                        </Row>
-                    </Card.Header>
-                    <div className="table-responsive">
-                        <Table hover className="align-middle mb-0 custom-table">
-                            <thead className="bg-light text-muted small text-uppercase">
-                                <tr>
-                                    <th className="px-4 py-3 border-0 text-center">#</th>
-                                    <th className="py-3 border-0">Condominio</th>
-                                    <th className="py-3 border-0">Ubicación</th>
-                                    <th className="py-3 border-0">Administrador</th>
-                                    <th className="py-3 border-0">Registro</th>
-                                    <th className="px-4 py-3 border-0 text-end">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentItems.length > 0 ? currentItems.map((condo, index) => {
-                                    const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
-                                    const admin = adminUsers.find(u => u.id_condominio === condo.id);
-                                    return (
-                                        <tr key={condo.id} className="border-bottom border-light">
-                                            <td className="px-4 py-3 text-center">
-                                                <span className="text-secondary fw-bold">{(actualIndex).toString().padStart(2, '0')}</span>
-                                            </td>
-                                            <td className="py-3">
-                                                <div className="fw-bold text-dark mb-0">{condo.nombre}</div>
-                                                <div className="x-small text-muted d-flex align-items-center gap-1">
-                                                    <FaGlobe className="text-primary opacity-50" /> {condo.pais}
-                                                </div>
-                                            </td>
-                                            <td className="py-3">
-                                                <div className="small fw-medium text-dark">{condo.direccion}</div>
-                                                <div className="x-small text-muted d-flex align-items-center gap-1">
-                                                    <FaMapMarkerAlt className="text-danger opacity-50" /> {condo.ciudad}
-                                                </div>
-                                            </td>
-                                            <td className="py-3">
-                                                {admin ? (
-                                                    <div className="d-flex align-items-center gap-2">
-                                                        <div className="p-2 rounded-circle bg-primary bg-opacity-10 text-primary small">
-                                                            <FaUsersCog />
-                                                        </div>
-                                                        <div>
-                                                            <div className="small fw-bold text-dark">{admin.nombre}</div>
-                                                            <div className="x-small text-muted">{admin.email}</div>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <span className="badge bg-light text-muted fw-normal border">Sin asignar</span>
-                                                )}
-                                            </td>
-                                            <td className="py-3">
-                                                <div className="small text-dark d-flex align-items-center gap-2">
-                                                    <FaCalendarAlt className="text-secondary opacity-50" />
-                                                    {new Date(condo.fecha_creacion).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-3 text-end">
-                                                <div className="d-flex justify-content-end gap-2">
-                                                    <Button 
-                                                        variant="light" 
-                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-info bg-opacity-10 text-info fw-bold small" 
-                                                        onClick={() => handleDetailClick(condo)}
-                                                    >
-                                                        <FaEye size={14} /> <span>Detalles</span>
-                                                    </Button>
-                                                    <Button 
-                                                        variant="light" 
-                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-warning bg-opacity-10 text-warning fw-bold small" 
-                                                        onClick={() => handleShow(condo)}
-                                                    >
-                                                        <FaEdit size={14} /> <span>Editar</span>
-                                                    </Button>
-                                                    <Button 
-                                                        variant="light" 
-                                                        className="btn-action rounded-pill border-0 px-3 py-1 d-flex align-items-center gap-2 transition-all bg-danger bg-opacity-10 text-danger fw-bold small" 
-                                                        onClick={() => handleDeleteClick(condo)}
-                                                    >
-                                                        <FaTrashAlt size={14} /> <span>Borrar</span>
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                }) : (
-                                    <EmptyState 
-                                        colSpan={6} 
-                                        message={searchTerm ? `No se encontraron condominios que coincidan con "${searchTerm}"` : "No hay condominios registrados."} 
-                                        icon={FaBuilding} 
-                                    />
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-                    <TablePagination 
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={filteredCondominios.length}
-                        itemsShowing={currentItems.length}
-                    />
-                </Card>
-            </div>
-
-            <CondoDetailModal 
-                show={showDetailModal} 
-                onHide={handleDetailClose} 
-                condo={selectedCondo} 
-            />
-
-            <Modal show={showModal} onHide={handleClose} centered size="lg" className="border-0">
-                <Modal.Header closeButton className="border-0 pb-0">
-                    <Modal.Title className="fw-bold text-primary-theme d-flex align-items-center gap-2">
-                        <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
-                            <FaBuilding />
-                        </div>
-                        {editingCondo ? "Editar Condominio" : "Nuevo Condominio"}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="py-4">
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="row">
-                            <div className="col-12">
-                                <AuthInput 
-                                    label="Nombre del Condominio"
-                                    type="text"
-                                    placeholder="Ej. Residencial Las Flores"
-                                    name="nombre"
-                                    register={register}
-                                    validation={{ required: "El nombre es obligatorio" }}
-                                    error={errors.nombre}
-                                />
-                            </div>
-                            <div className="col-12">
-                                <AuthInput 
-                                    label="Dirección"
-                                    type="text"
-                                    placeholder="Av. Principal 123"
-                                    name="direccion"
-                                    register={register}
-                                    validation={{ required: "La dirección es obligatoria" }}
-                                    error={errors.direccion}
-                                />
-                            </div>
-                            <div className="col-md-6">
-                                <AuthInput 
-                                    label="Ciudad"
-                                    type="text"
-                                    placeholder="Lima"
-                                    name="ciudad"
-                                    register={register}
-                                    validation={{ required: "La ciudad es obligatoria" }}
-                                    error={errors.ciudad}
-                                />
-                            </div>
-                            <div className="col-md-6">
-                                <AuthInput 
-                                    label="País"
-                                    type="text"
-                                    placeholder="Perú"
-                                    name="pais"
-                                    register={register}
-                                    validation={{ required: "El país es obligatorio" }}
-                                    error={errors.pais}
-                                />
-                            </div>
-                            
-                            <div className="col-12">
-                                <div className="mb-4">
-                                    <label className="form-label text-secondary fw-semibold small mb-1">
-                                        Asignar Administrador de Condominio
-                                    </label>
-                                    <Form.Select
-                                        className={`form-control input-no-shadow ${errors.id_administrador ? "is-invalid" : ""}`}
-                                        {...register("id_administrador")}
-                                    >
-                                        <option value="">Sin asignar (puedes hacerlo después)...</option>
-                                        {adminUsers
-                                            .filter(u => u.id_condominio === null || (editingCondo && u.id_condominio === editingCondo.id))
-                                            .map(u => (
-                                                <option key={u.id} value={u.id}>
-                                                    {u.nombre} ({u.email})
-                                                </option>
-                                            ))
-                                        }
-                                    </Form.Select>
-                                    {errors.id_administrador && (
-                                        <div className="invalid-feedback d-block mt-1">
-                                            {errors.id_administrador.message}
-                                        </div>
-                                    )}
-                                    <div className="x-small text-muted mt-1">
-                                        <FaInfoCircle className="me-1" /> Solo se muestran administradores que no tienen un condominio asignado.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="d-flex justify-content-end gap-2 mt-2">
-                            <Button variant="light" onClick={handleClose} className="rounded-pill px-4 fw-bold text-secondary border-0">
-                                <FaTimes className="me-2" /> Cancelar
-                            </Button>
-                            <Button type="submit" className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0">
-                                <FaSave className="me-2" /> {editingCondo ? "Actualizar Cambios" : "Guardar Condominio"}
-                            </Button>
-                        </div>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-
-            <Modal show={showRelationsModal} onHide={handleRelationsClose} centered className="border-0">
-                <Modal.Body className="p-4 text-center">
-                    <div className="p-3 rounded-circle bg-warning bg-opacity-10 text-warning d-inline-block mb-4">
-                        <FaExclamationTriangle size={40} />
-                    </div>
-                    <h4 className="fw-bold text-dark mb-3">No se puede eliminar</h4>
-                    <p className="text-secondary mb-4">
-                        El condominio <strong>{condoToDelete?.nombre}</strong> tiene relaciones activas que impiden su borrado:
-                    </p>
-                    <ListGroup variant="flush" className="text-start mb-4 bg-light rounded-3 p-2">
-                        {relations.map((rel, idx) => (
-                            <ListGroup.Item key={idx} className="bg-transparent border-0 d-flex align-items-center gap-2 small fw-medium text-secondary">
-                                <FaInfoCircle className="text-warning" /> {rel}
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
-                    <p className="small text-muted mb-4">
-                        Por favor, elimina primero estas dependencias antes de intentar borrar el condominio.
-                    </p>
-                    <Button variant="secondary" onClick={handleRelationsClose} className="rounded-pill px-5 fw-bold border-0 shadow-sm">
-                        Entendido
+                      <FaEye size={14} /> <span>Detalles</span>
                     </Button>
-                </Modal.Body>
-            </Modal>
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      onClick={() => handleShow(condo)}
+                    >
+                      <FaEdit size={14} /> <span>Editar</span>
+                    </Button>
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      onClick={() => handleDeleteClick(condo)}
+                    >
+                      <FaTrashAlt size={14} /> <span>Borrar</span>
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </MainTable>
+      </div>
 
-            <Modal show={showConfirmDeleteModal} onHide={handleConfirmDeleteClose} centered className="border-0">
-                <Modal.Body className="p-4 text-center">
-                    <div className="p-3 rounded-circle bg-danger bg-opacity-10 text-danger d-inline-block mb-4">
-                        <FaTrashAlt size={40} />
-                    </div>
-                    <h4 className="fw-bold text-dark mb-3">¿Estás seguro?</h4>
-                    <p className="text-secondary mb-4">
-                        Estás a punto de eliminar el condominio <strong>{condoToDelete?.nombre}</strong>. Esta acción no se puede deshacer.
-                    </p>
-                    <div className="d-flex justify-content-center gap-2 mt-4">
-                        <Button variant="light" onClick={handleConfirmDeleteClose} className="rounded-pill px-4 fw-bold text-secondary border-0">
-                            Cancelar
-                        </Button>
-                        <Button variant="danger" onClick={confirmDelete} className="rounded-pill px-4 fw-bold shadow-sm border-0">
-                            Sí, Eliminar
-                        </Button>
-                    </div>
-                </Modal.Body>
-            </Modal>
+      <CondoDetailModal
+        show={showDetailModal}
+        onHide={handleDetailClose}
+        condo={selectedCondo}
+      />
 
-            <style>
-                {`
-                .btn-action {
-                    font-size: 0.75rem;
-                    border: 1px solid transparent !important;
-                }
-                .btn-action:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-                }
-                .btn-action.text-info:hover { background-color: #0dcaf0 !important; color: white !important; }
-                .btn-action.text-warning:hover { background-color: #ffc107 !important; color: white !important; }
-                .btn-action.text-danger:hover { background-color: #dc3545 !important; color: white !important; }
-                
-                .custom-table th {
-                    font-weight: 600;
-                    letter-spacing: 0.5px;
-                }
+      <CondoFormModal
+        show={showModal}
+        onHide={handleClose}
+        onSubmit={onSubmit}
+        editingCondo={editingCondo}
+        adminUsers={adminUsers}
+      />
 
-                .transition-all { transition: all 0.2s ease-in-out; }
-                `}
-            </style>
-        </AnimatedPage>
-    );
+      <CondoRelationsModal
+        show={showRelationsModal}
+        onHide={handleRelationsClose}
+        condoName={condoToDelete?.nombre}
+        relations={relations}
+      />
+
+      <CondoDeleteModal
+        show={showConfirmDeleteModal}
+        onHide={handleConfirmDeleteClose}
+        onConfirm={confirmDelete}
+        condoName={condoToDelete?.nombre}
+      />
+    </AnimatedPage>
+  );
 };
 
 export default SACondominiosPage;

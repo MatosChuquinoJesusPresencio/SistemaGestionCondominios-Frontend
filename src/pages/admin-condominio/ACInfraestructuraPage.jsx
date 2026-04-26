@@ -22,6 +22,22 @@ const ACInfraestructuraPage = () => {
     const apartamentos = getTable('apartamentos');
     const usuarios = getTable('usuarios');
     const condominio = getTable('condominios').find(c => c.id === authUser?.id_condominio);
+    
+    if (!condominio) {
+        return (
+            <AnimatedPage>
+                <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
+                    <div className="text-center p-5 bg-white rounded-4 shadow-sm" style={{ maxWidth: '500px' }}>
+                        <div className="p-4 rounded-circle bg-warning bg-opacity-10 text-warning d-inline-block mb-4">
+                            <FaExclamationTriangle size={50} />
+                        </div>
+                        <h3 className="fw-bold text-dark">Sin condominio asignado</h3>
+                        <p className="text-secondary">Actualmente no tienes un condominio bajo tu administración. Contacta con el Super Administrador para que se te asigne uno.</p>
+                    </div>
+                </div>
+            </AnimatedPage>
+        );
+    }
 
     // Estados
     const [activeTab, setActiveTab] = useState("torres");
@@ -34,10 +50,18 @@ const ACInfraestructuraPage = () => {
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
     // Mapeos filtrados por condominio
-    const torresCondo = useMemo(() => torres.filter(t => t.id_condominio === authUser?.id_condominio), [torres, authUser]);
+    const torresCondo = useMemo(() => {
+        if (!authUser?.id_condominio) return [];
+        return torres.filter(t => t.id_condominio === authUser.id_condominio);
+    }, [torres, authUser]);
+
     const pisosCondo = useMemo(() => pisos.filter(p => torresCondo.map(t => t.id).includes(p.id_torre)), [pisos, torresCondo]);
     const aptosCondo = useMemo(() => apartamentos.filter(a => pisosCondo.map(p => p.id).includes(a.id_piso)), [apartamentos, pisosCondo]);
-    const propietarios = useMemo(() => usuarios.filter(u => u.id_rol === 3 && (u.id_condominio === authUser?.id_condominio || !u.id_condominio)), [usuarios, authUser]);
+    
+    const propietarios = useMemo(() => {
+        if (!authUser?.id_condominio) return [];
+        return usuarios.filter(u => u.id_rol === 3 && (u.id_condominio === authUser.id_condominio || !u.id_condominio));
+    }, [usuarios, authUser]);
 
     // Handlers Modal
     const handleOpenModal = (type, item = null) => {
