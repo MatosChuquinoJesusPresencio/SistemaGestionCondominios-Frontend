@@ -11,7 +11,7 @@ const SearchBar = ({
   colSize = { search: 7, filter: 5 },
 }) => {
   return (
-    <Row className="align-items-center g-3">
+    <Row className="align-items-center g-3 justify-content-between">
       <Col md={colSize.search}>
         <InputGroup className="input-no-shadow bg-light rounded-pill px-3 py-1 border-0">
           <InputGroup.Text className="bg-transparent border-0 text-muted">

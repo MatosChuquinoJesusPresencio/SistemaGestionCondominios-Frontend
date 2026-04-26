@@ -124,6 +124,20 @@ const SAUsuariosPage = () => {
         contraseña: "123123",
       };
       updateTable("usuarios", [...usuarios, newUser]);
+
+      console.group("Simulación: Correo Enviado (Residente)");
+      console.log(`Para: ${data.email}`);
+      console.log(
+        `Asunto: Acceso al Sistema de Gestión - ${condominio?.nombre}`,
+      );
+      console.log(
+        `Mensaje: Hola ${data.nombre}, el administrador te ha registrado.`,
+      );
+      console.log(`Tus credenciales son:`);
+      console.log(`- Email: ${data.email}`);
+      console.log(`- Contraseña: 123123`);
+      console.log("¡Cambie la contraseña en cuanto inicie sesión!");
+      console.groupEnd();
     }
     handleCloseModal();
   };
@@ -258,6 +272,7 @@ const SAUsuariosPage = () => {
             totalPages: totalPages,
             onPageChange: setCurrentPage,
             totalItems: filteredUsers.length,
+            itemsShowing: paginatedUsers.length,
           }}
         >
           {paginatedUsers.map((user, index) => {

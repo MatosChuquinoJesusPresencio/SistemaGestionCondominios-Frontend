@@ -7,7 +7,7 @@ const TablePagination = ({
   totalItems,
   itemsShowing,
 }) => {
-  if (totalPages <= 1 && totalItems === itemsShowing) return null;
+  if (!totalItems || totalItems === 0) return null;
 
   return (
     <Card.Footer className="bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center border-top gap-3">

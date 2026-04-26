@@ -249,7 +249,7 @@ const SAHistorialPage = () => {
                     eventKey="carritos"
                     title={
                       <span>
-                        <FaShoppingCart className="me-2" /> Carritos
+                        <FaShoppingCart className="me-2" /> Préstamo de Carritos
                       </span>
                     }
                   />
@@ -257,7 +257,7 @@ const SAHistorialPage = () => {
                     eventKey="estacionamiento"
                     title={
                       <span>
-                        <FaCar className="me-2" /> Estacionamiento
+                        <FaCar className="me-2" /> Accesos al Condominio
                       </span>
                     }
                   />
@@ -428,7 +428,6 @@ const SAHistorialPage = () => {
           })}
         </MainTable>
       </div>
-
     </AnimatedPage>
   );
 };

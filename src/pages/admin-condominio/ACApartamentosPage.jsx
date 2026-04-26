@@ -1,15 +1,7 @@
 import { useState, useMemo } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Table,
-  Badge,
-  Modal,
-  Form,
-} from "react-bootstrap";
 import { useForm } from "react-hook-form";
+
+import { Button, Col, Row, Table, Badge, Modal, Form } from "react-bootstrap";
 import {
   FaHome,
   FaUser,
@@ -18,25 +10,24 @@ import {
   FaTrash,
   FaInfoCircle,
   FaBuilding,
-  FaChevronRight,
   FaCheckCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
+
 import { useAuth } from "../../hooks/useAuth";
 import { useData } from "../../hooks/useData";
+
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
 import SearchBar from "../../components/ui/SearchBar";
-import TablePagination from "../../components/ui/TablePagination";
-import EmptyState from "../../components/ui/EmptyState";
+import MainTable from "../../components/ui/MainTable";
 
 const ACApartamentosPage = () => {
   const { authUser } = useAuth();
   const { getTable, updateTable } = useData();
 
-  // Datos
   const apartamentos = getTable("apartamentos");
   const pisos = getTable("pisos");
   const torres = getTable("torres");
@@ -66,7 +57,6 @@ const ACApartamentosPage = () => {
     );
   }
 
-  // Estados
   const [searchTerm, setSearchTerm] = useState("");
   const [towerFilter, setTowerFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,13 +75,11 @@ const ACApartamentosPage = () => {
     formState: { errors },
   } = useForm();
 
-  // Filtrar torres del condominio
   const torresCondo = useMemo(() => {
     if (!authUser?.id_condominio) return [];
     return torres.filter((t) => t.id_condominio === authUser.id_condominio);
   }, [torres, authUser]);
 
-  // Filtrar apartamentos del condominio
   const aptosCondo = useMemo(() => {
     const torresIds = torresCondo.map((t) => t.id);
     const pisosIds = pisos
@@ -105,7 +93,6 @@ const ACApartamentosPage = () => {
         const torre = torres.find((t) => t.id === piso?.id_torre);
         const owner = usuarios.find((u) => u.id === a.id_usuario);
 
-        // Inquilinos temporales vinculados a este apartamento
         const residents = inquilinosTemporales.filter(
           (i) => i.id_apartamento === a.id,
         );
@@ -120,12 +107,10 @@ const ACApartamentosPage = () => {
       });
   }, [apartamentos, pisos, torresCondo, usuarios, inquilinosTemporales]);
 
-  // Apartamento actualmente seleccionado (fresco)
   const currentApto = useMemo(() => {
     return aptosCondo.find((a) => a.id === selectedAptoId);
   }, [aptosCondo, selectedAptoId]);
 
-  // Estadísticas
   const stats = useMemo(
     () => ({
       total: aptosCondo.length,
@@ -141,7 +126,6 @@ const ACApartamentosPage = () => {
     [aptosCondo, inquilinosTemporales, apartamentos, pisos, torres, authUser],
   );
 
-  // Filtrado para la tabla
   const filteredAptos = useMemo(() => {
     return aptosCondo.filter((apto) => {
       const matchesSearch =
@@ -154,14 +138,12 @@ const ACApartamentosPage = () => {
     });
   }, [aptosCondo, searchTerm, towerFilter]);
 
-  // Paginación
   const totalPages = Math.ceil(filteredAptos.length / ITEMS_PER_PAGE);
   const paginatedAptos = filteredAptos.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
 
-  // Handlers para Residentes (Inquilinos)
   const handleManageResidents = (aptoId) => {
     setSelectedAptoId(aptoId);
     setShowResidentModal(true);
@@ -206,30 +188,41 @@ const ACApartamentosPage = () => {
             icon={FaBuilding}
             label="Total Unidades"
             value={stats.total}
-            colorClass="primary"
+            colorClass="primary-theme"
           />
           <StatCard
             icon={FaCheckCircle}
             label="Ocupados"
             value={stats.ocupados}
-            colorClass="success"
+            colorClass="primary-theme"
           />
           <StatCard
             icon={FaInfoCircle}
             label="Sin Propietario"
             value={stats.sinPropietario}
-            colorClass="warning"
+            colorClass="primary-theme"
           />
           <StatCard
             icon={FaUsers}
             label="Población Estimada"
             value={stats.totalResidentes}
-            colorClass="info"
+            colorClass="primary-theme"
           />
         </Row>
 
-        <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
-          <Card.Header className="bg-white border-0 py-4 px-4">
+        <MainTable
+          headers={[
+            "#",
+            "Unidad",
+            "Ubicación",
+            "Propietario Legal",
+            "Inquilinos/Residentes",
+            "Acciones",
+          ]}
+          isEmpty={paginatedAptos.length === 0}
+          emptyMessage="No se encontraron unidades con los filtros aplicados."
+          emptyIcon={FaHome}
+          searchBar={
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
@@ -245,103 +238,84 @@ const ACApartamentosPage = () => {
               ]}
               colSize={{ search: 5, filter: 3 }}
             />
-          </Card.Header>
-          <Card.Body className="p-0">
-            <div className="table-responsive">
-              <Table hover className="align-middle mb-0 custom-table">
-                <thead className="bg-light text-muted small text-uppercase">
-                  <tr>
-                    <th className="px-4 py-3 border-0">Unidad</th>
-                    <th className="py-3 border-0">Ubicación</th>
-                    <th className="py-3 border-0">Propietario Legal</th>
-                    <th className="py-3 border-0">Inquilinos/Residentes</th>
-                    <th className="px-4 py-3 border-0 text-end">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedAptos.length > 0 ? (
-                    paginatedAptos.map((apto) => (
-                      <tr key={apto.id} className="border-bottom border-light">
-                        <td className="px-4 py-3">
-                          <div className="d-flex align-items-center gap-3">
-                            <div className="apto-badge">{apto.numero}</div>
-                            <div>
-                              <div className="fw-bold text-dark">
-                                Apto {apto.numero}
-                              </div>
-                              <div className="x-small text-muted">
-                                {apto.metraje} m²
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <div className="small fw-medium text-secondary">
-                            {apto.torreNombre} • Piso {apto.pisoNumero}
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <div className="d-flex align-items-center gap-2">
-                            <FaUser className="text-muted x-small" />
-                            <span
-                              className={`small ${apto.id_usuario ? "text-dark fw-semibold" : "text-danger italic"}`}
-                            >
-                              {apto.ownerName}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <div className="d-flex flex-wrap gap-1">
-                            {apto.residents.length > 0 ? (
-                              apto.residents.map((r) => (
-                                <Badge
-                                  key={r.id}
-                                  bg="light"
-                                  className="text-primary border border-primary border-opacity-10 fw-normal"
-                                >
-                                  {r.nombre.split(" ")[0]}
-                                </Badge>
-                              ))
-                            ) : (
-                              <span className="x-small text-muted">
-                                Sin residentes
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-end">
-                          <Button
-                            variant="outline-primary"
-                            className="btn-sm rounded-pill px-3 fw-bold x-small"
-                            onClick={() => handleManageResidents(apto.id)}
-                          >
-                            Gestionar Inquilinos
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <EmptyState
-                      colSpan={5}
-                      message="No se encontraron unidades con los filtros aplicados."
-                      icon={FaHome}
-                    />
-                  )}
-                </tbody>
-              </Table>
-            </div>
-          </Card.Body>
-          <TablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            totalItems={filteredAptos.length}
-            itemsShowing={paginatedAptos.length}
-          />
-        </Card>
+          }
+          paginationProps={{
+            currentPage: currentPage,
+            totalPages: totalPages,
+            onPageChange: setCurrentPage,
+            totalItems: filteredAptos.length,
+            itemsShowing: paginatedAptos.length,
+          }}
+        >
+          {paginatedAptos.map((apto, index) => {
+            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            return (
+              <tr key={apto.id} className="border-bottom border-light">
+                <td className="px-4 py-3 text-center">
+                  <span className="text-secondary fw-bold">
+                    {actualIndex.toString().padStart(2, "0")}
+                  </span>
+                </td>
+                <td className="py-3">
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="apto-badge">{apto.numero}</div>
+                    <div>
+                      <div className="fw-bold text-dark">
+                        Apto {apto.numero}
+                      </div>
+                      <div className="x-small text-muted">
+                        {apto.metraje} m²
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td className="py-3">
+                  <div className="small fw-medium text-secondary">
+                    {apto.torreNombre} • Piso {apto.pisoNumero}
+                  </div>
+                </td>
+                <td className="py-3">
+                  <div className="d-flex align-items-center gap-2">
+                    <FaUser className="text-muted x-small" />
+                    <span
+                      className={`small ${apto.id_usuario ? "text-dark fw-semibold" : "text-danger italic"}`}
+                    >
+                      {apto.ownerName}
+                    </span>
+                  </div>
+                </td>
+                <td className="py-3">
+                  <div className="d-flex flex-wrap gap-1">
+                    {apto.residents.length > 0 ? (
+                      apto.residents.map((r) => (
+                        <Badge
+                          key={r.id}
+                          bg="light"
+                          className="text-primary border border-primary border-opacity-10 fw-normal"
+                        >
+                          {r.nombre.split(" ")[0]}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="x-small text-muted">Sin residentes</span>
+                    )}
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-end">
+                  <Button
+                    variant="outline-primary"
+                    className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                    onClick={() => handleManageResidents(apto.id)}
+                  >
+                    Gestionar
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
+        </MainTable>
       </div>
 
-      {/* Modal Gestionar Residentes */}
       <Modal
         show={showResidentModal}
         onHide={() => setShowResidentModal(false)}
@@ -445,28 +419,6 @@ const ACApartamentosPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <style>
-        {`
-                .apto-badge {
-                    width: 45px;
-                    height: 45px;
-                    background-color: var(--primary-color);
-                    color: white;
-                    border-radius: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 800;
-                    font-size: 0.9rem;
-                    box-shadow: 0 4px 10px rgba(17, 45, 77, 0.15);
-                }
-                .custom-table th {
-                    font-size: 0.75rem;
-                    letter-spacing: 0.05rem;
-                }
-                `}
-      </style>
     </AnimatedPage>
   );
 };

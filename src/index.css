@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #112D4D;
+  --primary-color: #112d4d;
   --primary-rgb: 17, 45, 77;
   --secondary-color: #2c5281;
-  --text-color: #F9F7F7;
+  --text-color: #f9f7f7;
 }
 
 .text-primary-theme {
@@ -22,7 +22,9 @@
   border-color: var(--primary-color) !important;
 }
 
-.transition-all { transition: all 0.2s ease-in-out; }
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
 
 .search-group-table {
   background-color: #f8f9fa;
@@ -35,9 +37,11 @@
   box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
 }
 
-.transition-all { transition: all 0.2s ease-in-out; }
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
 
-.table-custom-bordered td:not(:last-child), 
+.table-custom-bordered td:not(:last-child),
 .table-custom-bordered th:not(:last-child) {
   border-right: 1px solid #d8d8d8ff !important;
 }
@@ -64,7 +68,9 @@ body {
 }
 
 .bg-login-image {
-  background-image: linear-gradient(rgba(33, 37, 41, 0.6), rgba(33, 37, 41, 0.6)), url('./assets/login-bg.png');
+  background-image:
+    linear-gradient(rgba(33, 37, 41, 0.6), rgba(33, 37, 41, 0.6)),
+    url("./assets/login-bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -141,9 +147,11 @@ body {
   box-shadow: none !important;
 }
 
-.input-group-text, 
+.input-group-text,
 .form-control {
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .input-group:focus-within .input-group-text,
@@ -213,7 +221,7 @@ body {
 }
 
 .active-nav-link::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -269,7 +277,7 @@ body {
   background: #f8f9fa;
   padding: 6px;
   border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .custom-tabs.nav-pills .nav-link {
@@ -296,4 +304,18 @@ body {
   box-shadow: 0 4px 15px rgba(17, 45, 77, 0.25);
   border-color: var(--primary-color);
   transform: translateY(-1px);
+}
+
+.apto-badge {
+  width: 45px;
+  height: 45px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(17, 45, 77, 0.15);
 }

@@ -8,7 +8,7 @@ import EmptyState from "../ui/EmptyState";
 const TowerTable = ({ data, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 10;
 
   const filtered = useMemo(() => {
     return data.filter((t) =>
@@ -49,7 +49,7 @@ const TowerTable = ({ data, onEdit, onDelete }) => {
                 <tr key={tower.id} className="border-bottom border-light">
                   <td className="px-4 py-3">
                     <div className="d-flex align-items-center gap-3">
-                      <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
+                      <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary-theme">
                         <FaBuilding />
                       </div>
                       <div className="fw-bold text-dark">{tower.nombre}</div>
@@ -60,19 +60,17 @@ const TowerTable = ({ data, onEdit, onDelete }) => {
                     <div className="d-flex justify-content-end gap-2">
                       <Button
                         variant="light"
-                        size="sm"
-                        className="text-warning"
+                        className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
                         onClick={() => onEdit(tower)}
                       >
-                        <FaEdit />
+                        <FaEdit /> <span>Editar</span>
                       </Button>
                       <Button
                         variant="light"
-                        size="sm"
-                        className="text-danger"
+                        className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
                         onClick={() => onDelete(tower)}
                       >
-                        <FaTrash />
+                        <FaTrash /> <span>Eliminar</span>
                       </Button>
                     </div>
                   </td>
