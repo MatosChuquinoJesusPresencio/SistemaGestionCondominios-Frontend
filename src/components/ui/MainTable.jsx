@@ -13,7 +13,7 @@ const MainTable = ({
     cardClass = "mb-4"
 }) => {
     return (
-        <Card className={`border-0 shadow-sm rounded-4 overflow-hidden ${cardClass}`}>
+        <Card className={`card-custom overflow-hidden ${cardClass}`}>
             {searchBar && (
                 <Card.Header className="bg-white border-0 py-4 px-4">
                     {searchBar}

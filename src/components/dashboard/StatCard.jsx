@@ -1,7 +1,7 @@
 const StatCard = ({ icon: Icon, label, value, colorClass = "primary" }) => {
     return (
         <div className="col-12 col-sm-6 col-xl-3">
-            <div className={`card border-0 shadow-sm rounded-4 p-3 h-100 border-start border-${colorClass} border-5`}>
+            <div className={`card card-custom p-3 h-100 border-start border-${colorClass} border-5`}>
                 <div className="d-flex align-items-center">
                     <div className={`bg-${colorClass} bg-opacity-10 p-3 rounded-circle me-3`}>
                         <Icon className={`text-${colorClass} fs-4`} />

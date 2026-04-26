@@ -3,6 +3,10 @@
   --primary-rgb: 17, 45, 77;
   --secondary-color: #2c5281;
   --text-color: #f9f7f7;
+  --accent-color: #f9a826;
+  --accent-rgb: 249, 168, 38;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
 }
 
 .text-primary-theme {
@@ -11,6 +15,14 @@
 
 .text-secondary-theme {
   color: var(--secondary-color) !important;
+}
+
+.text-accent-theme {
+  color: var(--accent-color) !important;
+}
+
+.bg-accent-theme {
+  background-color: var(--accent-color) !important;
 }
 
 .border-primary-theme {
@@ -209,6 +221,20 @@ body {
   box-shadow: 0 4px 12px rgba(44, 82, 129, 0.2);
 }
 
+.btn-accent-theme {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid var(--accent-color) !important;
+}
+
+.btn-accent-theme:hover {
+  background-color: white !important;
+  color: var(--accent-color) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
+}
+
 .alert-close-small {
   font-size: 0.8rem;
 }
@@ -239,7 +265,7 @@ body {
 
 .custom-checkbox:focus {
   box-shadow: none !important;
-  border-color: #ced4da !important; /* Color gris suave original */
+  border-color: #ced4da !important;
   outline: none !important;
 }
 
@@ -271,7 +297,6 @@ body {
   z-index: 9999;
 }
 
-/* Custom Tabs for Dashboard */
 .custom-tabs {
   gap: 12px;
   background: #f8f9fa;
@@ -318,4 +343,82 @@ body {
   font-weight: 800;
   font-size: 0.9rem;
   box-shadow: 0 4px 10px rgba(17, 45, 77, 0.15);
+}
+
+.page-container {
+  min-height: 100vh;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  width: 100%;
+}
+
+.card-custom {
+  border: none !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  border-radius: 1rem !important;
+  background-color: white;
+}
+
+.btn-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.icon-circle {
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action-sm {
+  border-radius: 50rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.badge-role-super {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+.badge-role-admin {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+.badge-role-owner {
+  background-color: var(--secondary-color) !important;
+  color: white !important;
+}
+.badge-role-guard {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+.badge-status-active {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: var(--success-color) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+.badge-status-inactive {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: var(--danger-color) !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+.badge-status-warning {
+  background-color: rgba(249, 168, 38, 0.1) !important;
+  color: var(--accent-color) !important;
+  border: 1px solid rgba(249, 168, 38, 0.2) !important;
+}
+.badge-status-info {
+  background-color: rgba(63, 114, 175, 0.1) !important;
+  color: #3f72af !important;
+  border: 1px solid rgba(63, 114, 175, 0.2) !important;
 }

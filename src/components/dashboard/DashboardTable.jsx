@@ -17,7 +17,7 @@ const DashboardTable = ({
 }) => {
     return (
         <div className={`col-12 ${colSize}`}>
-            <div className="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white">
+            <div className="card card-custom overflow-hidden h-100">
                 <div className="card-header border-0 py-4 px-4 bg-white d-flex flex-wrap justify-content-between align-items-center gap-3">
                     <div className="d-flex align-items-center gap-3 flex-grow-1">
                         <h5 className="fw-bold mb-0 text-secondary-theme">{title}</h5>
@@ -40,7 +40,7 @@ const DashboardTable = ({
 
                     {buttonText && (
                         <button 
-                            className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                            className="btn btn-sm btn-primary-theme btn-action-sm"
                             onClick={onButtonClick}
                         >
                             {buttonText}

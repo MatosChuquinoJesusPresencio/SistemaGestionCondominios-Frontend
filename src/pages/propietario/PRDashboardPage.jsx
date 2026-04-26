@@ -57,7 +57,7 @@ const PRDashboardPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaUser}
           title={`¡Hola, ${currentUser.nombre.split(" ")[0]}!`}
@@ -132,7 +132,7 @@ const PRDashboardPage = () => {
                         Salió
                       </span>
                     ) : (
-                      <span className="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill border border-success border-opacity-10">
+                      <span className="badge badge-status-active">
                         En recinto
                       </span>
                     )}
@@ -185,7 +185,7 @@ const PRDashboardPage = () => {
                         Finalizado
                       </span>
                     ) : (
-                      <span className="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill border border-danger border-opacity-10">
+                      <span className="badge badge-status-inactive">
                         En uso
                       </span>
                     )}

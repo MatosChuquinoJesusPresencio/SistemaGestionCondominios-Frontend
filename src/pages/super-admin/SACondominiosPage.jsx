@@ -52,7 +52,13 @@ const SACondominiosPage = () => {
       condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const { currentPage, setCurrentPage, totalPages, paginatedData: currentItems, itemsPerPage } = usePagination(filteredCondominios);
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData: currentItems,
+    itemsPerPage,
+  } = usePagination(filteredCondominios);
 
   const handleClose = () => {
     setShowModal(false);
@@ -177,7 +183,7 @@ const SACondominiosPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaBuilding}
           title="Gestión de Condominios"
@@ -185,7 +191,7 @@ const SACondominiosPage = () => {
           welcomeText={`Bienvenido, ${authUser?.nombre || "Administrador"}. Aquí puedes gestionar todos los condominios del sistema.`}
         >
           <button
-            className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+            className="btn-primary-theme btn-action"
             onClick={() => handleShow()}
           >
             <FaPlusCircle />
@@ -269,7 +275,7 @@ const SACondominiosPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <span className="badge bg-light text-muted fw-normal border">
+                    <span className="badge badge-status-inactive fw-normal">
                       Sin asignar
                     </span>
                   )}
@@ -287,21 +293,21 @@ const SACondominiosPage = () => {
                   <div className="d-flex justify-content-end gap-2">
                     <Button
                       variant="light"
-                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
                       onClick={() => handleDetailClick(condo)}
                     >
                       <FaEye size={14} /> <span>Detalles</span>
                     </Button>
                     <Button
                       variant="light"
-                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
                       onClick={() => handleShow(condo)}
                     >
                       <FaEdit size={14} /> <span>Editar</span>
                     </Button>
                     <Button
                       variant="light"
-                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
                       onClick={() => handleDeleteClick(condo)}
                     >
                       <FaTrashAlt size={14} /> <span>Borrar</span>

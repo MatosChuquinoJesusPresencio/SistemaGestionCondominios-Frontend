@@ -115,8 +115,8 @@ const PRVehiculosPage = () => {
   if (!miApto) {
     return (
       <AnimatedPage>
-        <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
-          <Card className="border-0 shadow-sm rounded-4 p-5 text-center">
+        <div className="page-container d-flex align-items-center justify-content-center">
+          <Card className="card-custom p-5 text-center">
             <FaCar size={60} className="text-muted mb-3 mx-auto" />
             <h3 className="fw-bold text-dark">Sin Unidad Asignada</h3>
             <p className="text-muted">
@@ -130,7 +130,7 @@ const PRVehiculosPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaCar}
           title="Gestión de Mis Vehículos"
@@ -148,7 +148,7 @@ const PRVehiculosPage = () => {
             />
           </Col>
           <Col lg={8}>
-            <Card className="border-0 shadow-sm rounded-4 bg-white h-100 d-flex flex-row align-items-center px-4">
+            <Card className="card-custom bg-white h-100 d-flex flex-row align-items-center px-4">
               <div className="p-3 rounded-circle bg-info bg-opacity-10 text-info me-4">
                 <FaParking size={24} />
               </div>
@@ -244,14 +244,14 @@ const PRVehiculosPage = () => {
                   <div className="d-flex justify-content-end gap-2">
                     <Button
                       variant="light"
-                      className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+                      className="btn-primary-theme btn-action"
                       onClick={() => handleOpenModal(v)}
                     >
                       <FaEdit /> <span>Editar</span>
                     </Button>
                     <Button
                       variant="light"
-                      className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+                      className="btn-primary-theme btn-action"
                       onClick={() => handleDeleteClick(v)}
                     >
                       <FaTrash /> <span>Eliminar</span>

@@ -166,7 +166,7 @@ const ACHistorialPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaListAlt}
           title="Historial"
@@ -334,8 +334,7 @@ const ACHistorialPage = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <Badge
-                      bg={log.fecha_salida ? "success" : "warning"}
-                      className="rounded-pill px-3 py-1"
+                      className={`${log.fecha_salida ? "badge-status-active" : "badge-status-warning"} rounded-pill px-3 py-1 border-0`}
                     >
                       {log.fecha_salida ? "Devuelto" : "En uso"}
                     </Badge>
@@ -373,8 +372,7 @@ const ACHistorialPage = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <Badge
-                      bg={log.fecha_salida ? "secondary" : "info"}
-                      className="rounded-pill px-3 py-1"
+                      className={`${log.fecha_salida ? "badge-status-inactive" : "badge-status-info"} rounded-pill px-3 py-1 border-0`}
                     >
                       {log.fecha_salida ? "Fuera" : "En recinto"}
                     </Badge>

@@ -197,7 +197,7 @@ const ACInfraestructuraPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaBuilding}
           title="Infraestructura y Unidades"
@@ -226,7 +226,7 @@ const ACInfraestructuraPage = () => {
           />
         </Row>
 
-        <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
+        <Card className="card-custom overflow-hidden">
           <Card.Header className="bg-white border-0 pt-4 px-4">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
               <Tabs

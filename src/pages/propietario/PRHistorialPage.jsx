@@ -127,8 +127,8 @@ const PRHistorialPage = () => {
   if (!miApto) {
     return (
       <AnimatedPage>
-        <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
-          <Card className="border-0 shadow-sm rounded-4 p-5 text-center">
+        <div className="page-container d-flex align-items-center justify-content-center">
+          <Card className="card-custom p-5 text-center">
             <FaHistory size={60} className="text-muted mb-3 mx-auto" />
             <h3 className="fw-bold text-dark">Actividad no disponible</h3>
             <p className="text-muted">
@@ -142,7 +142,7 @@ const PRHistorialPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaHistory}
           title="Mi Historial de Actividad"
@@ -286,8 +286,7 @@ const PRHistorialPage = () => {
                   </td>
                   <td className="px-4 py-3 text-end">
                     <Badge
-                      bg={log.fecha_salida ? "success" : "warning"}
-                      className="rounded-pill px-3 py-1"
+                      className={`${log.fecha_salida ? "badge-status-active" : "badge-status-warning"} rounded-pill px-3 py-1 border-0`}
                     >
                       {log.fecha_salida ? "Devuelto" : "En uso"}
                     </Badge>
@@ -325,8 +324,7 @@ const PRHistorialPage = () => {
                   </td>
                   <td className="px-4 py-3 text-end">
                     <Badge
-                      bg={log.fecha_salida ? "secondary" : "primary"}
-                      className="rounded-pill px-3 py-1"
+                      className={`${log.fecha_salida ? "badge-status-inactive" : "badge-status-info"} rounded-pill px-3 py-1 border-0`}
                     >
                       {log.estado}
                     </Badge>

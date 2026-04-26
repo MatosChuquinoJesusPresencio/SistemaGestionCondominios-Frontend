@@ -151,7 +151,7 @@ const ACApartamentosPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaHome}
           title="Control de Apartamentos"
@@ -280,7 +280,7 @@ const ACApartamentosPage = () => {
                 <td className="px-4 py-3 text-end">
                   <Button
                     variant="outline-primary"
-                    className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                    className="btn btn-sm btn-primary-theme btn-action-sm"
                     onClick={() => handleManageResidents(apto.id)}
                   >
                     Gestionar

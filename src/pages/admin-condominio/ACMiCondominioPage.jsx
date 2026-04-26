@@ -113,7 +113,7 @@ const ACMiCondominioPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaBuilding}
           title="Mi Condominio"
@@ -150,7 +150,7 @@ const ACMiCondominioPage = () => {
 
         <div className="row g-4">
           <Col lg={5}>
-            <Card className="border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+            <Card className="card-custom h-100 overflow-hidden bg-white">
               <Card.Header className="border-0 bg-white pt-4 px-4 pb-0">
                 <h5 className="fw-bold text-dark d-flex align-items-center gap-2">
                   <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
@@ -207,7 +207,7 @@ const ACMiCondominioPage = () => {
           </Col>
 
           <Col lg={7}>
-            <Card className="border-0 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
+            <Card className="card-custom h-100 overflow-hidden bg-white">
               <Card.Header className="border-0 bg-white pt-4 px-4 pb-0">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="fw-bold text-dark d-flex align-items-center gap-2">

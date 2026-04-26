@@ -159,7 +159,7 @@ const ACUsuariosPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaUsers}
           title="Gestión de Usuarios"
@@ -167,7 +167,7 @@ const ACUsuariosPage = () => {
           welcomeText="Administra a los propietarios, residentes y personal de seguridad de tu condominio."
         >
           <Button
-            className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+            className="btn-primary-theme btn-action"
             onClick={() => handleShowModal()}
           >
             <FaUserPlus />
@@ -271,17 +271,11 @@ const ACUsuariosPage = () => {
                 </td>
                 <td className="py-3 text-center">
                   {user.activo ? (
-                    <Badge
-                      bg="success"
-                      className="bg-opacity-10 text-success rounded-pill px-3 py-1"
-                    >
+                    <Badge className="badge-status-active rounded-pill px-3 py-1 border-0">
                       Activo
                     </Badge>
                   ) : (
-                    <Badge
-                      bg="danger"
-                      className="bg-opacity-10 text-danger rounded-pill px-3 py-1"
-                    >
+                    <Badge className="badge-status-inactive rounded-pill px-3 py-1 border-0">
                       Inactivo
                     </Badge>
                   )}
@@ -290,14 +284,14 @@ const ACUsuariosPage = () => {
                   <div className="d-flex justify-content-end gap-2">
                     <Button
                       variant="light"
-                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
                       onClick={() => handleShowModal(user)}
                     >
                       <FaEdit /> <span>Editar</span>
                     </Button>
                     <Button
                       variant="light"
-                      className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
                       onClick={() => handleDeleteClick(user)}
                     >
                       <FaTrash /> <span>Eliminar</span>

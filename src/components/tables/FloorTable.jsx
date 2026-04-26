@@ -81,14 +81,14 @@ const FloorTable = ({ data, torres, onEdit, onDelete }) => {
                     <div className="d-flex justify-content-end gap-2">
                       <Button
                         variant="light"
-                        className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+                        className="btn-primary-theme btn-action"
                         onClick={() => onEdit(floor)}
                       >
                         <FaEdit /> <span>Editar</span>
                       </Button>
                       <Button
                         variant="light"
-                        className="btn btn-primary-theme d-inline-flex align-items-center gap-2 shadow-sm px-4 py-2 rounded-3 fw-semibold transition-all"
+                        className="btn-primary-theme btn-action"
                         onClick={() => onDelete(floor)}
                       >
                         <FaTrash /> <span>Eliminar</span>

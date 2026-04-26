@@ -89,7 +89,7 @@ const ACDashboardPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaBuilding}
           title={condominio?.nombre || "Panel de Administración"}
@@ -164,7 +164,7 @@ const ACDashboardPage = () => {
                         Salió
                       </span>
                     ) : (
-                      <span className="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill border border-success border-opacity-10">
+                      <span className="badge badge-status-active">
                         En recinto
                       </span>
                     )}
@@ -220,7 +220,7 @@ const ACDashboardPage = () => {
                         Finalizado
                       </span>
                     ) : (
-                      <span className="badge bg-danger bg-opacity-10 text-danger fw-bold px-3 py-2 rounded-pill border border-danger border-opacity-10">
+                      <span className="badge badge-status-inactive">
                         En uso
                       </span>
                     )}

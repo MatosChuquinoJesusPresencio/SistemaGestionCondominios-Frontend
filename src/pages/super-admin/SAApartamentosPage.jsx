@@ -108,7 +108,7 @@ const SAApartamentosPage = () => {
 
   return (
     <AnimatedPage>
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="page-container">
         <DashboardHeader
           icon={FaSitemap}
           title="Explorador Global de Unidades"
@@ -242,7 +242,7 @@ const SAApartamentosPage = () => {
                 <td className="px-4 py-3 text-end">
                   <Button
                     variant="light"
-                    className="btn btn-sm btn-primary-theme rounded-pill px-3 border-opacity-25 transition fw-bold"
+                    className="btn btn-sm btn-primary-theme btn-action-sm"
                     onClick={() => handleViewDetails(apto.id)}
                   >
                     <FaEye size={14} /> <span>Detalles</span>
