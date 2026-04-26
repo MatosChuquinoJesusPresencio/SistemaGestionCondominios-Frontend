@@ -131,7 +131,6 @@ const ACHistorialPage = () => {
   const filteredData = useMemo(() => {
     const source =
       activeTab === "carritos" ? mappedLogsCarritos : mappedLogsEstacionamiento;
-    setCurrentPage(1);
 
     return source.filter((item) => {
       const matchesSearch =
@@ -157,7 +156,13 @@ const ACHistorialPage = () => {
     statusFilter,
   ]);
 
-  const { currentPage, setCurrentPage, totalPages, paginatedData, itemsPerPage } = usePagination(filteredData);
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData,
+    itemsPerPage,
+  } = usePagination(filteredData);
 
   return (
     <AnimatedPage>

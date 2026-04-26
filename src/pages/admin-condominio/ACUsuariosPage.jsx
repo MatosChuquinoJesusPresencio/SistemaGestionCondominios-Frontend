@@ -62,7 +62,6 @@ const ACUsuariosPage = () => {
   );
 
   const filteredResidentes = useMemo(() => {
-    setCurrentPage(1);
     return residentes.filter((user) => {
       const matchesSearch =
         user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,11 +69,17 @@ const ACUsuariosPage = () => {
       const matchesRole =
         roleFilter === "all" || user.id_rol.toString() === roleFilter;
 
-    return matchesSearch && matchesRole;
+      return matchesSearch && matchesRole;
     });
   }, [residentes, searchTerm, roleFilter]);
 
-  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedResidentes, itemsPerPage } = usePagination(filteredResidentes);
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData: paginatedResidentes,
+    itemsPerPage,
+  } = usePagination(filteredResidentes);
 
   const handleShowModal = (user = null) => {
     setEditingUser(user);
@@ -256,7 +261,9 @@ const ACUsuariosPage = () => {
                     </div>
                   </div>
                 </td>
-                <td className="py-3"><RoleBadge roleId={user.id_rol} /></td>
+                <td className="py-3">
+                  <RoleBadge roleId={user.id_rol} />
+                </td>
                 <td className="py-3">
                   <div className="small fw-medium text-secondary">
                     {getAptosString(user.id)}
