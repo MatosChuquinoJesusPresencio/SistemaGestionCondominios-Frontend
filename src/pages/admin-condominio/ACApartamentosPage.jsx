@@ -23,6 +23,8 @@ import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthInput from "../../components/auth/AuthInput";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
+import NoCondoWarning from "../../components/ui/NoCondoWarning";
+import { usePagination } from "../../hooks/usePagination";
 
 const ACApartamentosPage = () => {
   const { authUser } = useAuth();
@@ -35,32 +37,10 @@ const ACApartamentosPage = () => {
     (c) => c.id === authUser?.id_condominio,
   );
 
-  if (!condominio) {
-    return (
-      <AnimatedPage>
-        <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
-          <div
-            className="text-center p-5 bg-white rounded-4 shadow-sm"
-            style={{ maxWidth: "500px" }}
-          >
-            <div className="p-4 rounded-circle bg-warning bg-opacity-10 text-warning d-inline-block mb-4">
-              <FaExclamationTriangle size={50} />
-            </div>
-            <h3 className="fw-bold text-dark">Sin condominio asignado</h3>
-            <p className="text-secondary">
-              Actualmente no tienes un condominio bajo tu administración.
-              Contacta con el Super Administrador para que se te asigne uno.
-            </p>
-          </div>
-        </div>
-      </AnimatedPage>
-    );
-  }
+  if (!condominio) return <NoCondoWarning />;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [towerFilter, setTowerFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
 
   const [showResidentModal, setShowResidentModal] = useState(false);
   const [selectedAptoId, setSelectedAptoId] = useState(null);
@@ -138,11 +118,7 @@ const ACApartamentosPage = () => {
     });
   }, [aptosCondo, searchTerm, towerFilter]);
 
-  const totalPages = Math.ceil(filteredAptos.length / ITEMS_PER_PAGE);
-  const paginatedAptos = filteredAptos.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedAptos, itemsPerPage } = usePagination(filteredAptos);
 
   const handleManageResidents = (aptoId) => {
     setSelectedAptoId(aptoId);
@@ -248,7 +224,7 @@ const ACApartamentosPage = () => {
           }}
         >
           {paginatedAptos.map((apto, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={apto.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">

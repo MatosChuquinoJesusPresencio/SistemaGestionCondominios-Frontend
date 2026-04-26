@@ -24,6 +24,8 @@ import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
 import UserFormModal from "../../components/modals/UserFormModal";
 import UserDeleteModal from "../../components/modals/UserDeleteModal";
+import { usePagination } from "../../hooks/usePagination";
+import RoleBadge from "../../components/ui/RoleBadge";
 
 const SAUsuariosPage = () => {
   const { authUser } = useAuth();
@@ -46,8 +48,6 @@ const SAUsuariosPage = () => {
 
   const [roleFilter, setRoleFilter] = useState("all");
   const [condoFilter, setCondoFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
 
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -82,11 +82,7 @@ const SAUsuariosPage = () => {
     });
   }, [usuarios, searchTerm, roleFilter, condoFilter]);
 
-  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedUsers, itemsPerPage } = usePagination(filteredUsers);
 
   const handleShowModal = (user = null) => {
     setEditingUser(user || null);
@@ -152,21 +148,6 @@ const SAUsuariosPage = () => {
     updateTable("usuarios", updated);
     setShowConfirmDelete(false);
     setUserToDelete(null);
-  };
-
-  const getRoleBadge = (roleId) => {
-    const roles = {
-      1: { bg: "danger", label: "Super Admin" },
-      2: { bg: "primary", label: "Admin Condo" },
-      3: { bg: "success", label: "Propietario" },
-      4: { bg: "info", label: "Seguridad" },
-    };
-    const role = roles[roleId] || { bg: "secondary", label: "Usuario" };
-    return (
-      <Badge bg={role.bg} className="rounded-pill px-3 py-2">
-        {role.label}
-      </Badge>
-    );
   };
 
   return (
@@ -276,7 +257,7 @@ const SAUsuariosPage = () => {
           }}
         >
           {paginatedUsers.map((user, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={user.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">
@@ -292,7 +273,7 @@ const SAUsuariosPage = () => {
                     </div>
                   </div>
                 </td>
-                <td className="py-3">{getRoleBadge(user.id_rol)}</td>
+                <td className="py-3"><RoleBadge roleId={user.id_rol} /></td>
                 <td className="py-3">
                   <div className="small fw-medium text-secondary">
                     {user.id_condominio

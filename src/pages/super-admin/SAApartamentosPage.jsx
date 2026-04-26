@@ -19,6 +19,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
+import { usePagination } from "../../hooks/usePagination";
 
 const SAApartamentosPage = () => {
   const { getTable } = useData();
@@ -32,10 +33,6 @@ const SAApartamentosPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [condoFilter, setCondoFilter] = useState("all");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedAptoId, setSelectedAptoId] = useState(null);
 
@@ -98,11 +95,7 @@ const SAApartamentosPage = () => {
     });
   }, [allAptos, searchTerm, condoFilter]);
 
-  const totalPages = Math.ceil(filteredAptos.length / ITEMS_PER_PAGE);
-  const paginatedAptos = filteredAptos.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedAptos, itemsPerPage } = usePagination(filteredAptos);
 
   const handleViewDetails = (aptoId) => {
     setSelectedAptoId(aptoId);
@@ -195,7 +188,7 @@ const SAApartamentosPage = () => {
           }}
         >
           {paginatedAptos.map((apto, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={apto.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">

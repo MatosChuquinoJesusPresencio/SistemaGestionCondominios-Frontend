@@ -21,6 +21,8 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import MainTable from "../../components/ui/MainTable";
 import SearchBar from "../../components/ui/SearchBar";
+import { usePagination } from "../../hooks/usePagination";
+import { formatDateTime } from "../../utils/formatters";
 
 const SAHistorialPage = () => {
   const { getTable } = useData();
@@ -51,8 +53,6 @@ const SAHistorialPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
 
   const mappedLogsCarritos = useMemo(() => {
     return logsCarritos
@@ -165,11 +165,7 @@ const SAHistorialPage = () => {
     statusFilter,
   ]);
 
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData, itemsPerPage } = usePagination(filteredData);
 
   return (
     <AnimatedPage>
@@ -320,18 +316,7 @@ const SAHistorialPage = () => {
           }}
         >
           {paginatedData.map((log, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
-            const formatDateTime = (isoString) => {
-              if (!isoString) return "---";
-              const date = new Date(isoString);
-              return date.toLocaleString("es-ES", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-            };
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
 
             if (activeTab === "carritos") {
               return (

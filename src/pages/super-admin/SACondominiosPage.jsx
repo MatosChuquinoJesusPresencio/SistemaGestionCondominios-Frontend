@@ -24,6 +24,7 @@ import CondoRelationsModal from "../../components/modals/CondoRelationsModal";
 import CondoDeleteModal from "../../components/modals/CondoDeleteModal";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
+import { usePagination } from "../../hooks/usePagination";
 
 const SACondominiosPage = () => {
   const { authUser } = useAuth();
@@ -31,10 +32,6 @@ const SACondominiosPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingCondo, setEditingCondo] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedCondo, setSelectedCondo] = useState(null);
 
@@ -55,11 +52,7 @@ const SACondominiosPage = () => {
       condo.ciudad.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const totalPages = Math.ceil(filteredCondominios.length / ITEMS_PER_PAGE);
-  const currentItems = filteredCondominios.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: currentItems, itemsPerPage } = usePagination(filteredCondominios);
 
   const handleClose = () => {
     setShowModal(false);
@@ -239,7 +232,7 @@ const SACondominiosPage = () => {
           }}
         >
           {currentItems.map((condo, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             const admin = adminUsers.find((u) => u.id_condominio === condo.id);
             return (
               <tr key={condo.id} className="border-bottom border-light">

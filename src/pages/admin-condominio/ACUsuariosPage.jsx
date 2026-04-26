@@ -21,6 +21,9 @@ import MainTable from "../../components/ui/MainTable";
 import SearchBar from "../../components/ui/SearchBar";
 import ResidentFormModal from "../../components/modals/ResidentFormModal";
 import ResidentDeleteModal from "../../components/modals/ResidentDeleteModal";
+import { usePagination } from "../../hooks/usePagination";
+import RoleBadge from "../../components/ui/RoleBadge";
+import NoCondoWarning from "../../components/ui/NoCondoWarning";
 
 const ACUsuariosPage = () => {
   const { authUser } = useAuth();
@@ -32,32 +35,10 @@ const ACUsuariosPage = () => {
     (c) => c.id === authUser?.id_condominio,
   );
 
-  if (!condominio) {
-    return (
-      <AnimatedPage>
-        <div className="container-fluid py-4 bg-light min-vh-100 d-flex align-items-center justify-content-center">
-          <div
-            className="text-center p-5 bg-white rounded-4 shadow-sm"
-            style={{ maxWidth: "500px" }}
-          >
-            <div className="p-4 rounded-circle bg-warning bg-opacity-10 text-warning d-inline-block mb-4">
-              <FaExclamationTriangle size={50} />
-            </div>
-            <h3 className="fw-bold text-dark">Sin condominio asignado</h3>
-            <p className="text-secondary">
-              Actualmente no tienes un condominio bajo tu administración.
-              Contacta con el Super Administrador para que se te asigne uno.
-            </p>
-          </div>
-        </div>
-      </AnimatedPage>
-    );
-  }
+  if (!condominio) return <NoCondoWarning />;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
 
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -89,15 +70,11 @@ const ACUsuariosPage = () => {
       const matchesRole =
         roleFilter === "all" || user.id_rol.toString() === roleFilter;
 
-      return matchesSearch && matchesRole;
+    return matchesSearch && matchesRole;
     });
   }, [residentes, searchTerm, roleFilter]);
 
-  const totalPages = Math.ceil(filteredResidentes.length / ITEMS_PER_PAGE);
-  const paginatedResidentes = filteredResidentes.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedResidentes, itemsPerPage } = usePagination(filteredResidentes);
 
   const handleShowModal = (user = null) => {
     setEditingUser(user);
@@ -167,20 +144,6 @@ const ACUsuariosPage = () => {
     updateTable("usuarios", updated);
     setShowConfirmDelete(false);
     setUserToDelete(null);
-  };
-
-  const getRoleBadge = (roleId) => {
-    const roles = {
-      2: { bg: "primary", label: "Admin" },
-      3: { bg: "success", label: "Propietario" },
-      4: { bg: "info", label: "Seguridad" },
-    };
-    const role = roles[roleId] || { bg: "secondary", label: "Usuario" };
-    return (
-      <Badge bg={role.bg} className="rounded-pill px-3 py-2">
-        {role.label}
-      </Badge>
-    );
   };
 
   const getAptosString = (userId) => {
@@ -277,7 +240,7 @@ const ACUsuariosPage = () => {
           }}
         >
           {paginatedResidentes.map((user, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={user.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">
@@ -293,7 +256,7 @@ const ACUsuariosPage = () => {
                     </div>
                   </div>
                 </td>
-                <td className="py-3">{getRoleBadge(user.id_rol)}</td>
+                <td className="py-3"><RoleBadge roleId={user.id_rol} /></td>
                 <td className="py-3">
                   <div className="small fw-medium text-secondary">
                     {getAptosString(user.id)}

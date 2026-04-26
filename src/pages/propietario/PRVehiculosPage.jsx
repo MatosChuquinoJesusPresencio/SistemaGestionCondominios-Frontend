@@ -19,6 +19,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import VehicleModal from "../../components/modals/VehicleModal";
 import MainTable from "../../components/ui/MainTable";
+import { usePagination } from "../../hooks/usePagination";
 
 const PRVehiculosPage = () => {
   const { authUser } = useAuth();
@@ -72,14 +73,7 @@ const PRVehiculosPage = () => {
       });
   }, [vehiculos, authUser, misResidentesIds, residentes]);
 
-  const ITEMS_PER_PAGE = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(misVehiculos.length / ITEMS_PER_PAGE);
-  const paginatedVehiculos = misVehiculos.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedVehiculos, itemsPerPage } = usePagination(misVehiculos);
 
   const handleOpenModal = (vehicle = null) => {
     setEditingVehicle(vehicle);
@@ -209,7 +203,7 @@ const PRVehiculosPage = () => {
           }}
         >
           {paginatedVehiculos.map((v, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={v.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">

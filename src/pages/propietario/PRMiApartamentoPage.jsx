@@ -22,6 +22,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import ResidentModal from "../../components/modals/ResidentModal";
 import MainTable from "../../components/ui/MainTable";
+import { usePagination } from "../../hooks/usePagination";
 
 const PRMiApartamentoPage = () => {
   const { authUser } = useAuth();
@@ -58,14 +59,7 @@ const PRMiApartamentoPage = () => {
     [residentes, miApto],
   );
 
-  const ITEMS_PER_PAGE = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(misResidentes.length / ITEMS_PER_PAGE);
-  const paginatedResidentes = misResidentes.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedResidentes, itemsPerPage } = usePagination(misResidentes);
 
   const handleOpenModal = (resident = null) => {
     setEditingResident(resident);
@@ -241,7 +235,7 @@ const PRMiApartamentoPage = () => {
           }}
         >
           {paginatedResidentes.map((resident, index) => {
-            const actualIndex = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+            const actualIndex = (currentPage - 1) * itemsPerPage + index + 1;
             return (
               <tr key={resident.id} className="border-bottom border-light">
                 <td className="px-4 py-3 text-center">
