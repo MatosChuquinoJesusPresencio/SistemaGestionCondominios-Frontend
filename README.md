@@ -17,7 +17,7 @@ El sistema está dividido en tres niveles de acceso principales, cada uno con fu
 
 - **Gestión Global:** Control total sobre múltiples condominios.
 - **Administración de Usuarios:** Creación y gestión de cuentas administrativas.
-- **Control de Departamentos:** Visualización y gestión de la estructura habitacional.
+- **Control de Apartamentos:** Visualización y gestión de la estructura habitacional.
 - **Historial General:** Seguimiento de todas las actividades críticas en la plataforma.
 
 ### Administrador de Condominio

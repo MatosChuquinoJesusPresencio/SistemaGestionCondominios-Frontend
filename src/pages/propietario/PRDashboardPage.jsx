@@ -208,7 +208,7 @@ const PRDashboardPage = () => {
             headers={[
               "Nombre del Inquilino",
               "Documento (DNI)",
-              "Departamento",
+              "Apartamento",
             ]}
           >
             {myTenants.length > 0 ? (

@@ -250,7 +250,7 @@ const SADashboardPage = () => {
             title="Préstamos de Carritos (Global)"
             buttonText="Ver historial"
             onButtonClick={() => navigate("/super-admin/historial?tab=carritos")}
-            headers={["Carrito / Usuario", "Departamento", "Estado"]}
+            headers={["Carrito / Usuario", "Apartamento", "Estado"]}
           >
             {recentLoans.length > 0 ? (
               recentLoans.map((loan) => (

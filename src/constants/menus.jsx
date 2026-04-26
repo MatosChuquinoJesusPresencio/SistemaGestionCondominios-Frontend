@@ -7,6 +7,7 @@ export const MENU_BY_ROLE = {
         { path: "/admin-condominio/infraestructura", label: "Infraestructura", icon: <FaSitemap /> },
         { path: "/admin-condominio/usuarios", label: "Usuarios", icon: <FaUsers /> },
         { path: "/admin-condominio/apartamentos", label: "Apartamentos", icon: <FaHome /> },
+        { path: "/admin-condominio/estacionamientos", label: "Estacionamientos", icon: <FaCar /> },
         { path: "/admin-condominio/historial", label: "Historial", icon: <FaListAlt /> },
     ],
 

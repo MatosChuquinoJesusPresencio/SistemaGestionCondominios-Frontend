@@ -60,14 +60,14 @@ const TowerTable = ({ data, onEdit, onDelete }) => {
                     <div className="d-flex justify-content-end gap-2">
                       <Button
                         variant="light"
-                        className="btn-primary-theme btn-action"
+                        className="btn btn-sm btn-primary-theme btn-action-sm"
                         onClick={() => onEdit(tower)}
                       >
                         <FaEdit /> <span>Editar</span>
                       </Button>
                       <Button
                         variant="light"
-                        className="btn-primary-theme btn-action"
+                        className="btn btn-sm btn-primary-theme btn-action-sm"
                         onClick={() => onDelete(tower)}
                       >
                         <FaTrash /> <span>Eliminar</span>

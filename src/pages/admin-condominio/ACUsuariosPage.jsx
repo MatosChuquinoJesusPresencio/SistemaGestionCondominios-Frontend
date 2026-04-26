@@ -7,7 +7,6 @@ import {
   FaTrash,
   FaUserShield,
   FaCheckCircle,
-  FaExclamationTriangle,
   FaHome,
 } from "react-icons/fa";
 
@@ -137,7 +136,7 @@ const ACUsuariosPage = () => {
     const hasAptos = apartamentos.some((a) => a.id_usuario === user.id);
     if (hasAptos)
       return alert(
-        "No puedes eliminar a este propietario porque tiene departamentos asignados. Desvincúlalo de la infraestructura primero.",
+        "No puedes eliminar a este propietario porque tiene apartamentos asignados. Desvincúlalo de la infraestructura primero.",
       );
 
     setUserToDelete(user);
@@ -207,7 +206,7 @@ const ACUsuariosPage = () => {
             "#",
             "Residente",
             "Rol",
-            "Departamentos",
+            "Apartamentos",
             "Estado",
             "Acciones",
           ]}

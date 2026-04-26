@@ -130,7 +130,7 @@ const ACMiCondominioPage = () => {
           />
           <StatCard
             icon={FaPlusCircle}
-            label="Total Departamentos"
+            label="Total Apartamentos"
             value={aptos.length}
             colorClass="primary-theme"
           />
@@ -189,7 +189,7 @@ const ACMiCondominioPage = () => {
                   </div>
                   <div className="list-group-item bg-transparent px-0 border-light d-flex justify-content-between align-items-center">
                     <span className="text-secondary small">
-                      Departamentos Activos
+                      Apartamentos Activos
                     </span>
                     <span className="fw-bold text-dark">{aptos.length}</span>
                   </div>

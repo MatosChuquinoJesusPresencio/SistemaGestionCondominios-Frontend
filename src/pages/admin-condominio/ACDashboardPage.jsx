@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Badge } from "react-bootstrap";
 
 import {
   FaBuilding,
@@ -38,6 +40,12 @@ const ACDashboardPage = () => {
 
   const currentCondoId = authUser?.id_condominio;
   const condominio = condominios.find((c) => c.id === currentCondoId);
+
+  const configuraciones = getTable("configuraciones");
+  const config = useMemo(
+    () => configuraciones.find((c) => c.id_condominio === currentCondoId),
+    [configuraciones, currentCondoId],
+  );
 
   if (!condominio) return <NoCondoWarning />;
 
@@ -82,6 +90,15 @@ const ACDashboardPage = () => {
     .slice(0, 5);
   const recentCondoUsers = [...condoUsers].slice(0, 5);
 
+  const estacionamientos = getTable("estacionamientos");
+  const estacionamientosCondo = estacionamientos
+    .filter((e) => aptosIds.includes(e.id_apartamento))
+    .map((e) => {
+      const apto = aptosCondo.find((a) => a.id === e.id_apartamento);
+      return { ...e, aptoNumero: apto?.numero };
+    });
+  const recentEstacionamientos = [...estacionamientosCondo].slice(0, 5);
+
   const getRoleName = (roleId) => {
     const role = roles.find((r) => r.id === roleId);
     return role ? role.nombre : "N/A";
@@ -100,7 +117,7 @@ const ACDashboardPage = () => {
         <div className="row g-4 mb-5">
           <StatCard
             icon={FaHome}
-            label="Departamentos"
+            label="Apartamentos"
             value={totalAptos}
             colorClass="primary-theme"
           />
@@ -184,7 +201,7 @@ const ACDashboardPage = () => {
             title="Préstamos de Carritos"
             buttonText="Historial"
             onButtonClick={() => navigate("/admin-condominio/historial?tab=carritos")}
-            headers={["Carrito / Usuario", "Departamento", "Solicitud", "Estado"]}
+            headers={["Carrito / Usuario", "Apartamento", "Solicitud", "Estado"]}
           >
             {recentLoans.length > 0 ? (
               recentLoans.map((loan) => (
@@ -232,6 +249,70 @@ const ACDashboardPage = () => {
                 colSpan={4}
                 message="No hay préstamos de carritos recientes."
                 icon={FaShoppingCart}
+              />
+            )}
+          </DashboardTable>
+
+          <DashboardTable
+            title="Gestión de Estacionamientos"
+            buttonText="Gestionar Espacios"
+            onButtonClick={() => navigate("/admin-condominio/estacionamientos")}
+            headers={["Nro. Espacio", "Unidad", "Estado", "Capacidad"]}
+          >
+            {recentEstacionamientos.length > 0 ? (
+              recentEstacionamientos.map((est) => {
+                const isFull =
+                  est.cantidad_vehiculos > 0 &&
+                  ((est.tipo_vehiculo === "Auto" &&
+                    est.cantidad_vehiculos >= (config?.max_autos || 0)) ||
+                    (est.tipo_vehiculo === "Moto" &&
+                      est.cantidad_vehiculos >= (config?.max_motos || 0)));
+
+                return (
+                  <tr key={est.id} className="border-bottom border-light">
+                    <td className="px-4 py-3">
+                      <div className="fw-bold text-dark">{est.numero}</div>
+                      <div className="x-small text-muted">
+                        {est.cantidad_vehiculos > 0
+                          ? est.tipo_vehiculo
+                          : "Sin vehículos"}
+                      </div>
+                    </td>
+                    <td className="py-3">
+                      <Badge
+                        bg="light"
+                        className="text-primary-theme border border-primary border-opacity-10 rounded-pill px-3 fw-medium x-small"
+                      >
+                        Apto {est.aptoNumero}
+                      </Badge>
+                    </td>
+                    <td className="py-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <FaCircle
+                          className={isFull ? "text-danger" : "text-success"}
+                          style={{ fontSize: "8px" }}
+                        />
+                        <span className="small text-muted fw-medium">
+                          {isFull ? "Lleno" : "Disponible"}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-end">
+                      <div className="fw-bold text-dark small">
+                        {est.cantidad_vehiculos} /{" "}
+                        {est.tipo_vehiculo === "Auto"
+                          ? config?.max_autos || "-"
+                          : config?.max_motos || "-"}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <EmptyState
+                colSpan={4}
+                message="No hay estacionamientos registrados."
+                icon={FaCar}
               />
             )}
           </DashboardTable>
