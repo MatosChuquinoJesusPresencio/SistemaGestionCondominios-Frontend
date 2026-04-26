@@ -15,6 +15,7 @@ export const MENU_BY_ROLE = {
         { path: "/super-admin", label: "Inicio", icon: <FaUserShield />, exact: true },
         { path: "/super-admin/condominios", label: "Condominios", icon: <FaBuilding /> },
         { path: "/super-admin/apartamentos", label: "Apartamentos", icon: <FaSitemap /> },
+        { path: "/super-admin/estacionamientos", label: "Estacionamientos", icon: <FaCar /> },
         { path: "/super-admin/usuarios", label: "Usuarios", icon: <FaUsers /> },
         { path: "/super-admin/historial", label: "Historial", icon: <FaListAlt /> },
     ],
