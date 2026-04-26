@@ -30,7 +30,7 @@ const ResidentModal = ({ show, onHide, onSubmit, editingResident = null }) => {
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton className="border-0">
         <Modal.Title className="fw-bold text-primary-theme d-flex align-items-center gap-2">
-          <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
+          <div className="p-2 rounded-3 bg-primary bg-opacity-10 text-primary-theme">
             {editingResident ? <FaEdit /> : <FaUserPlus />}
           </div>
           {editingResident ? "Editar Residente" : "Nuevo Residente"}
