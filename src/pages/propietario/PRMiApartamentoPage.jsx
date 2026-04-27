@@ -195,14 +195,14 @@ const PRMiApartamentoPage = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col lg={4}>
-            <StatCard
-              icon={FaUsers}
-              label="Residentes Registrados"
-              value={misResidentes.length}
-              colorClass="primary-theme"
-            />
-          </Col>
+          <StatCard
+            icon={FaUsers}
+            label="Residentes Registrados"
+            value={misResidentes.length}
+            colorClass="primary-theme"
+            colSize="col-12 col-md-5 col-lg-3"
+            useFullHeight={false}
+          />
         </Row>
 
         <MainTable

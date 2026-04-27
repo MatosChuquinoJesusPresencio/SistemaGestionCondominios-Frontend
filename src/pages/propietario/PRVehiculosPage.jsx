@@ -139,14 +139,14 @@ const PRVehiculosPage = () => {
         />
 
         <Row className="g-4 mb-5">
-          <Col lg={4}>
-            <StatCard
-              icon={FaCar}
-              label="Vehículos Registrados"
-              value={misVehiculos.length}
-              colorClass="primary-theme"
-            />
-          </Col>
+          <StatCard
+            icon={FaCar}
+            label="Vehículos Registrados"
+            value={misVehiculos.length}
+            colorClass="primary-theme"
+            colSize="col-12 col-md-5 col-lg-3"
+            useFullHeight={false}
+          />
           <Col lg={8}>
             <Card className="card-custom bg-white h-100 d-flex flex-row align-items-center px-4">
               <div className="p-3 rounded-circle bg-info bg-opacity-10 text-info me-4">
