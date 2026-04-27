@@ -35,6 +35,7 @@ const PRHistorialPage = () => {
   const vehiculosTable = getTable("vehiculos");
   const apartamentos = getTable("apartamentos");
   const usuarios = getTable("usuarios");
+  const inquilinos = getTable("inquilinos_temporales");
   const estacionamientos = getTable("estacionamientos");
   const configuraciones = getTable("configuraciones");
 
@@ -74,7 +75,8 @@ const PRHistorialPage = () => {
       .filter((log) => log.id_apartamento === miApto.id)
       .map((log) => {
         const carrito = carritos.find((c) => c.id === log.id_carrito);
-        const user = usuarios.find((u) => u.id === log.id_usuario);
+        const user = log.id_usuario ? usuarios.find((u) => u.id === log.id_usuario) : null;
+        const inquilino = log.id_inquilino_temporal ? inquilinos.find((i) => i.id === log.id_inquilino_temporal) : null;
 
         let liveFine = log.penalizacion || 0;
 
@@ -93,7 +95,7 @@ const PRHistorialPage = () => {
         return {
           ...log,
           carritoNombre: carrito?.nombre || `Carrito ${log.id_carrito}`,
-          usuarioNombre: user?.nombre || "N/A",
+          usuarioNombre: user?.nombre || inquilino?.nombre || "N/A",
           estado: log.fecha_salida ? "Devuelto" : "En uso",
           penalizacionCalculada: liveFine,
         };

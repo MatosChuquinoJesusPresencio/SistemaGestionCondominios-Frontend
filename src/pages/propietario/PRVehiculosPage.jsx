@@ -9,6 +9,7 @@ import {
   FaTrash,
   FaEdit,
   FaExclamationTriangle,
+  FaMotorcycle,
 } from "react-icons/fa";
 
 import { useAuth } from "../../hooks/useAuth";
@@ -43,12 +44,15 @@ const PRVehiculosPage = () => {
     () => estacionamientos.find((e) => e.id_apartamento === miApto?.id),
     [estacionamientos, miApto],
   );
-  const misResidentesIds = useMemo(
-    () =>
-      residentes
-        .filter((r) => r.id_apartamento === miApto?.id)
-        .map((r) => r.id),
+
+  const misResidentes = useMemo(
+    () => residentes.filter((r) => r.id_apartamento === miApto?.id),
     [residentes, miApto],
+  );
+
+  const misResidentesIds = useMemo(
+    () => misResidentes.map((r) => r.id),
+    [misResidentes],
   );
 
   const misVehiculos = useMemo(() => {
@@ -83,7 +87,13 @@ const PRVehiculosPage = () => {
   const onSubmit = (data) => {
     if (editingVehicle) {
       const updated = vehiculos.map((v) =>
-        v.id === editingVehicle.id ? { ...v, ...data } : v,
+        v.id === editingVehicle.id
+          ? {
+              ...v,
+              ...data,
+              id_usuario: data.id_usuario ? authUser.id : null,
+            }
+          : v,
       );
       updateTable("vehiculos", updated);
     } else {
@@ -91,9 +101,8 @@ const PRVehiculosPage = () => {
         vehiculos.length > 0 ? Math.max(...vehiculos.map((v) => v.id)) + 1 : 1;
       const newVehicle = {
         id: newId,
-        id_usuario: authUser.id,
-        id_inquilino_temporal: null,
         ...data,
+        id_usuario: data.id_usuario ? authUser.id : null,
       };
       updateTable("vehiculos", [...vehiculos, newVehicle]);
     }
@@ -214,7 +223,7 @@ const PRVehiculosPage = () => {
                 <td className="py-3">
                   <div className="d-flex align-items-center gap-3">
                     <div className="p-2 rounded-3 bg-light text-primary">
-                      <FaCar />
+                      {v.tipo === "Moto" ? <FaMotorcycle /> : <FaCar />}
                     </div>
                     <div>
                       <div className="fw-bold text-dark">{v.marca}</div>
@@ -269,6 +278,7 @@ const PRVehiculosPage = () => {
         onHide={() => setShowModal(false)}
         onSubmit={onSubmit}
         editingVehicle={editingVehicle}
+        residents={misResidentes}
       />
 
       <Modal

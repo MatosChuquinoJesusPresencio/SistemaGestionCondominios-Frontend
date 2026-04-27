@@ -38,6 +38,7 @@ const SAHistorialPage = () => {
   const condominios = getTable("condominios");
   const pisos = getTable("pisos");
   const torres = getTable("torres");
+  const inquilinos = getTable("inquilinos_temporales");
 
   const initialTab = searchParams.get("tab") || "carritos";
 
@@ -71,7 +72,8 @@ const SAHistorialPage = () => {
         const condo = condominios.find((c) => c.id === torre?.id_condominio);
 
         const carrito = carritos.find((c) => c.id === log.id_carrito);
-        const user = usuarios.find((u) => u.id === log.id_usuario);
+        const user = log.id_usuario ? usuarios.find((u) => u.id === log.id_usuario) : null;
+        const inquilino = log.id_inquilino_temporal ? inquilinos.find((i) => i.id === log.id_inquilino_temporal) : null;
 
         const config = configuraciones.find(
           (c) => c.id_condominio === condo?.id,
@@ -97,7 +99,7 @@ const SAHistorialPage = () => {
           condoNombre: condo?.nombre || "N/A",
           carritoNombre: carrito?.nombre || `Carrito ${log.id_carrito}`,
           aptoNumero: apto?.numero || "N/A",
-          usuarioNombre: user?.nombre || "N/A",
+          usuarioNombre: user?.nombre || inquilino?.nombre || "N/A",
           estado: log.fecha_salida ? "Devuelto" : "En uso",
           penalizacionCalculada: liveFine,
         };

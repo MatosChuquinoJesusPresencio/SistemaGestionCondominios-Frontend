@@ -43,10 +43,13 @@ const ACApartamentosPage = () => {
   const [towerFilter, setTowerFilter] = useState("all");
 
   const [showResidentModal, setShowResidentModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedAptoId, setSelectedAptoId] = useState(null);
+  const [residentToDelete, setResidentToDelete] = useState(null);
 
   const usuarios = getTable("usuarios");
   const inquilinosTemporales = getTable("inquilinos_temporales");
+  const vehiculos = getTable("vehiculos");
 
   const {
     register,
@@ -144,9 +147,17 @@ const ACApartamentosPage = () => {
     reset();
   };
 
-  const handleRemoveResident = (residentId) => {
-    const updated = inquilinosTemporales.filter((i) => i.id !== residentId);
+  const handleRemoveResident = (resident) => {
+    setResidentToDelete(resident);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (!residentToDelete) return;
+    const updated = inquilinosTemporales.filter((i) => i.id !== residentToDelete.id);
     updateTable("inquilinos_temporales", updated);
+    setShowDeleteModal(false);
+    setResidentToDelete(null);
   };
 
   return (
@@ -328,7 +339,7 @@ const ACApartamentosPage = () => {
                           <Button
                             variant="link"
                             className="text-danger p-0"
-                            onClick={() => handleRemoveResident(r.id)}
+                            onClick={() => handleRemoveResident(r)}
                           >
                             <FaTrash size={12} />
                           </Button>
@@ -393,6 +404,94 @@ const ACApartamentosPage = () => {
           >
             Cerrar
           </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* DELETE CONFIRMATION MODAL */}
+      <Modal
+        show={showDeleteModal}
+        onHide={() => {
+          setShowDeleteModal(false);
+          setResidentToDelete(null);
+        }}
+        centered
+        className="modal-custom"
+      >
+        <Modal.Header closeButton className="border-0 p-4 pb-0">
+          <Modal.Title
+            className={`fw-bold ${vehiculos.some((v) => v.id_inquilino_temporal === residentToDelete?.id) ? "text-warning" : "text-danger"}`}
+          >
+            {vehiculos.some(
+              (v) => v.id_inquilino_temporal === residentToDelete?.id,
+            )
+              ? "Acción Bloqueada"
+              : "Confirmar Eliminación"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4">
+          {residentToDelete && (
+            <div className="text-center py-3">
+              {vehiculos.some(
+                (v) => v.id_inquilino_temporal === residentToDelete.id,
+              ) ? (
+                <>
+                  <div className="p-4 bg-warning bg-opacity-10 rounded-circle d-inline-block mb-3 text-warning">
+                    <FaInfoCircle size={40} />
+                  </div>
+                  <h5 className="fw-bold text-dark">No se puede eliminar</h5>
+                  <Alert
+                    variant="warning"
+                    className="border-0 rounded-4 small text-start mt-3"
+                  >
+                    El residente <strong>{residentToDelete.nombre}</strong>{" "}
+                    tiene vehículos registrados en el sistema. Por seguridad,
+                    debes eliminar sus vehículos antes de poder dar de baja al
+                    residente.
+                  </Alert>
+                </>
+              ) : (
+                <>
+                  <div className="p-4 bg-danger bg-opacity-10 rounded-circle d-inline-block mb-3 text-danger">
+                    <FaTrash size={40} />
+                  </div>
+                  <h5 className="fw-bold text-dark">
+                    ¿Eliminar a {residentToDelete.nombre}?
+                  </h5>
+                  <p className="text-secondary small">
+                    Esta acción es irreversible. El residente perderá el acceso
+                    a los servicios del condominio.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="border-0 p-4 pt-0 d-flex gap-2">
+          <Button
+            variant="light"
+            onClick={() => {
+              setShowDeleteModal(false);
+              setResidentToDelete(null);
+            }}
+            className="rounded-pill px-4 flex-grow-1"
+          >
+            {vehiculos.some(
+              (v) => v.id_inquilino_temporal === residentToDelete?.id,
+            )
+              ? "Entendido"
+              : "Cancelar"}
+          </Button>
+          {!vehiculos.some(
+            (v) => v.id_inquilino_temporal === residentToDelete?.id,
+          ) && (
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              className="rounded-pill px-4 flex-grow-1"
+            >
+              Confirmar Eliminación
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </AnimatedPage>

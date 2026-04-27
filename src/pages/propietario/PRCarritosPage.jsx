@@ -31,6 +31,7 @@ const PRCarritosPage = () => {
   const configuraciones = getTable("configuraciones");
   const apartamentos = getTable("apartamentos");
   const usuarios = getTable("usuarios");
+  const inquilinos = getTable("inquilinos_temporales");
 
   const myApartments = useMemo(
     () => apartamentos.filter((a) => a.id_usuario === authUser?.id),
@@ -423,7 +424,12 @@ const PRCarritosPage = () => {
                     const carrito = carritos.find(
                       (c) => c.id === log.id_carrito,
                     );
-                    const user = usuarios.find((u) => u.id === log.id_usuario);
+                    const user = log.id_usuario
+                      ? usuarios.find((u) => u.id === log.id_usuario)
+                      : null;
+                    const inquilino = log.id_inquilino_temporal
+                      ? inquilinos.find((i) => i.id === log.id_inquilino_temporal)
+                      : null;
                     const isReturned = !!log.fecha_salida;
 
                     return (
@@ -435,7 +441,7 @@ const PRCarritosPage = () => {
                         </td>
                         <td className="py-3">
                           <span className="small text-secondary">
-                            {user?.nombre || "Cargando..."}
+                            {user?.nombre || inquilino?.nombre || "Cargando..."}
                           </span>
                         </td>
                         <td className="py-3">

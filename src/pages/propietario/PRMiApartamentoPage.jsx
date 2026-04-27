@@ -1,6 +1,15 @@
 import { useState, useMemo } from "react";
 
-import { Card, Col, Row, Button, Table, Badge } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Row,
+  Button,
+  Table,
+  Badge,
+  Modal,
+  Alert,
+} from "react-bootstrap";
 import {
   FaHome,
   FaUsers,
@@ -29,13 +38,17 @@ const PRMiApartamentoPage = () => {
   const { getTable, updateTable } = useData();
 
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editingResident, setEditingResident] = useState(null);
+  const [residentToDelete, setResidentToDelete] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
 
   const apartamentos = getTable("apartamentos");
   const pisos = getTable("pisos");
   const torres = getTable("torres");
   const condominios = getTable("condominios");
   const residentes = getTable("inquilinos_temporales");
+  const vehiculos = getTable("vehiculos");
 
   const miApto = useMemo(
     () => apartamentos.find((a) => a.id_usuario === authUser?.id),
@@ -59,7 +72,13 @@ const PRMiApartamentoPage = () => {
     [residentes, miApto],
   );
 
-  const { currentPage, setCurrentPage, totalPages, paginatedData: paginatedResidentes, itemsPerPage } = usePagination(misResidentes);
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData: paginatedResidentes,
+    itemsPerPage,
+  } = usePagination(misResidentes);
 
   const handleOpenModal = (resident = null) => {
     setEditingResident(resident);
@@ -89,11 +108,17 @@ const PRMiApartamentoPage = () => {
     setShowModal(false);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar a este residente?")) {
-      const filtered = residentes.filter((r) => r.id !== id);
-      updateTable("inquilinos_temporales", filtered);
-    }
+  const handleDelete = (resident) => {
+    setResidentToDelete(resident);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (!residentToDelete) return;
+    const filtered = residentes.filter((r) => r.id !== residentToDelete.id);
+    updateTable("inquilinos_temporales", filtered);
+    setShowDeleteModal(false);
+    setResidentToDelete(null);
   };
 
   if (!miApto) {
@@ -212,8 +237,10 @@ const PRMiApartamentoPage = () => {
           emptyIcon={FaUsers}
           searchBar={
             <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h5 className="fw-bold text-dark mb-1">Residentes Autorizados</h5>
+              <div className="w-100">
+                <h5 className="fw-bold text-dark mb-1">
+                  Residentes Autorizados
+                </h5>
                 <p className="text-muted small mb-0">
                   Gestiona las personas que viven en tu unidad.
                 </p>
@@ -222,7 +249,7 @@ const PRMiApartamentoPage = () => {
                 className="btn-primary-theme rounded-pill px-4 fw-bold shadow-sm border-0 d-flex align-items-center gap-2"
                 onClick={() => handleOpenModal()}
               >
-                <FaPlus /> Añadir Residente
+                <FaPlus /> Residente
               </Button>
             </div>
           }
@@ -274,7 +301,7 @@ const PRMiApartamentoPage = () => {
                     <Button
                       variant="light"
                       className="btn-primary-theme btn-action"
-                      onClick={() => handleDelete(resident.id)}
+                      onClick={() => handleDelete(resident)}
                     >
                       <FaTrash /> <span>Eliminar</span>
                     </Button>
@@ -292,6 +319,93 @@ const PRMiApartamentoPage = () => {
         onSubmit={onSubmit}
         editingResident={editingResident}
       />
+
+      <Modal
+        show={showDeleteModal}
+        onHide={() => {
+          setShowDeleteModal(false);
+          setResidentToDelete(null);
+        }}
+        centered
+        className="modal-custom"
+      >
+        <Modal.Header closeButton className="border-0 p-4 pb-0">
+          <Modal.Title
+            className={`fw-bold ${vehiculos.some((v) => v.id_inquilino_temporal === residentToDelete?.id) ? "text-warning" : "text-danger"}`}
+          >
+            {vehiculos.some(
+              (v) => v.id_inquilino_temporal === residentToDelete?.id,
+            )
+              ? "Acción Bloqueada"
+              : "Confirmar Eliminación"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4">
+          {residentToDelete && (
+            <div className="text-center py-3">
+              {vehiculos.some(
+                (v) => v.id_inquilino_temporal === residentToDelete.id,
+              ) ? (
+                <>
+                  <div className="p-4 bg-warning bg-opacity-10 rounded-circle d-inline-block mb-3 text-warning">
+                    <FaInfoCircle size={40} />
+                  </div>
+                  <h5 className="fw-bold text-dark">No se puede eliminar</h5>
+                  <Alert
+                    variant="warning"
+                    className="border-0 rounded-4 small text-start mt-3"
+                  >
+                    El residente <strong>{residentToDelete.nombre}</strong>{" "}
+                    tiene vehículos registrados en el sistema. Por seguridad,
+                    debes eliminar sus vehículos antes de poder dar de baja al
+                    residente.
+                  </Alert>
+                </>
+              ) : (
+                <>
+                  <div className="p-4 bg-danger bg-opacity-10 rounded-circle d-inline-block mb-3 text-danger">
+                    <FaTrash size={40} />
+                  </div>
+                  <h5 className="fw-bold text-dark">
+                    ¿Eliminar a {residentToDelete.nombre}?
+                  </h5>
+                  <p className="text-secondary small">
+                    Esta acción es irreversible. El residente perderá el acceso
+                    a los servicios del condominio vinculados a tu unidad.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="border-0 p-4 pt-0 d-flex gap-2">
+          <Button
+            variant="light"
+            onClick={() => {
+              setShowDeleteModal(false);
+              setResidentToDelete(null);
+            }}
+            className="rounded-pill px-4 flex-grow-1"
+          >
+            {vehiculos.some(
+              (v) => v.id_inquilino_temporal === residentToDelete?.id,
+            )
+              ? "Entendido"
+              : "Cancelar"}
+          </Button>
+          {!vehiculos.some(
+            (v) => v.id_inquilino_temporal === residentToDelete?.id,
+          ) && (
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              className="rounded-pill px-4 flex-grow-1"
+            >
+              Confirmar Eliminación
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
     </AnimatedPage>
   );
 };
