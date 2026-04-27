@@ -72,6 +72,15 @@ Sigue estos pasos para ejecutar el proyecto localmente:
 
 ---
 
+## Despliegue
+
+La aplicación se encuentra desplegada y disponible públicamente a través de **Render**, lo que permite acceder al sistema sin necesidad de configuración local.
+
+**Accede a la aplicación aquí:**
+https://sistemagestioncondominios-frontend.onrender.com
+
+---
+
 ## Estructura del Proyecto
 
 ```text
