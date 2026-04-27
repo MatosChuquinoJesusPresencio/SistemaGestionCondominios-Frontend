@@ -1,15 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import {
-  Card,
-  Row,
-  Col,
-  Pagination,
-  Tabs,
-  Tab,
-  Badge,
-} from "react-bootstrap";
+import { Card, Row, Col, Pagination, Tabs, Tab, Badge } from "react-bootstrap";
 import {
   FaHistory,
   FaShoppingCart,
@@ -44,6 +36,14 @@ const PRHistorialPage = () => {
   const apartamentos = getTable("apartamentos");
   const usuarios = getTable("usuarios");
   const estacionamientos = getTable("estacionamientos");
+  const configuraciones = getTable("configuraciones");
+
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   const miApto = useMemo(
     () => apartamentos.find((a) => a.id_usuario === authUser?.id),
@@ -65,21 +65,41 @@ const PRHistorialPage = () => {
 
   const mappedLogsCarritos = useMemo(() => {
     if (!miApto) return [];
+
+    const config = configuraciones.find(
+      (c) => c.id_condominio === miApto.id_condominio,
+    );
+
     return logsCarritos
       .filter((log) => log.id_apartamento === miApto.id)
       .map((log) => {
         const carrito = carritos.find((c) => c.id === log.id_carrito);
         const user = usuarios.find((u) => u.id === log.id_usuario);
 
+        let liveFine = log.penalizacion || 0;
+
+        if (!log.fecha_salida && config) {
+          const startDate = new Date(log.fecha_entrada);
+          const diffMs = now - startDate;
+          const diffMins = Math.floor(diffMs / 60000);
+
+          if (diffMins > config.tiempo_max_prestamo_min) {
+            liveFine =
+              (diffMins - config.tiempo_max_prestamo_min) *
+              config.penalizacion_por_minuto;
+          }
+        }
+
         return {
           ...log,
           carritoNombre: carrito?.nombre || `Carrito ${log.id_carrito}`,
           usuarioNombre: user?.nombre || "N/A",
           estado: log.fecha_salida ? "Devuelto" : "En uso",
+          penalizacionCalculada: liveFine,
         };
       })
       .sort((a, b) => new Date(b.fecha_entrada) - new Date(a.fecha_entrada));
-  }, [logsCarritos, carritos, miApto, usuarios]);
+  }, [logsCarritos, carritos, miApto, usuarios, configuraciones, now]);
 
   const mappedLogsEstacionamiento = useMemo(() => {
     if (!miApto) return [];
@@ -122,7 +142,13 @@ const PRHistorialPage = () => {
     });
   }, [activeTab, mappedLogsCarritos, mappedLogsEstacionamiento, searchTerm]);
 
-  const { currentPage, setCurrentPage, totalPages, paginatedData, itemsPerPage } = usePagination(filteredData);
+  const {
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    paginatedData,
+    itemsPerPage,
+  } = usePagination(filteredData);
 
   if (!miApto) {
     return (
@@ -174,7 +200,7 @@ const PRHistorialPage = () => {
         <MainTable
           headers={
             activeTab === "carritos"
-              ? ["#", "Unidad", "Carrito", "Solicitante", "Entrada", "Estado"]
+              ? ["#", "Unidad", "Carrito", "Solicitante", "Salida", "Retorno", "Multa", "Estado"]
               : [
                   "#",
                   "Vehículo / Placa",
@@ -278,11 +304,26 @@ const PRHistorialPage = () => {
                       {log.usuarioNombre || log.solicitante}
                     </div>
                   </td>
-                  <td className="py-3">
+                   <td className="py-3">
                     <div className="x-small">
                       <FaClock className="me-1 text-muted" />{" "}
                       {formatDateTime(log.fecha_entrada)}
                     </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="x-small">
+                      <FaClock className="me-1 text-muted" />{" "}
+                      {log.fecha_salida ? formatDateTime(log.fecha_salida) : "---"}
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    {log.penalizacionCalculada > 0 ? (
+                      <span className="text-danger fw-bold small">
+                        S/. {log.penalizacionCalculada.toFixed(2)}
+                      </span>
+                    ) : (
+                      <span className="text-muted small">S/. 0.00</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-end">
                     <Badge

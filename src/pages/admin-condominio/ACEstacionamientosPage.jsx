@@ -372,87 +372,63 @@ const ACEstacionamientosPage = () => {
                   </Badge>
                 </td>
                 <td className="py-3 text-center">
-                    <div className="text-center">
-                      {est.cantidad_vehiculos > 0 ? (
-                        <>
-                          <span className="fw-bold text-primary-theme">
-                            {est.cantidad_vehiculos}
-                          </span>
-                          <span className="text-muted x-small">
-                            {" "}
-                            /{" "}
-                            {est.tipo_vehiculo === "Auto"
-                              ? config?.max_autos || "-"
-                              : config?.max_motos || "-"}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-muted fw-bold">0</span>
-                      )}
-                    </div>
+                  <div className="text-center">
+                    {est.cantidad_vehiculos > 0 ? (
+                      <>
+                        <span className="fw-bold text-primary-theme">
+                          {est.cantidad_vehiculos}
+                        </span>
+                        <span className="text-muted x-small">
+                          {" "}
+                          /{" "}
+                          {est.tipo_vehiculo === "Auto"
+                            ? config?.max_autos || "-"
+                            : config?.max_motos || "-"}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-muted fw-bold">0</span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-end">
                   <div className="d-flex justify-content-end gap-2">
-                    <OverlayTrigger overlay={<Tooltip>Ver Vehículos</Tooltip>}>
-                      <Button
-                        variant="light"
-                        className="btn btn-sm btn-primary-theme btn-action-sm"
-                        onClick={() => handleOpenVehicles(est)}
-                        disabled={est.cantidad_vehiculos === 0}
-                      >
-                        <FaEye /> <span>Detalles</span>
-                      </Button>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip>
-                          {est.cantidad_vehiculos > 0
-                            ? "No se puede editar con vehículos"
-                            : "Editar"}
-                        </Tooltip>
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
+                      onClick={() => handleOpenVehicles(est)}
+                      disabled={est.cantidad_vehiculos === 0}
+                    >
+                      <FaEye /> <span>Detalles</span>
+                    </Button>
+
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
+                      onClick={() => handleOpenEdit(est)}
+                      disabled={est.cantidad_vehiculos > 0}
+                      style={
+                        est.cantidad_vehiculos > 0
+                          ? { pointerEvents: "none" }
+                          : {}
                       }
                     >
-                      <span className="d-inline-block">
-                        <Button
-                          variant="light"
-                          className="btn btn-sm btn-primary-theme btn-action-sm"
-                          onClick={() => handleOpenEdit(est)}
-                          disabled={est.cantidad_vehiculos > 0}
-                          style={
-                            est.cantidad_vehiculos > 0
-                              ? { pointerEvents: "none" }
-                              : {}
-                          }
-                        >
-                          <FaEdit /> <span>Editar</span>
-                        </Button>
-                      </span>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip>
-                          {est.cantidad_vehiculos > 0
-                            ? "No se puede eliminar con vehículos"
-                            : "Eliminar"}
-                        </Tooltip>
+                      <FaEdit /> <span>Editar</span>
+                    </Button>
+
+                    <Button
+                      variant="light"
+                      className="btn btn-sm btn-primary-theme btn-action-sm"
+                      onClick={() => handleOpenDelete(est)}
+                      disabled={est.cantidad_vehiculos > 0}
+                      style={
+                        est.cantidad_vehiculos > 0
+                          ? { pointerEvents: "none" }
+                          : {}
                       }
                     >
-                      <span className="d-inline-block">
-                        <Button
-                          variant="light"
-                          className="btn btn-sm btn-primary-theme btn-action-sm"
-                          onClick={() => handleOpenDelete(est)}
-                          disabled={est.cantidad_vehiculos > 0}
-                          style={
-                            est.cantidad_vehiculos > 0
-                              ? { pointerEvents: "none" }
-                              : {}
-                          }
-                        >
-                          <FaTrash /> <span>Eliminar</span>
-                        </Button>
-                      </span>
-                    </OverlayTrigger>
+                      <FaTrash /> <span>Eliminar</span>
+                    </Button>
                   </div>
                 </td>
               </tr>

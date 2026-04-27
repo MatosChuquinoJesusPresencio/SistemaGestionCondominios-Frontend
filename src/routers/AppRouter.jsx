@@ -31,11 +31,13 @@ import ACApartamentosPage from "../pages/admin-condominio/ACApartamentosPage";
 import ACUsuariosPage from "../pages/admin-condominio/ACUsuariosPage";
 import ACHistorialPage from "../pages/admin-condominio/ACHistorialPage";
 import ACEstacionamientosPage from "../pages/admin-condominio/ACEstacionamientosPage";
+import ACCarritosPage from "../pages/admin-condominio/ACCarritosPage";
 
 import PRDashboardPage from "../pages/propietario/PRDashboardPage";
 import PRMiApartamentoPage from "../pages/propietario/PRMiApartamentoPage";
 import PRVehiculosPage from "../pages/propietario/PRVehiculosPage";
 import PRHistorialPage from "../pages/propietario/PRHistorialPage";
+import PRCarritosPage from "../pages/propietario/PRCarritosPage";
 
 const AppRouter = () => {
   const location = useLocation();
@@ -103,6 +105,7 @@ const AppRouter = () => {
               element={<ACEstacionamientosPage />}
             />
             <Route path="usuarios" element={<ACUsuariosPage />} />
+            <Route path="carritos" element={<ACCarritosPage />} />
             <Route path="historial" element={<ACHistorialPage />} />
           </Route>
 
@@ -113,6 +116,7 @@ const AppRouter = () => {
             <Route index element={<PRDashboardPage />} />
             <Route path="mi-apartamento" element={<PRMiApartamentoPage />} />
             <Route path="vehiculos" element={<PRVehiculosPage />} />
+            <Route path="carritos" element={<PRCarritosPage />} />
             <Route path="historial" element={<PRHistorialPage />} />
           </Route>
         </Route>
