@@ -32,11 +32,18 @@ const PRCarritosPage = () => {
   const apartamentos = getTable("apartamentos");
   const usuarios = getTable("usuarios");
   const inquilinos = getTable("inquilinos_temporales");
+  const pisos = getTable("pisos");
+  const torres = getTable("torres");
 
-  const myApartments = useMemo(
-    () => apartamentos.filter((a) => a.id_usuario === authUser?.id),
-    [apartamentos, authUser],
-  );
+  const myApartments = useMemo(() => {
+    return apartamentos
+      .filter((a) => a.id_usuario === authUser?.id)
+      .map((a) => {
+        const piso = pisos.find((p) => p.id === a.id_piso);
+        const torre = torres.find((t) => t.id === piso?.id_torre);
+        return { ...a, id_condominio: torre?.id_condominio };
+      });
+  }, [apartamentos, pisos, torres, authUser]);
   const myApartmentIds = useMemo(
     () => myApartments.map((a) => a.id),
     [myApartments],
