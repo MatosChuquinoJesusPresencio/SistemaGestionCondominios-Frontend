@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
   const [authError, setAuthError] = useState(null);
-  
+
   const usuariosData = getTable("usuarios");
 
   useEffect(() => {
@@ -118,9 +118,11 @@ export const AuthProvider = ({ children }) => {
         };
         localStorage.setItem(RESET_TOKEN_KEY, JSON.stringify(payload));
 
+        const baseUrl = window.location.origin;
+
         console.info(
           `[SIMULACIÓN] Enlace de recuperación:\n` +
-          `http://localhost:5173/reset-password?token=${token}`
+          `${baseUrl}/reset-password?token=${token}`
         );
       }
 
