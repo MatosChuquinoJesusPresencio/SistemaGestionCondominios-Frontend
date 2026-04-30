@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
       const currentUser = usuariosData.find(u => u.id === authUser.id);
 
       if (!currentUser || !currentUser.activo) {
+        // eslint-disable-next-line react-hooks/immutability
         logout();
       }
     }
