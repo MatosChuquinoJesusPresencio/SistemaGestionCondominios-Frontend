@@ -1,0 +1,371 @@
+/* ==========================================================================
+   CONFIGURACIÓN GLOBAL Y VARIABLES AZULES
+   ========================================================================== */
+:root {
+  --primary-blue: #0056b3;
+  --accent-cyan: #00d4ff;
+  --dark-navy: #020617;
+  --deep-slate: #0f172a;
+  --whatsapp-green: #25d366;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--dark-navy);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: white; /* Forzamos color de texto base claro */
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+section {
+  scroll-margin-top: 70px;
+}
+
+/* ==========================================================================
+   NAVBAR & LINKS
+   ========================================================================== */
+.custom-nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.custom-nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--accent-cyan);
+  transition: width 0.3s ease-in-out;
+}
+
+.custom-nav-link:hover {
+  opacity: 1 !important;
+}
+
+.custom-nav-link:hover::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   CARRUSEL (Slick Slider) - CENTRADO Y FLECHAS DE ÉLITE
+   ========================================================================== */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 45px; /* Espacio para que las flechas no se encimen */
+}
+
+.slick-list {
+  overflow: visible !important; /* CRÍTICO: Permite elevación de cards */
+}
+
+.slick-track {
+  display: flex !important;
+  align-items: stretch;
+}
+
+/* Estilo de Flechas de Navegación */
+.slick-prev, .slick-next {
+  width: 50px !important;
+  height: 50px !important;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  top: 40% !important; 
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+.slick-prev:before, .slick-next:before {
+  font-family: 'slick';
+  font-size: 28px !important;
+  color: var(--accent-cyan) !important;
+  opacity: 1 !important;
+}
+
+.slick-prev { left: -15px !important; }
+.slick-next { right: -15px !important; }
+
+.slick-prev:hover, .slick-next:hover {
+  background: var(--accent-cyan) !important;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+  color: #000 !important;
+}
+
+/* Efectos de Center Mode */
+.slick-slide {
+  padding: 20px 10px;
+  transition: all 0.5s ease;
+  opacity: 0.4;
+  transform: scale(0.85); /* Cartas laterales más pequeñas */
+}
+
+.slick-center {
+  opacity: 1;
+  transform: scale(1); /* Carta central tamaño real */
+}
+
+.slick-dots li button:before {
+  color: white !important;
+  opacity: 0.3 !important;
+}
+
+.slick-dots li.slick-active button:before {
+  opacity: 1 !important;
+  color: var(--accent-cyan) !important;
+}
+
+/* ==========================================================================
+   ANIMACIONES "FUERA DE LO COMÚN" Y BOTONES DE ÉLITE
+   ========================================================================== */
+
+/* Brillo Shimmer Compartido */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  100% { transform: translateX(150%) skewX(-25deg); }
+}
+
+/* Botón Premium (Planes) */
+@keyframes pulse-blue {
+  0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 86, 179, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
+}
+
+.btn-premium-unique {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #0056b3, #00d4ff) !important;
+  border: none !important;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+  animation: pulse-blue 2s infinite;
+}
+
+.btn-premium-unique::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer-sweep 3s infinite;
+}
+
+.btn-premium-unique:hover {
+  transform: scale(1.1) rotate(-2deg) !important;
+  letter-spacing: 2px;
+  box-shadow: 0 15px 30px rgba(0, 212, 255, 0.4) !important;
+}
+
+/* Botón Consulta (Contacto) - Minimalista Sofisticado */
+.btn-elite-minimal {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 14px 40px;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  transition: all 0.5s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-elite-minimal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.1), transparent);
+  animation: shimmer-sweep 6s infinite; /* Más lento */
+}
+
+.btn-elite-minimal:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: var(--accent-cyan);
+  transform: translateY(-5px);
+  color: var(--accent-cyan);
+}
+
+.btn-elite-minimal i { transition: transform 0.3s ease; }
+.btn-elite-minimal:hover i { transform: translateX(8px); }
+
+/* ==========================================================================
+   MEJORA DE DISEÑO DE SERVICIOS (TARJETAS DE CRISTAL)
+   ========================================================================= */
+.service-card-elite {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 40px;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card-elite::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: -1;
+}
+
+.service-card-elite:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 212, 255, 0.1);
+}
+
+.service-card-elite:hover::after {
+  opacity: 1;
+}
+
+.icon-box-elite {
+  width: 65px; height: 65px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; color: white;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 20px rgba(0, 212, 255, 0.2);
+}
+
+.btn-know-more {
+  background: none; border: none; padding: 0;
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: letter-spacing 0.3s ease;
+}
+
+.service-card-elite:hover .btn-know-more {
+  letter-spacing: 1.5px;
+}
+
+.hover-cyan {
+  transition: all 0.3s ease;
+}
+
+.hover-cyan:hover {
+  color: var(--accent-cyan) !important;
+  transform: translateX(3px);
+  display: inline-block;
+}
+
+/* ==========================================================================
+   FORMULARIOS Y PLACEHOLDERS
+   ========================================================================== */
+input::placeholder, 
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important; /* Más visible: 50% de opacidad */
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+input:focus::placeholder, 
+textarea:focus::placeholder {
+  color: rgba(0, 212, 255, 0.6) !important; /* Brillo cyan al hacer clic */
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+@media (max-width: 768px) {
+  .display-2 { font-size: 2.3rem; }
+  .display-4 { font-size: 2rem; }
+  .hero-container { padding: 60px 0; }
+  .carousel-wrapper { padding: 0 15px; }
+  .slick-prev { left: 0px !important; }
+  .slick-next { right: 0px !important; }
+}
+/* ==========================================================================
+   SISTEMA DE RESPONSIVIDAD INTEGRAL
+   ========================================================================== */
+
+/* Ajustes para Tablets y Móviles (Menos de 992px) */
+@media (max-width: 991.98px) {
+  .display-2 { font-size: 2.8rem !important; }
+  .display-4 { font-size: 2.2rem !important; }
+  
+  .carousel-wrapper {
+    padding: 0 20px;
+    max-width: 100%;
+  }
+
+  .slick-prev { left: -10px !important; }
+  .slick-next { right: -10px !important; }
+
+  /* Reducimos el escalado en móvil para evitar saltos visuales */
+  .slick-slide {
+    transform: scale(0.95);
+    opacity: 1; /* En móvil es mejor que todas sean visibles */
+  }
+}
+
+/* Ajustes para Móviles Pequeños (Menos de 576px) */
+@media (max-width: 575.98px) {
+  .display-2 { font-size: 2.2rem !important; }
+  .display-4 { font-size: 1.8rem !important; }
+  
+  .hero-container {
+    padding-top: 100px;
+    min-height: auto;
+    padding-bottom: 50px;
+  }
+
+  .service-card-elite {
+    padding: 25px;
+    margin: 0 5px;
+  }
+
+  /* El botón de WhatsApp un poco más pequeño para no tapar contenido */
+  .btn-whatsapp-custom {
+    width: 55px !important;
+    height: 55px !important;
+  }
+
+  /* Navbar: Asegurar que el menú colapsable se vea bien */
+  .navbar-collapse {
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(15px);
+    margin-top: 15px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-item {
+    text-align: center;
+    padding: 10px 0;
+  }
+}
+
+/* Evitar scroll horizontal por animaciones de AOS */
+[data-aos] {
+  pointer-events: none;
+}
+.aos-animate {
+  pointer-events: auto;
+}
