@@ -27,7 +27,7 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
 import NoCondoWarning from "../../components/ui/NoCondoWarning";
@@ -211,10 +211,10 @@ const ACEstacionamientosPage = () => {
       const updated = estacionamientos.map((e) =>
         e.id === editingEstacionamiento.id
           ? {
-              ...e,
-              numero: data.numero,
-              id_apartamento: aptoId,
-            }
+            ...e,
+            numero: data.numero,
+            id_apartamento: aptoId,
+          }
           : e,
       );
       updateTable("estacionamientos", updated);
@@ -453,7 +453,7 @@ const ACEstacionamientosPage = () => {
           <Modal.Body className="p-4">
             <Row className="g-3">
               <Col md={12}>
-                <AuthInput
+                <FormInput
                   label="Número de Estacionamiento"
                   name="numero"
                   register={register}

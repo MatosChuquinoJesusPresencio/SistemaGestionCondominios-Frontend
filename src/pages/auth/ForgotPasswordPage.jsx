@@ -5,7 +5,7 @@ import AnimatedPage from "../../components/animations/AnimatedPage";
 import { useAuth } from "../../hooks/useAuth";
 import AuthCard from "../../components/auth/AuthCard";
 import AuthLogo from "../../components/auth/AuthLogo";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import AuthButton from "../../components/auth/AuthButton";
 import AuthAlert from "../../components/auth/AuthAlert";
 
@@ -40,7 +40,7 @@ const ForgotPasswordPage = () => {
 
                     {!isSubmitted ? (
                         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                            <AuthInput
+                            <FormInput
                                 label="Correo Electrónico"
                                 icon="envelope"
                                 type="email"

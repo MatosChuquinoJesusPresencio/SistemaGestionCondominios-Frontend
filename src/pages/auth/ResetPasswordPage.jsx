@@ -5,7 +5,7 @@ import AnimatedPage from "../../components/animations/AnimatedPage";
 import { useAuth } from "../../hooks/useAuth";
 import AuthCard from "../../components/auth/AuthCard";
 import AuthLogo from "../../components/auth/AuthLogo";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import AuthButton from "../../components/auth/AuthButton";
 import AuthAlert from "../../components/auth/AuthAlert";
 
@@ -71,7 +71,7 @@ const ResetPasswordPage = () => {
                         </div>
                     ) : (
                         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                            <AuthInput
+                            <FormInput
                                 label="Nueva Contraseña"
                                 icon="lock"
                                 type="password"
@@ -85,7 +85,7 @@ const ResetPasswordPage = () => {
                                 error={errors.password}
                             />
 
-                            <AuthInput
+                            <FormInput
                                 label="Confirmar Contraseña"
                                 icon="lock"
                                 type="password"

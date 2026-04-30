@@ -22,7 +22,7 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
 import NoCondoWarning from "../../components/ui/NoCondoWarning";
@@ -203,10 +203,10 @@ const ACCarritosPage = () => {
       const updated = carritos.map((c) =>
         c.id === editingCarrito.id
           ? {
-              ...c,
-              codigo: data.codigo,
-              estado: data.estado,
-            }
+            ...c,
+            codigo: data.codigo,
+            estado: data.estado,
+          }
           : c,
       );
       updateTable("carritos_carga", updated);
@@ -453,7 +453,7 @@ const ACCarritosPage = () => {
           <Modal.Body className="p-4">
             <Row className="g-3">
               <Col md={12}>
-                <AuthInput
+                <FormInput
                   label="Código del Carrito"
                   name="codigo"
                   register={register}

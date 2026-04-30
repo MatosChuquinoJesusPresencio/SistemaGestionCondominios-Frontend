@@ -9,7 +9,7 @@ import { useData } from "../../hooks/useData";
 
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import AuthAlert from "../../components/auth/AuthAlert";
 
 const ChangePasswordPage = () => {
@@ -108,7 +108,7 @@ const ChangePasswordPage = () => {
                     </div>
                   </div>
 
-                  <AuthInput
+                  <FormInput
                     label="Contraseña Actual"
                     type="password"
                     placeholder="Escribe tu contraseña actual"
@@ -120,7 +120,7 @@ const ChangePasswordPage = () => {
                     error={errors.currentPassword}
                   />
 
-                  <AuthInput
+                  <FormInput
                     label="Nueva Contraseña"
                     type="password"
                     placeholder="Mínimo 6 caracteres"
@@ -136,7 +136,7 @@ const ChangePasswordPage = () => {
                     error={errors.newPassword}
                   />
 
-                  <AuthInput
+                  <FormInput
                     label="Confirmar Nueva Contraseña"
                     type="password"
                     placeholder="Repite la nueva contraseña"

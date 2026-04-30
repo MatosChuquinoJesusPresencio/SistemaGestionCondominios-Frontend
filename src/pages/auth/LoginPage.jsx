@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import AnimatedPage from "../../components/animations/AnimatedPage";
 import AuthCard from "../../components/auth/AuthCard";
 import AuthLogo from "../../components/auth/AuthLogo";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import AuthButton from "../../components/auth/AuthButton";
 import AuthAlert from "../../components/auth/AuthAlert";
 
@@ -36,7 +36,7 @@ const LoginPage = () => {
                     />
 
                     <form noValidate onSubmit={handleSubmit(onSubmit)}>
-                        <AuthInput
+                        <FormInput
                             label="Correo Electrónico"
                             type="email"
                             placeholder="ejemplo@correo.com"
@@ -52,7 +52,7 @@ const LoginPage = () => {
                             error={errors.email}
                         />
 
-                        <AuthInput
+                        <FormInput
                             label="Contraseña"
                             type="password"
                             placeholder="********"

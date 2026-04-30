@@ -20,7 +20,7 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import SearchBar from "../../components/ui/SearchBar";
 import MainTable from "../../components/ui/MainTable";
 import NoCondoWarning from "../../components/ui/NoCondoWarning";
@@ -365,7 +365,7 @@ const ACApartamentosPage = () => {
             <Form onSubmit={handleSubmit(handleAddResident)}>
               <Row className="g-3">
                 <Col md={6}>
-                  <AuthInput
+                  <FormInput
                     label="Nombre del Inquilino"
                     name="nombre"
                     register={register}
@@ -375,7 +375,7 @@ const ACApartamentosPage = () => {
                   />
                 </Col>
                 <Col md={6}>
-                  <AuthInput
+                  <FormInput
                     label="DNI / Identificación"
                     name="dni"
                     register={register}
@@ -484,14 +484,14 @@ const ACApartamentosPage = () => {
           {!vehiculos.some(
             (v) => v.id_inquilino_temporal === residentToDelete?.id,
           ) && (
-            <Button
-              variant="danger"
-              onClick={confirmDelete}
-              className="rounded-pill px-4 flex-grow-1"
-            >
-              Confirmar Eliminación
-            </Button>
-          )}
+              <Button
+                variant="danger"
+                onClick={confirmDelete}
+                className="rounded-pill px-4 flex-grow-1"
+              >
+                Confirmar Eliminación
+              </Button>
+            )}
         </Modal.Footer>
       </Modal>
     </AnimatedPage>

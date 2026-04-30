@@ -1,7 +1,7 @@
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { FaSave, FaTimes, FaEdit, FaPlus, FaCar, FaMotorcycle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import AuthInput from "../auth/AuthInput";
+import FormInput from "../form/FormInput";
 import { useEffect } from "react";
 
 const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents = [] }) => {
@@ -23,7 +23,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
       setValue("color", editingVehicle.color);
       setValue("placa", editingVehicle.placa);
       setValue("tipo", editingVehicle.tipo || "Auto");
-      
+
       if (editingVehicle.id_inquilino_temporal) {
         setValue("ownerType", "inquilino");
         setValue("id_inquilino_temporal", editingVehicle.id_inquilino_temporal);
@@ -67,37 +67,37 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
       <Modal.Body className="py-4">
         <Form onSubmit={handleSubmit(handleFormSubmit)}>
           <Row className="mb-3">
-             <Col md={12}>
-                <Form.Label className="fw-bold small text-secondary mb-3">Tipo de Vehículo</Form.Label>
-                <div className="d-flex gap-3">
-                   <div 
-                      className={`flex-grow-1 p-3 border rounded-4 text-center cursor-pointer transition-all ${selectedType === 'Auto' ? 'border-primary bg-primary bg-opacity-10 text-primary fw-bold' : 'bg-light text-muted opacity-75'}`}
-                      onClick={() => setValue("tipo", "Auto")}
-                      style={{ cursor: 'pointer' }}
-                   >
-                      <FaCar size={20} className="mb-2 d-block mx-auto" />
-                      Auto
-                   </div>
-                   <div 
-                      className={`flex-grow-1 p-3 border rounded-4 text-center cursor-pointer transition-all ${selectedType === 'Moto' ? 'border-primary bg-primary bg-opacity-10 text-primary fw-bold' : 'bg-light text-muted opacity-75'}`}
-                      onClick={() => setValue("tipo", "Moto")}
-                      style={{ cursor: 'pointer' }}
-                   >
-                      <FaMotorcycle size={20} className="mb-2 d-block mx-auto" />
-                      Moto
-                   </div>
-                   <input type="hidden" {...register("tipo")} />
+            <Col md={12}>
+              <Form.Label className="fw-bold small text-secondary mb-3">Tipo de Vehículo</Form.Label>
+              <div className="d-flex gap-3">
+                <div
+                  className={`flex-grow-1 p-3 border rounded-4 text-center cursor-pointer transition-all ${selectedType === 'Auto' ? 'border-primary bg-primary bg-opacity-10 text-primary fw-bold' : 'bg-light text-muted opacity-75'}`}
+                  onClick={() => setValue("tipo", "Auto")}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <FaCar size={20} className="mb-2 d-block mx-auto" />
+                  Auto
                 </div>
-             </Col>
+                <div
+                  className={`flex-grow-1 p-3 border rounded-4 text-center cursor-pointer transition-all ${selectedType === 'Moto' ? 'border-primary bg-primary bg-opacity-10 text-primary fw-bold' : 'bg-light text-muted opacity-75'}`}
+                  onClick={() => setValue("tipo", "Moto")}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <FaMotorcycle size={20} className="mb-2 d-block mx-auto" />
+                  Moto
+                </div>
+                <input type="hidden" {...register("tipo")} />
+              </div>
+            </Col>
           </Row>
 
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label className="fw-bold small text-secondary">¿A quién pertenece?</Form.Label>
-                <Form.Select 
-                   {...register("ownerType")}
-                   className="rounded-pill border-light py-2 px-3 small"
+                <Form.Select
+                  {...register("ownerType")}
+                  className="rounded-pill border-light py-2 px-3 small"
                 >
                   <option value="propietario">A mí (Propietario)</option>
                   {residents.length > 0 && <option value="inquilino">A un Inquilino</option>}
@@ -108,7 +108,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label className="fw-bold small text-secondary">Seleccionar Inquilino</Form.Label>
-                  <Form.Select 
+                  <Form.Select
                     {...register("id_inquilino_temporal", { required: ownerType === "inquilino" })}
                     className="rounded-pill border-light py-2 px-3 small"
                     isInvalid={!!errors.id_inquilino_temporal}
@@ -125,7 +125,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
 
           <Row>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Marca"
                 name="marca"
                 register={register}
@@ -135,7 +135,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
               />
             </Col>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Modelo"
                 name="modelo"
                 register={register}
@@ -147,7 +147,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
           </Row>
           <Row>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Color"
                 name="color"
                 register={register}
@@ -157,7 +157,7 @@ const VehicleModal = ({ show, onHide, onSubmit, editingVehicle = null, residents
               />
             </Col>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Placa / Matrícula"
                 name="placa"
                 register={register}

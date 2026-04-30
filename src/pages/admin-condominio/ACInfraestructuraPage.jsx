@@ -26,7 +26,7 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import TowerTable from "../../components/tables/TowerTable";
 import FloorTable from "../../components/tables/FloorTable";
 import AptoTable from "../../components/tables/AptoTable";
@@ -325,7 +325,7 @@ const ACInfraestructuraPage = () => {
         <Modal.Body className="p-4">
           <Form onSubmit={handleSubmit(onSubmit)}>
             {modalType === "torre" && (
-              <AuthInput
+              <FormInput
                 label="Nombre de la Torre"
                 name="nombre"
                 register={register}
@@ -337,7 +337,7 @@ const ACInfraestructuraPage = () => {
 
             {modalType === "piso" && (
               <>
-                <AuthInput
+                <FormInput
                   label="Número de Piso"
                   name="numero_piso"
                   type="number"
@@ -366,7 +366,7 @@ const ACInfraestructuraPage = () => {
 
             {modalType === "apto" && (
               <>
-                <AuthInput
+                <FormInput
                   label="Número de Apartamento"
                   name="numero"
                   register={register}
@@ -376,7 +376,7 @@ const ACInfraestructuraPage = () => {
                 />
                 <Row className="g-3">
                   <Col md={6}>
-                    <AuthInput
+                    <FormInput
                       label="Superficie (m²)"
                       type="number"
                       step="0.01"

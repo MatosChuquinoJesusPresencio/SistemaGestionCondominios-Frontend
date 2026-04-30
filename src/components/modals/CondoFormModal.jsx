@@ -2,7 +2,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { FaBuilding, FaTimes, FaSave, FaInfoCircle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import AuthInput from "../auth/AuthInput";
+import FormInput from "../form/FormInput";
 
 const CondoFormModal = ({
   show,
@@ -71,7 +71,7 @@ const CondoFormModal = ({
         <Form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="row">
             <div className="col-12">
-              <AuthInput
+              <FormInput
                 label="Nombre del Condominio"
                 type="text"
                 placeholder="Ej. Residencial Las Flores"
@@ -82,7 +82,7 @@ const CondoFormModal = ({
               />
             </div>
             <div className="col-12">
-              <AuthInput
+              <FormInput
                 label="Dirección"
                 type="text"
                 placeholder="Av. Principal 123"
@@ -93,7 +93,7 @@ const CondoFormModal = ({
               />
             </div>
             <div className="col-md-6">
-              <AuthInput
+              <FormInput
                 label="Ciudad"
                 type="text"
                 placeholder="Lima"
@@ -104,7 +104,7 @@ const CondoFormModal = ({
               />
             </div>
             <div className="col-md-6">
-              <AuthInput
+              <FormInput
                 label="País"
                 type="text"
                 placeholder="Perú"

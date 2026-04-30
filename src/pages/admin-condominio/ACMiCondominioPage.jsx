@@ -24,7 +24,7 @@ import { useData } from "../../hooks/useData";
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
 import AnimatedPage from "../../components/animations/AnimatedPage";
-import AuthInput from "../../components/auth/AuthInput";
+import FormInput from "../../components/form/FormInput";
 import NoCondoWarning from "../../components/ui/NoCondoWarning";
 
 const ACMiCondominioPage = () => {
@@ -339,7 +339,7 @@ const ACMiCondominioPage = () => {
             </h6>
             <Row>
               <Col md={6}>
-                <AuthInput
+                <FormInput
                   label="Máx. Autos por Apto."
                   type="number"
                   name="max_autos"
@@ -352,7 +352,7 @@ const ACMiCondominioPage = () => {
                 />
               </Col>
               <Col md={6}>
-                <AuthInput
+                <FormInput
                   label="Máx. Motos por Apto."
                   type="number"
                   name="max_motos"
@@ -371,7 +371,7 @@ const ACMiCondominioPage = () => {
             </h6>
             <Row>
               <Col md={6}>
-                <AuthInput
+                <FormInput
                   label="Tiempo Máx (Minutos)"
                   type="number"
                   name="tiempo_max_prestamo_min"
@@ -384,7 +384,7 @@ const ACMiCondominioPage = () => {
                 />
               </Col>
               <Col md={6}>
-                <AuthInput
+                <FormInput
                   label="Penalidad por Minuto (S/)"
                   type="number"
                   step="0.01"

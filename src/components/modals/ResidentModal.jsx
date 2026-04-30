@@ -1,8 +1,8 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { FaUserPlus, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import AuthInput from "../auth/AuthInput";
 import { useEffect } from "react";
+import FormInput from "../form/FormInput";
 
 const ResidentModal = ({ show, onHide, onSubmit, editingResident = null }) => {
   const {
@@ -38,7 +38,7 @@ const ResidentModal = ({ show, onHide, onSubmit, editingResident = null }) => {
       </Modal.Header>
       <Modal.Body className="py-4">
         <Form onSubmit={handleSubmit(handleFormSubmit)}>
-          <AuthInput
+          <FormInput
             label="Nombre Completo"
             name="nombre"
             register={register}
@@ -46,7 +46,7 @@ const ResidentModal = ({ show, onHide, onSubmit, editingResident = null }) => {
             error={errors.nombre}
             placeholder="Ej: Juan Pérez..."
           />
-          <AuthInput
+          <FormInput
             label="DNI / Documento de Identidad"
             name="dni"
             register={register}

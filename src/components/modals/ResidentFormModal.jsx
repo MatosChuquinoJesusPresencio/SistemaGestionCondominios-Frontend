@@ -2,7 +2,7 @@ import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { FaUserPlus, FaEdit, FaSave } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import AuthInput from "../auth/AuthInput";
+import FormInput from "../form/FormInput";
 
 const ResidentFormModal = ({
   show,
@@ -59,7 +59,7 @@ const ResidentFormModal = ({
         <Form onSubmit={handleSubmit(handleFormSubmit)}>
           <Row>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Nombre Completo"
                 name="nombre"
                 register={register}
@@ -69,7 +69,7 @@ const ResidentFormModal = ({
               />
             </Col>
             <Col md={6}>
-              <AuthInput
+              <FormInput
                 label="Correo Electrónico"
                 name="email"
                 type="email"
