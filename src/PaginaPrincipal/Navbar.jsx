@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importamos el hook para navegación
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate(); // Inicializamos la función navigate
 
   const navLinkStyle = {
     transition: 'all 0.3s ease',
@@ -14,6 +16,11 @@ const Navbar = () => {
     { name: 'Planes', link: '#planes' },
     { name: 'Contacto', link: '#contacto' }
   ];
+
+  // Función reutilizable para ir al login
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-transparent position-absolute w-100 mt-3" style={{ zIndex: 1000 }}>
@@ -30,7 +37,7 @@ const Navbar = () => {
           OASIS
         </a>
 
-        {/* BOTÓN HAMBURGUESA (Solo visible en móvil) */}
+        {/* BOTÓN HAMBURGUESA (Móvil) */}
         <button 
           className="navbar-toggler border-0 shadow-none" 
           type="button" 
@@ -59,19 +66,19 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Botones de Acción dentro del colapso para móvil */}
+          {/* Botones dentro del colapso para móvil */}
           <div className="d-lg-none d-flex flex-column align-items-center gap-3 pb-3">
              <a href="#" className="text-white text-decoration-none small fw-semibold">Empezar</a>
              <button 
                 className="btn btn-light rounded-pill px-4 fw-bold w-75"
-                onClick={() => window.location.href = '#contacto'}
+                onClick={handleLoginRedirect} // Corregido para móviles
              >
                 Iniciar Sesión
              </button>
           </div>
         </div>
 
-        {/* Botones de Acción (Solo visibles en escritorio) */}
+        {/* Botones de Acción (Escritorio) */}
         <div className="d-none d-lg-flex align-items-center gap-4">
           <a href="#" className="text-white text-decoration-none small fw-semibold opacity-75" 
              style={navLinkStyle}
@@ -99,7 +106,7 @@ const Navbar = () => {
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            onClick={() => window.location.href = '#contacto'}
+            onClick={handleLoginRedirect} // Corregido para escritorio
           >
             Iniciar Sesión
           </button>
