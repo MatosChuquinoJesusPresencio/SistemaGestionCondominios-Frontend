@@ -20,9 +20,25 @@ const LoginPage = () => {
 
     const onSubmit = async (data) => {
         clearAuthError();
-        const result = await login(data);
+
+        // 1. Limpieza de datos: Eliminamos espacios accidentales
+        const cleanData = {
+            ...data,
+            email: data.email.trim().toLowerCase(),
+            password: data.password // La contraseña no se limpia por si tiene espacios intencionales
+        };
+
+        // 2. Debug: Verificamos en consola qué estamos enviando
+        console.log("Intentando login con:", cleanData);
+
+        const result = await login(cleanData);
+
         if (result.success) {
+            console.log("Login exitoso, redirigiendo...");
             navigate("/");
+        } else {
+            // Esto nos ayudará a ver si el error viene con un mensaje específico del backend
+            console.error("Fallo en la autenticación:", result.message || "Credenciales incorrectas");
         }
     };
 
@@ -94,7 +110,11 @@ const LoginPage = () => {
 
                         {authError && (
                             <div className="mt-3">
-                                <AuthAlert type="danger" message={authError} onClose={clearAuthError} />
+                                <AuthAlert 
+                                    type="danger" 
+                                    message={authError} 
+                                    onClose={clearAuthError} 
+                                />
                             </div>
                         )}
                     </form>
